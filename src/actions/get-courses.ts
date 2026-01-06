@@ -88,10 +88,10 @@ export async function getCourses(
     });
 
     // Transform and calculate aggregates
-    let formattedCourses = courses.map((c) => {
+    let formattedCourses = courses.map((c: any) => {
       const reviewCount = c.reviews.length;
       const totalRating = c.reviews.reduce(
-        (acc: number, r) => acc + (r.rating || 0),
+        (acc: number, r: any) => acc + (r.rating || 0),
         0
       );
       const avgRating =
