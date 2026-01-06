@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useUserIdentity } from "@/hooks/use-user-identity";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -56,16 +57,25 @@ export function ReviewForm({ courseId }: ReviewFormProps) {
   const [open, setOpen] = useState(false);
   const router = useRouter();
 
+  const { name: storedName } = useUserIdentity();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      reviewerName: "",
+      reviewerName: storedName || "",
       rating: "5",
       gradeReceived: "",
       semester: "",
       content: "",
     },
   });
+
+  // Update form default when storedName changes (e.g. initial load)
+  useEffect(() => {
+    if (storedName) {
+      form.setValue("reviewerName", storedName);
+    }
+  }, [storedName, form]);
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {

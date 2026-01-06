@@ -22,7 +22,7 @@ export function CourseCard({ course }: CourseCardProps) {
   const hasReviews = (course.reviewCount || 0) > 0;
 
   return (
-    <Card className="flex flex-col h-full hover:shadow-lg hover:border-primary/50 transition-all duration-300 group relative">
+    <Card className="flex flex-col h-full hover:shadow-xl hover:shadow-primary/5 hover:-translate-y-1 hover:border-primary/20 transition-all duration-300 group relative bg-card/50 backdrop-blur-sm">
       {/* Bookmark Button - Top Right */}
       <div className="absolute top-2 right-2 z-10">
         <BookmarkButton courseCode={course.code} />

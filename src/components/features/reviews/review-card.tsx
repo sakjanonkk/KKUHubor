@@ -94,7 +94,7 @@ export function ReviewCard({ review }: ReviewCardProps) {
 
   return (
     <>
-      <Card>
+      <Card className="bg-card/50 backdrop-blur-sm border-border/40 hover:border-primary/20 transition-all duration-300 hover:shadow-lg">
         <CardHeader className="pb-2">
           <div className="flex justify-between items-start">
             <div className="flex-1">
@@ -130,7 +130,9 @@ export function ReviewCard({ review }: ReviewCardProps) {
               <div className="text-xs text-muted-foreground flex gap-2 mt-1">
                 <span>{review.semester}</span> |
                 <span>Grade: {review.gradeReceived || "-"}</span> |
-                <span>{new Date(review.createdAt).toLocaleDateString()}</span>
+                <span suppressHydrationWarning>
+                  {new Date(review.createdAt).toLocaleDateString()}
+                </span>
               </div>
             </div>
           </div>

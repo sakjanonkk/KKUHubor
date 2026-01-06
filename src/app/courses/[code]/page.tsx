@@ -9,6 +9,7 @@ import { notFound } from "next/navigation";
 
 import { getCourseDistribution } from "@/actions/get-course-distribution";
 import { ScoreDistribution } from "@/components/features/courses/score-distribution";
+import { PageHeader } from "@/components/layout/page-header";
 
 // Define Page Props manually for Next.js 15+ compatibility
 interface PageProps {
@@ -70,70 +71,73 @@ export default async function CourseDetailPage({ params }: PageProps) {
   ]);
 
   return (
-    <main className="container mx-auto p-6 space-y-8">
-      {/* Course Header */}
-      <div className="bg-white dark:bg-zinc-900 rounded-lg shadow-sm border p-8">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-          <div>
-            <Badge variant="outline" className="text-lg font-mono mb-2">
-              {course.code}
-            </Badge>
-            <h1 className="text-3xl font-bold mb-2">{course.nameTH}</h1>
-            <h2 className="text-xl text-muted-foreground">{course.nameEN}</h2>
-            <div className="mt-4 flex gap-2">
-              <Badge
-                variant="outline"
-                style={{
-                  backgroundColor: course.facultyColor || "#f3f4f6",
-                  color: course.facultyColor ? "#ffffff" : "#1f2937",
-                  borderColor: "transparent",
-                }}
-              >
-                {course.facultyNameEN || course.facultyNameTH}
-              </Badge>
-              {/* Render tags if available. Note: raw SQL getCourse might not select tags yet unless updated. */}
-            </div>
-          </div>
-          <div className="text-center md:text-right">
-            <div className="mb-4">
-              <ReviewForm courseId={course.id} />
-            </div>
-          </div>
+    <main className="min-h-screen bg-background pb-20">
+      <PageHeader
+        title={`${course.code} ${course.nameTH}`}
+        description={`${course.nameEN} • ${
+          course.facultyNameEN || course.facultyNameTH
+        }`}
+      >
+        <div className="mt-4 md:mt-0">
+          <ReviewForm courseId={course.id} />
         </div>
-      </div>
+      </PageHeader>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        {/* Left Column: Stats & Distribution */}
-        <div className="md:col-span-1 space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Rating Distribution</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <ScoreDistribution
-                distribution={distributionData.distribution}
-                totalReviews={distributionData.totalReviews}
-                averageRating={distributionData.averageRating}
-              />
-            </CardContent>
-          </Card>
-        </div>
+      <div className="container mx-auto px-4 py-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {/* Left Column: Stats & Distribution */}
+          <div className="md:col-span-1 space-y-6">
+            <Card className="bg-card/50 backdrop-blur-sm border-border/50">
+              <CardHeader>
+                <CardTitle className="text-lg">Rating Distribution</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ScoreDistribution
+                  distribution={distributionData.distribution}
+                  totalReviews={distributionData.totalReviews}
+                  averageRating={distributionData.averageRating}
+                />
+              </CardContent>
+            </Card>
+          </div>
 
-        {/* Right Column: Reviews */}
-        <div className="md:col-span-2">
-          <h3 className="text-2xl font-bold mb-6">Student Reviews</h3>
+          {/* Right Column: Reviews */}
+          <div className="md:col-span-2">
+            <h3 className="text-2xl font-bold mb-6 flex items-center gap-2">
+              Student Reviews
+              {reviews.length > 0 && (
+                <Badge variant="secondary" className="rounded-full">
+                  {reviews.length}
+                </Badge>
+              )}
+            </h3>
 
-          {reviews.length === 0 ? (
-            <p className="text-muted-foreground italic">
-              No reviews yet. Be the first to review!
-            </p>
-          ) : (
-            <div className="grid gap-4">
-              {reviews.map((review) => (
-                <ReviewCard key={review.id} review={review} />
-              ))}
-            </div>
-          )}
+            {reviews.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-16 text-center border rounded-3xl bg-muted/20 border-border/50 border-dashed animate-in fade-in zoom-in duration-500">
+                <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mb-4">
+                  <Star className="w-8 h-8 text-muted-foreground fill-muted-foreground/20" />
+                </div>
+                <h3 className="text-xl font-bold mb-2">No reviews yet</h3>
+                <p className="text-muted-foreground max-w-sm mx-auto mb-6">
+                  Be the first to share your experience with this course. Help
+                  others make better decisions!
+                </p>
+                <ReviewForm courseId={course.id} />
+              </div>
+            ) : (
+              <div className="space-y-6">
+                {reviews.map((review, i) => (
+                  <div
+                    key={review.id}
+                    className="animate-in fade-in slide-in-from-bottom-4 fill-mode-backwards"
+                    style={{ animationDelay: `${i * 100}ms` }}
+                  >
+                    <ReviewCard review={review} />
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </main>

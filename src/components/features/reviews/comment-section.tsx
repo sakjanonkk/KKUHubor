@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Loader2, Send } from "lucide-react";
 import { toast } from "sonner";
+import { useUserIdentity } from "@/hooks/use-user-identity";
 
 interface Comment {
   comment_id: number;
@@ -45,6 +46,8 @@ export function CommentSection({ reviewId }: CommentSectionProps) {
   const handlePostComment = async () => {
     if (!newComment.trim()) return;
 
+    const { name } = useUserIdentity.getState(); // Access state directly or use hook at top level
+
     setSubmitting(true);
     try {
       const res = await fetch("/api/comments", {
@@ -53,7 +56,7 @@ export function CommentSection({ reviewId }: CommentSectionProps) {
         body: JSON.stringify({
           reviewId,
           content: newComment,
-          authorName: "Anonymous", // Could be customizable later
+          authorName: name || "Anonymous",
         }),
       });
 

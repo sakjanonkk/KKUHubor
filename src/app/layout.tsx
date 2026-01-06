@@ -5,6 +5,7 @@ import "./globals.css";
 import { Navbar } from "@/components/layout/navbar";
 import { Toaster } from "@/components/ui/sonner";
 import { BookmarkProvider } from "@/contexts/bookmark-context";
+import { ThemeProvider } from "@/components/theme-provider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,15 +29,22 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <BookmarkProvider>
-          <Navbar isAdmin={!!(await cookies()).get("admin_session")} />
-          {children}
-          <Toaster />
-        </BookmarkProvider>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <BookmarkProvider>
+            <Navbar isAdmin={!!(await cookies()).get("admin_session")} />
+            {children}
+            <Toaster />
+          </BookmarkProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

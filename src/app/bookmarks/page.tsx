@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Heart, Trash2, BookOpen } from "lucide-react";
 import Link from "next/link";
 import { Course } from "@/types";
+import { PageHeader } from "@/components/layout/page-header";
 
 export default function BookmarksPage() {
   const { bookmarks, clearBookmarks } = useBookmarks();
@@ -50,26 +51,15 @@ export default function BookmarksPage() {
   }, [bookmarks]);
 
   return (
-    <main className="container mx-auto p-6 space-y-8">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div className="flex flex-col space-y-2">
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-full bg-red-100 dark:bg-red-950/30">
-              <Heart className="w-6 h-6 text-red-500 fill-red-500" />
-            </div>
-            <h1 className="text-3xl font-bold tracking-tight">
-              Bookmarked Courses
-            </h1>
-          </div>
-          <p className="text-muted-foreground">
-            Your saved courses for quick access. Bookmarks are stored locally in
-            your browser.
-          </p>
-        </div>
+    <main className="min-h-screen bg-background">
+      <PageHeader
+        title="Bookmarked Courses"
+        description="Your saved courses for quick access. Bookmarks are stored locally in your browser so you can easily find them later."
+      >
         {bookmarks.length > 0 && (
           <Button
             variant="outline"
-            className="gap-2 text-red-600 hover:text-red-700 hover:bg-red-50"
+            className="gap-2 text-destructive border-destructive/20 hover:text-destructive hover:bg-destructive/10"
             onClick={() => {
               if (
                 window.confirm("Are you sure you want to clear all bookmarks?")
@@ -82,56 +72,69 @@ export default function BookmarksPage() {
             Clear All
           </Button>
         )}
-      </div>
+      </PageHeader>
 
-      {loading ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {[...Array(3)].map((_, i) => (
-            <div
-              key={i}
-              className="h-64 bg-gray-100 dark:bg-gray-800 rounded-lg animate-pulse"
-            />
-          ))}
-        </div>
-      ) : error ? (
-        <div className="text-center py-16">
-          <p className="text-red-500">{error}</p>
-          <Button
-            variant="outline"
-            className="mt-4"
-            onClick={() => window.location.reload()}
-          >
-            Try Again
-          </Button>
-        </div>
-      ) : courses.length === 0 ? (
-        <div className="text-center py-16 space-y-4">
-          <div className="mx-auto w-16 h-16 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
-            <BookOpen className="w-8 h-8 text-gray-400" />
-          </div>
-          <h2 className="text-xl font-semibold text-gray-600 dark:text-gray-300">
-            No bookmarks yet
-          </h2>
-          <p className="text-muted-foreground max-w-md mx-auto">
-            Start bookmarking courses by clicking the heart icon on any course
-            card. Your bookmarks will be saved in your browser.
-          </p>
-          <Button asChild className="mt-4">
-            <Link href="/courses">Browse Courses</Link>
-          </Button>
-        </div>
-      ) : (
-        <>
-          <p className="text-sm text-muted-foreground">
-            {courses.length} course{courses.length !== 1 ? "s" : ""} bookmarked
-          </p>
+      <div className="container mx-auto px-4 py-8">
+        {loading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {courses.map((course) => (
-              <CourseCard key={course.id} course={course} />
+            {[...Array(3)].map((_, i) => (
+              <div
+                key={i}
+                className="h-64 bg-muted/50 rounded-lg animate-pulse border border-border/50"
+              />
             ))}
           </div>
-        </>
-      )}
+        ) : error ? (
+          <div className="flex flex-col items-center justify-center py-20 text-center border rounded-3xl bg-red-50/50 dark:bg-red-950/10 border-red-200 dark:border-red-900/50 border-dashed">
+            <div className="w-16 h-16 rounded-full bg-red-100 dark:bg-red-900/20 flex items-center justify-center mb-4">
+              <Trash2 className="w-8 h-8 text-red-500" />
+            </div>
+            <h3 className="text-xl font-bold mb-2 text-red-700 dark:text-red-400">
+              Failed to load courses
+            </h3>
+            <p className="text-muted-foreground max-w-sm mx-auto mb-6">
+              {error}
+            </p>
+            <Button variant="outline" onClick={() => window.location.reload()}>
+              Try Again
+            </Button>
+          </div>
+        ) : courses.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-24 text-center border rounded-3xl bg-muted/20 border-border/50 border-dashed">
+            <div className="w-20 h-20 rounded-full bg-muted flex items-center justify-center mb-6">
+              <Heart className="w-10 h-10 text-muted-foreground fill-muted-foreground/20" />
+            </div>
+            <h2 className="text-2xl font-bold mb-3">No bookmarks yet</h2>
+            <p className="text-muted-foreground max-w-md mx-auto mb-8 text-lg">
+              Start building your schedule by clicking the heart icon on any
+              course card.
+            </p>
+            <Button size="lg" asChild className="rounded-full px-8">
+              <Link href="/courses">Browse Courses</Link>
+            </Button>
+          </div>
+        ) : (
+          <>
+            <div className="flex items-center justify-between mb-6">
+              <p className="text-sm font-medium text-muted-foreground">
+                Showing {courses.length} saved course
+                {courses.length !== 1 ? "s" : ""}
+              </p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {courses.map((course, i) => (
+                <div
+                  key={course.id}
+                  className="animate-in fade-in slide-in-from-bottom-4 fill-mode-backwards"
+                  style={{ animationDelay: `${i * 50}ms` }}
+                >
+                  <CourseCard course={course} />
+                </div>
+              ))}
+            </div>
+          </>
+        )}
+      </div>
     </main>
   );
 }

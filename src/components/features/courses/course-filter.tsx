@@ -28,6 +28,16 @@ import {
   GraduationCap,
   ClipboardList,
   X,
+  BookOpen,
+  Target,
+  Sparkles,
+  LayoutGrid,
+  Activity,
+  CheckCircle2,
+  BarChart3,
+  TrendingDown,
+  TrendingUp,
+  Binary,
 } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useEffect } from "react";
@@ -35,27 +45,69 @@ import { cn } from "@/lib/utils";
 
 // Filter options
 const CATEGORIES = [
-  { value: "GENERAL", label: "General Education", emoji: "📚" },
-  { value: "MAJOR", label: "Major", emoji: "🎯" },
-  { value: "ELECTIVE", label: "Elective", emoji: "✨" },
-  { value: "FREE_ELECTIVE", label: "Free Elective", emoji: "🆓" },
+  {
+    value: "GENERAL",
+    label: "General Education",
+    icon: <BookOpen className="h-5 w-5 text-blue-500" />,
+  },
+  {
+    value: "MAJOR",
+    label: "Major",
+    icon: <Target className="h-5 w-5 text-red-500" />,
+  },
+  {
+    value: "ELECTIVE",
+    label: "Elective",
+    icon: <Sparkles className="h-5 w-5 text-amber-500" />,
+  },
+  {
+    value: "FREE_ELECTIVE",
+    label: "Free Elective",
+    icon: <LayoutGrid className="h-5 w-5 text-emerald-500" />,
+  },
 ];
 
 const GRADING_TYPES = [
-  { value: "NORM", label: "Norm-referenced", description: "Curve grading" },
+  {
+    value: "NORM",
+    label: "Norm-referenced",
+    description: "Curve grading",
+    icon: <Activity className="h-6 w-6 text-orange-500" />,
+  },
   {
     value: "CRITERION",
     label: "Criterion-referenced",
     description: "Fixed criteria",
+    icon: <CheckCircle2 className="h-6 w-6 text-green-500" />,
   },
 ];
 
 const SORT_OPTIONS = [
-  { value: "reviews_desc", label: "Most Reviews", icon: "📊" },
-  { value: "rating_desc", label: "Highest Rated", icon: "⭐" },
-  { value: "rating_asc", label: "Lowest Rated", icon: "📉" },
-  { value: "name_asc", label: "Name (A-Z)", icon: "🔤" },
-  { value: "code_asc", label: "Code (A-Z)", icon: "🔢" },
+  {
+    value: "reviews_desc",
+    label: "Most Reviews",
+    icon: <BarChart3 className="h-5 w-5 text-purple-500" />,
+  },
+  {
+    value: "rating_desc",
+    label: "Highest Rated",
+    icon: <Star className="h-5 w-5 text-yellow-500 fill-yellow-500" />,
+  },
+  {
+    value: "rating_asc",
+    label: "Lowest Rated",
+    icon: <TrendingDown className="h-5 w-5 text-red-500" />,
+  },
+  {
+    value: "name_asc",
+    label: "Name (A-Z)",
+    icon: <ArrowUpDown className="h-5 w-5 text-blue-400" />,
+  },
+  {
+    value: "code_asc",
+    label: "Code (A-Z)",
+    icon: <Binary className="h-5 w-5 text-slate-500" />,
+  },
 ];
 
 interface Faculty {
@@ -161,73 +213,119 @@ export function CourseFilter() {
       <SheetTrigger asChild>
         <Button
           variant="outline"
-          className="gap-2 relative border-2 hover:border-primary/50 transition-all"
+          className="gap-2 relative border-neutral-200 dark:border-neutral-800 hover:border-primary/50 hover:bg-primary/5 transition-all duration-300"
         >
           <SlidersHorizontal className="h-4 w-4" />
           <span className="hidden sm:inline">Filters</span>
           {activeFilterCount > 0 && (
-            <span className="absolute -top-2 -right-2 bg-primary text-primary-foreground text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold shadow-lg animate-in zoom-in-50">
+            <span className="absolute -top-2 -right-2 bg-gradient-to-r from-primary to-violet-600 text-primary-foreground text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold shadow-lg shadow-primary/25 animate-in zoom-in-50">
               {activeFilterCount}
             </span>
           )}
         </Button>
       </SheetTrigger>
 
-      <SheetContent className="w-full sm:max-w-md overflow-y-auto">
-        <SheetHeader className="text-left pb-4 border-b mb-2">
-          <SheetTitle className="text-xl flex items-center gap-2">
-            <SlidersHorizontal className="h-5 w-5 text-primary" />
+      <SheetContent className="w-full sm:max-w-md overflow-y-auto border-l-0 shadow-2xl p-0">
+        {/* Background Gradient */}
+        <div className="absolute top-0 right-0 w-[300px] h-[300px] bg-primary/5 blur-[100px] rounded-full pointer-events-none -z-10" />
+
+        <SheetHeader className="text-left px-6 py-6 border-b space-y-1">
+          <SheetTitle className="text-2xl font-bold flex items-center gap-3">
+            <div className="p-2.5 rounded-xl bg-primary/10 text-primary">
+              <SlidersHorizontal className="h-6 w-6" />
+            </div>
             Filter & Sort
           </SheetTitle>
-          <SheetDescription>Customize your course search</SheetDescription>
+          <SheetDescription className="text-base text-muted-foreground/80">
+            Customize how you explore courses
+          </SheetDescription>
         </SheetHeader>
 
-        <div className="py-4 px-4 space-y-5">
+        <div className="px-6 py-6 space-y-8 pb-24">
           {/* Sort By Section */}
-          <section className="space-y-3">
-            <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
-              <ArrowUpDown className="h-4 w-4 text-primary" />
+          <section className="space-y-4">
+            <div className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-muted-foreground/70">
+              <ArrowUpDown className="h-4 w-4" />
               Sort By
             </div>
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-2 gap-4">
               {SORT_OPTIONS.map((option) => (
                 <button
                   key={option.value}
                   onClick={() => setSortBy(option.value)}
                   className={cn(
-                    "flex items-center gap-2 px-3 py-2.5 rounded-lg border-2 text-sm font-medium transition-all",
+                    "flex flex-col gap-3 p-4 rounded-xl border text-sm font-medium transition-all duration-200 text-left relative overflow-hidden group",
                     sortBy === option.value
-                      ? "border-primary bg-primary/10 text-primary"
-                      : "border-muted hover:border-primary/30 hover:bg-muted/50"
+                      ? "border-primary bg-primary/5 text-primary shadow-sm"
+                      : "border-transparent bg-muted/40 hover:bg-muted hover:scale-[1.02]"
                   )}
                 >
-                  <span>{option.icon}</span>
-                  <span className="truncate">{option.label}</span>
+                  <div
+                    className={cn(
+                      "p-2 w-fit rounded-lg transition-colors duration-200",
+                      sortBy === option.value
+                        ? "bg-primary/10"
+                        : "bg-background"
+                    )}
+                  >
+                    {option.icon}
+                  </div>
+                  <span className="truncate font-semibold">{option.label}</span>
+                  {sortBy === option.value && (
+                    <div className="absolute inset-0 border-2 border-primary rounded-xl pointer-events-none" />
+                  )}
                 </button>
               ))}
             </div>
           </section>
 
+          {/* Has Reviews Toggle */}
+          <section className="p-5 rounded-2xl bg-gradient-to-br from-emerald-50/50 to-teal-50/50 dark:from-emerald-950/20 dark:to-teal-950/20 border border-emerald-100/50 dark:border-emerald-900/50 relative overflow-hidden group hover:border-emerald-200 dark:hover:border-emerald-800 transition-colors">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/5 blur-3xl rounded-full -mr-16 -mt-16" />
+            <div className="flex items-center justify-between relative z-10">
+              <div className="flex items-center gap-4">
+                <div className="p-3 rounded-xl bg-emerald-100 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400">
+                  <MessageSquare className="h-5 w-5" />
+                </div>
+                <div>
+                  <Label className="text-base font-bold cursor-pointer block mb-1">
+                    Has Reviews Only
+                  </Label>
+                  <p className="text-sm text-muted-foreground">
+                    Show courses with student feedback
+                  </p>
+                </div>
+              </div>
+              <Switch
+                checked={hasReviews}
+                onCheckedChange={setHasReviews}
+                className="data-[state=checked]:bg-emerald-500 scale-110"
+              />
+            </div>
+          </section>
+
           {/* Faculty Section */}
-          <section className="space-y-3">
-            <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
-              <Building2 className="h-4 w-4 text-primary" />
+          <section className="space-y-4">
+            <div className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-muted-foreground/70">
+              <Building2 className="h-4 w-4" />
               Faculty
             </div>
             <Select value={facultyId} onValueChange={setFacultyId}>
-              <SelectTrigger className="h-11 border-2 hover:border-primary/30 transition-colors">
+              <SelectTrigger className="h-12 border-input bg-background/50 backdrop-blur-sm hover:border-primary/50 transition-colors rounded-xl px-4 text-base">
                 <SelectValue placeholder="All Faculties" />
               </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">
+              <SelectContent className="max-h-[300px]">
+                <SelectItem value="all" className="font-medium py-3">
                   <span className="flex items-center gap-2">
-                    🏛️ All Faculties
+                    <Building2 className="h-4 w-4 text-primary" />
+                    <span className="ml-1">All Faculties</span>
                   </span>
                 </SelectItem>
                 {faculties.map((faculty) => (
                   <SelectItem
                     key={faculty.faculty_id}
                     value={String(faculty.faculty_id)}
+                    className="py-2.5"
                   >
                     {faculty.name_th}
                   </SelectItem>
@@ -237,29 +335,36 @@ export function CourseFilter() {
           </section>
 
           {/* Rating Section */}
-          <section className="space-y-3">
-            <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
-              <Star className="h-4 w-4 text-yellow-500 fill-yellow-500" />
+          <section className="space-y-4">
+            <div className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-muted-foreground/70">
+              <Star className="h-4 w-4" />
               Minimum Rating
             </div>
-            <div className="flex gap-1">
+            <div className="flex gap-2 p-1.5 bg-muted/30 rounded-xl border border-border/50">
               {[0, 1, 2, 3, 4, 5].map((rating) => (
                 <button
                   key={rating}
                   onClick={() => setMinRating(rating)}
                   className={cn(
-                    "flex-1 py-2.5 rounded-lg border-2 font-medium transition-all text-sm",
+                    "flex-1 py-3 rounded-lg font-medium transition-all text-sm relative",
                     minRating === rating
-                      ? "border-yellow-500 bg-yellow-50 dark:bg-yellow-950/30 text-yellow-700 dark:text-yellow-400"
-                      : "border-muted hover:border-yellow-300 hover:bg-yellow-50/50 dark:hover:bg-yellow-950/20"
+                      ? "bg-background text-yellow-600 dark:text-yellow-400 shadow-sm ring-1 ring-black/5 dark:ring-white/10"
+                      : "text-muted-foreground hover:text-foreground hover:bg-background/50"
                   )}
                 >
                   {rating === 0 ? (
                     "Any"
                   ) : (
-                    <span className="flex items-center justify-center gap-0.5">
-                      {rating}
-                      <Star className="h-3 w-3 fill-current" />
+                    <span className="flex flex-col items-center justify-center gap-1">
+                      <span className="font-bold text-base">{rating}</span>
+                      <Star
+                        className={cn(
+                          "h-3 w-3",
+                          minRating === rating
+                            ? "fill-yellow-500 text-yellow-500"
+                            : "fill-current opacity-30"
+                        )}
+                      />
                     </span>
                   )}
                 </button>
@@ -267,61 +372,46 @@ export function CourseFilter() {
             </div>
           </section>
 
-          {/* Has Reviews Toggle */}
-          <section className="p-4 rounded-xl bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950/30 dark:to-emerald-950/30 border-2 border-green-100 dark:border-green-900/50">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="p-2 rounded-lg bg-green-100 dark:bg-green-900/50">
-                  <MessageSquare className="h-5 w-5 text-green-600 dark:text-green-400" />
-                </div>
-                <div>
-                  <Label className="text-sm font-semibold cursor-pointer">
-                    Has Reviews Only
-                  </Label>
-                  <p className="text-xs text-muted-foreground">
-                    Show courses with feedback
-                  </p>
-                </div>
-              </div>
-              <Switch
-                checked={hasReviews}
-                onCheckedChange={setHasReviews}
-                className="data-[state=checked]:bg-green-500"
-              />
-            </div>
-          </section>
-
           {/* Category Section */}
-          <section className="space-y-3">
-            <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
-              <GraduationCap className="h-4 w-4 text-primary" />
+          <section className="space-y-4">
+            <div className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-muted-foreground/70">
+              <GraduationCap className="h-4 w-4" />
               Category
             </div>
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-2 gap-4">
               <button
                 onClick={() => setCategory("")}
                 className={cn(
-                  "flex items-center gap-2 px-3 py-2.5 rounded-lg border-2 text-sm font-medium transition-all",
+                  "flex items-center gap-3 px-4 py-4 rounded-xl border text-sm font-medium transition-all duration-200 text-left",
                   category === ""
-                    ? "border-primary bg-primary/10 text-primary"
-                    : "border-muted hover:border-primary/30 hover:bg-muted/50"
+                    ? "border-primary bg-primary/5 text-primary shadow-sm ring-1 ring-primary/20"
+                    : "border-transparent bg-muted/40 hover:bg-muted hover:scale-[1.02]"
                 )}
               >
-                <span>📋</span>
-                <span>All</span>
+                <div className="p-2 bg-background rounded-lg shadow-sm">
+                  <ClipboardList
+                    className={cn(
+                      "h-5 w-5",
+                      category === "" ? "text-primary" : "text-muted-foreground"
+                    )}
+                  />
+                </div>
+                <span>All Categories</span>
               </button>
               {CATEGORIES.map((cat) => (
                 <button
                   key={cat.value}
                   onClick={() => setCategory(cat.value)}
                   className={cn(
-                    "flex items-center gap-2 px-3 py-2.5 rounded-lg border-2 text-sm font-medium transition-all",
+                    "flex items-center gap-3 px-4 py-4 rounded-xl border text-sm font-medium transition-all duration-200 text-left",
                     category === cat.value
-                      ? "border-primary bg-primary/10 text-primary"
-                      : "border-muted hover:border-primary/30 hover:bg-muted/50"
+                      ? "border-primary bg-primary/5 text-primary shadow-sm ring-1 ring-primary/20"
+                      : "border-transparent bg-muted/40 hover:bg-muted hover:scale-[1.02]"
                   )}
                 >
-                  <span>{cat.emoji}</span>
+                  <div className="p-2 bg-background rounded-lg shadow-sm">
+                    {cat.icon}
+                  </div>
                   <span className="truncate">{cat.label}</span>
                 </button>
               ))}
@@ -329,24 +419,40 @@ export function CourseFilter() {
           </section>
 
           {/* Grading Type Section */}
-          <section className="space-y-3">
-            <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
-              <ClipboardList className="h-4 w-4 text-primary" />
+          <section className="space-y-4">
+            <div className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-muted-foreground/70">
+              <ClipboardList className="h-4 w-4" />
               Grading Type
             </div>
-            <div className="space-y-2">
+            <div className="space-y-3">
               <button
                 onClick={() => setGradingType("")}
                 className={cn(
-                  "w-full flex items-center gap-3 px-4 py-3 rounded-lg border-2 text-left transition-all",
+                  "w-full flex items-center gap-4 px-4 py-4 rounded-xl border text-left transition-all duration-200",
                   gradingType === ""
-                    ? "border-primary bg-primary/10"
-                    : "border-muted hover:border-primary/30 hover:bg-muted/50"
+                    ? "border-primary bg-primary/5 shadow-sm ring-1 ring-primary/20"
+                    : "border-transparent bg-muted/40 hover:bg-muted hover:scale-[1.01]"
                 )}
               >
-                <span className="text-lg">📊</span>
+                <div className="h-12 w-12 rounded-full bg-background flex items-center justify-center shadow-sm">
+                  <ClipboardList
+                    className={cn(
+                      "h-6 w-6",
+                      gradingType === ""
+                        ? "text-primary"
+                        : "text-muted-foreground"
+                    )}
+                  />
+                </div>
                 <div>
-                  <div className="font-medium text-sm">All Types</div>
+                  <div
+                    className={cn(
+                      "font-bold text-sm mb-0.5",
+                      gradingType === "" ? "text-primary" : "text-foreground"
+                    )}
+                  >
+                    All Types
+                  </div>
                   <div className="text-xs text-muted-foreground">
                     Show all grading methods
                   </div>
@@ -357,17 +463,26 @@ export function CourseFilter() {
                   key={type.value}
                   onClick={() => setGradingType(type.value)}
                   className={cn(
-                    "w-full flex items-center gap-3 px-4 py-3 rounded-lg border-2 text-left transition-all",
+                    "w-full flex items-center gap-4 px-4 py-4 rounded-xl border text-left transition-all duration-200",
                     gradingType === type.value
-                      ? "border-primary bg-primary/10"
-                      : "border-muted hover:border-primary/30 hover:bg-muted/50"
+                      ? "border-primary bg-primary/5 shadow-sm ring-1 ring-primary/20"
+                      : "border-transparent bg-muted/40 hover:bg-muted hover:scale-[1.01]"
                   )}
                 >
-                  <span className="text-lg">
-                    {type.value === "NORM" ? "📈" : "✅"}
-                  </span>
+                  <div className="h-12 w-12 rounded-full bg-background flex items-center justify-center shadow-sm">
+                    {type.icon}
+                  </div>
                   <div>
-                    <div className="font-medium text-sm">{type.label}</div>
+                    <div
+                      className={cn(
+                        "font-bold text-sm mb-0.5",
+                        gradingType === type.value
+                          ? "text-primary"
+                          : "text-foreground"
+                      )}
+                    >
+                      {type.label}
+                    </div>
                     <div className="text-xs text-muted-foreground">
                       {type.description}
                     </div>
@@ -379,19 +494,25 @@ export function CourseFilter() {
         </div>
 
         {/* Footer Actions */}
-        <SheetFooter className="border-t pt-4 gap-2 sm:gap-2">
+        <SheetFooter className="border-t p-6 gap-3 sm:gap-3 sticky bottom-0 bg-background/95 backdrop-blur z-20">
           {activeFilterCount > 0 && (
             <Button
-              variant="ghost"
+              variant="outline"
               onClick={clearFilters}
-              className="flex-1 gap-2 text-muted-foreground hover:text-destructive"
+              className="flex-1 gap-2 text-muted-foreground hover:text-destructive hover:border-destructive/30 hover:bg-destructive/5 rounded-xl h-12"
             >
               <X className="h-4 w-4" />
               Clear ({activeFilterCount})
             </Button>
           )}
-          <Button onClick={handleApply} className="flex-1 gap-2 font-semibold">
-            Apply Filters
+          <Button
+            onClick={handleApply}
+            className="flex-1 gap-2 font-bold rounded-xl h-12 shadow-lg shadow-primary/20"
+          >
+            Apply
+            <span className="ml-1 opacity-60">
+              {activeFilterCount > 0 ? `(${activeFilterCount})` : ""}
+            </span>
           </Button>
         </SheetFooter>
       </SheetContent>
