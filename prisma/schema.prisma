@@ -1,0 +1,133 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model comments {
+  comment_id  Int       @id @default(autoincrement())
+  review_id   Int?
+  content     String
+  author_name String?   @default("Anonymous") @db.VarChar(100)
+  created_at  DateTime? @default(now()) @db.Timestamp(6)
+  reviews     reviews?  @relation(fields: [review_id], references: [review_id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model Request {
+  id         Int        @id @default(autoincrement()) @map("request_id")
+  courseCode String?    @map("course_code") @db.VarChar(20)
+  nameTH     String?    @map("name_th") @db.VarChar(255)
+  nameEN     String?    @map("name_en") @db.VarChar(255)
+  facultyId  Int?       @map("faculty_id")
+  status     String?    @default("pending") @db.VarChar(20)
+  createdAt  DateTime?  @default(now()) @map("created_at") @db.Timestamp(6)
+  faculty    faculties? @relation(fields: [facultyId], references: [faculty_id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@map("course_requests")
+}
+
+model Course {
+  id           Int            @id @default(autoincrement()) @map("course_id")
+  code         String         @unique @map("course_code") @db.VarChar(20)
+  nameTH       String         @map("name_th") @db.VarChar(255)
+  nameEN       String?        @map("name_en") @db.VarChar(255)
+  facultyId    Int?           @map("faculty_id")
+  createdAt    DateTime?      @default(now()) @map("created_at") @db.Timestamp(6)
+  tags         String[]       @default([])
+  faculty      faculties?     @relation(fields: [facultyId], references: [faculty_id], onDelete: NoAction, onUpdate: NoAction)
+  reviews      reviews[]
+  tagRequests  TagRequest[]
+
+  category     CourseCategory? @default(GENERAL)
+  gradingType  GradingType?    @default(NORM)
+
+  @@map("courses")
+}
+
+enum CourseCategory {
+  GENERAL
+  MAJOR
+  ELECTIVE
+  FREE_ELECTIVE
+}
+
+enum GradingType {
+  NORM
+  CRITERION
+}
+
+model faculties {
+  faculty_id      Int               @id @default(autoincrement())
+  name_th         String            @db.VarChar(255)
+  name_en         String            @db.VarChar(255)
+  color_code      String?           @default("#808080") @db.VarChar(7)
+  requests        Request[]
+  courses         Course[]
+}
+
+model reports {
+  report_id  Int       @id @default(autoincrement())
+  review_id  Int?
+  user_id    Int?
+  reason     String
+  status     String?   @default("pending") @db.VarChar(20)
+  created_at DateTime? @default(now()) @db.Timestamp(6)
+  reviews    reviews?  @relation(fields: [review_id], references: [review_id], onDelete: Cascade, onUpdate: NoAction)
+  users      users?    @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model review_likes {
+  like_id    Int       @id @default(autoincrement())
+  user_id    Int?
+  session_id String?   @db.VarChar(255)
+  review_id  Int?
+  created_at DateTime? @default(now()) @db.Timestamp(6)
+  reviews    reviews?  @relation(fields: [review_id], references: [review_id], onDelete: Cascade, onUpdate: NoAction)
+  users      users?    @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@unique([user_id, review_id])
+}
+
+model reviews {
+  review_id      Int            @id @default(autoincrement())
+  course_id      Int?
+  user_id        Int?
+  reviewer_name  String?        @default("Anonymous") @db.VarChar(100)
+  rating         Int?
+  grade_received String?        @db.VarChar(5)
+  semester       String?        @db.VarChar(20)
+  content        String?
+  status         String?        @default("approved") @db.VarChar(20)
+  created_at     DateTime?      @default(now()) @db.Timestamp(6)
+  comments       comments[]
+  reports        reports[]
+  review_likes   review_likes[]
+  course         Course?        @relation(fields: [course_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users          users?         @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model TagRequest {
+  id        Int       @id @default(autoincrement()) @map("request_id")
+  courseId  Int?      @map("course_id")
+  tagName   String    @map("tag_name") @db.VarChar(50)
+  status    String?   @default("pending") @db.VarChar(20)
+  createdAt DateTime? @default(now()) @map("created_at") @db.Timestamp(6)
+  course    Course?   @relation(fields: [courseId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@map("tag_requests")
+}
+
+model users {
+  user_id       Int            @id @default(autoincrement())
+  username      String?        @db.VarChar(50)
+  email         String         @unique @db.VarChar(100)
+  password_hash String?        @db.VarChar(255)
+  image         String?        @db.VarChar(255)
+  role          String?        @default("user") @db.VarChar(20)
+  created_at    DateTime?      @default(now()) @db.Timestamp(6)
+  reports       reports[]
+  review_likes  review_likes[]
+  reviews       reviews[]
+}

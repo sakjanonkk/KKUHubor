@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { Menu, Home, BookOpen, ShieldCheck } from "lucide-react";
+import { Menu, Home, BookOpen, ShieldCheck, Heart } from "lucide-react";
 import {
   Sheet,
   SheetContent,
@@ -25,6 +25,7 @@ export function Navbar({ isAdmin = false }: NavbarProps) {
   const navItems = [
     { name: "Home", href: "/", icon: Home },
     { name: "Courses", href: "/courses", icon: BookOpen },
+    { name: "Bookmarks", href: "/bookmarks", icon: Heart },
     ...(isAdmin ? [{ name: "Admin", href: "/admin", icon: ShieldCheck }] : []),
   ];
 

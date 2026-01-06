@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Card,
   CardContent,
@@ -8,8 +10,9 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Course } from "@/types";
-import { Star, BookOpen } from "lucide-react";
+import { Star } from "lucide-react";
 import { AddTagDialog } from "./add-tag-dialog";
+import { BookmarkButton } from "./bookmark-button";
 
 interface CourseCardProps {
   course: Course;
@@ -19,9 +22,14 @@ export function CourseCard({ course }: CourseCardProps) {
   const hasReviews = (course.reviewCount || 0) > 0;
 
   return (
-    <Card className="flex flex-col h-full hover:shadow-lg hover:border-primary/50 transition-all duration-300 group">
+    <Card className="flex flex-col h-full hover:shadow-lg hover:border-primary/50 transition-all duration-300 group relative">
+      {/* Bookmark Button - Top Right */}
+      <div className="absolute top-2 right-2 z-10">
+        <BookmarkButton courseCode={course.code} />
+      </div>
+
       <CardHeader className="pb-3">
-        <div className="flex justify-between items-start gap-2 mb-2">
+        <div className="flex justify-between items-start gap-2 mb-2 pr-8">
           <Badge
             variant={hasReviews ? "default" : "secondary"}
             className="font-mono text-xs"
@@ -49,8 +57,8 @@ export function CourseCard({ course }: CourseCardProps) {
           <Badge
             variant="outline"
             style={{
-              backgroundColor: course.facultyColor || "#f3f4f6", // Default gray-100
-              color: course.facultyColor ? "#ffffff" : "#1f2937", // White if color exists, else gray-800
+              backgroundColor: course.facultyColor || "#f3f4f6",
+              color: course.facultyColor ? "#ffffff" : "#1f2937",
               borderColor: "transparent",
             }}
             className="font-normal"

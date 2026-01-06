@@ -7,6 +7,9 @@ import { Badge } from "@/components/ui/badge";
 import { Star } from "lucide-react";
 import { notFound } from "next/navigation";
 
+import { getCourseDistribution } from "@/actions/get-course-distribution";
+import { ScoreDistribution } from "@/components/features/courses/score-distribution";
+
 // Define Page Props manually for Next.js 15+ compatibility
 interface PageProps {
   params: Promise<{ code: string }>;
@@ -53,20 +56,18 @@ async function getReviews(courseId: number): Promise<Review[]> {
 }
 
 export default async function CourseDetailPage({ params }: PageProps) {
-  const { code } = await params; // Await params in newer Next.js versions
+  const { code } = await params;
   const course = await getCourse(decodedCode(code));
 
   if (!course) {
     notFound();
   }
 
-  const reviews = await getReviews(course.id);
-  const averageRating =
-    reviews.length > 0
-      ? (
-          reviews.reduce((acc, r) => acc + r.rating, 0) / reviews.length
-        ).toFixed(1)
-      : "N/A";
+  // Fetch data in parallel
+  const [reviews, distributionData] = await Promise.all([
+    getReviews(course.id),
+    getCourseDistribution(course.id),
+  ]);
 
   return (
     <main className="container mx-auto p-6 space-y-8">
@@ -79,7 +80,7 @@ export default async function CourseDetailPage({ params }: PageProps) {
             </Badge>
             <h1 className="text-3xl font-bold mb-2">{course.nameTH}</h1>
             <h2 className="text-xl text-muted-foreground">{course.nameEN}</h2>
-            <div className="mt-4">
+            <div className="mt-4 flex gap-2">
               <Badge
                 variant="outline"
                 style={{
@@ -90,37 +91,50 @@ export default async function CourseDetailPage({ params }: PageProps) {
               >
                 {course.facultyNameEN || course.facultyNameTH}
               </Badge>
+              {/* Render tags if available. Note: raw SQL getCourse might not select tags yet unless updated. */}
             </div>
           </div>
           <div className="text-center md:text-right">
-            <div className="text-4xl font-bold flex items-center justify-end gap-2 text-yellow-500">
-              {averageRating} <Star className="fill-current" size={32} />
-            </div>
-            <p className="text-sm text-muted-foreground">
-              Based on {reviews.length} reviews
-            </p>
-            <div className="mt-4">
+            <div className="mb-4">
               <ReviewForm courseId={course.id} />
             </div>
           </div>
         </div>
       </div>
 
-      {/* Reviews List */}
-      <div>
-        <h3 className="text-2xl font-bold mb-6">Student Reviews</h3>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {/* Left Column: Stats & Distribution */}
+        <div className="md:col-span-1 space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Rating Distribution</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ScoreDistribution
+                distribution={distributionData.distribution}
+                totalReviews={distributionData.totalReviews}
+                averageRating={distributionData.averageRating}
+              />
+            </CardContent>
+          </Card>
+        </div>
 
-        {reviews.length === 0 ? (
-          <p className="text-muted-foreground italic">
-            No reviews yet. Be the first to review!
-          </p>
-        ) : (
-          <div className="grid gap-4">
-            {reviews.map((review) => (
-              <ReviewCard key={review.id} review={review} />
-            ))}
-          </div>
-        )}
+        {/* Right Column: Reviews */}
+        <div className="md:col-span-2">
+          <h3 className="text-2xl font-bold mb-6">Student Reviews</h3>
+
+          {reviews.length === 0 ? (
+            <p className="text-muted-foreground italic">
+              No reviews yet. Be the first to review!
+            </p>
+          ) : (
+            <div className="grid gap-4">
+              {reviews.map((review) => (
+                <ReviewCard key={review.id} review={review} />
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </main>
   );
