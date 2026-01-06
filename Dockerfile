@@ -59,6 +59,12 @@ RUN chown nextjs:nodejs .next
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 COPY --from=builder --chown=nextjs:nodejs /app/prisma ./prisma
+COPY --from=builder --chown=nextjs:nodejs /app/node_modules/.prisma ./node_modules/.prisma
+COPY --from=builder --chown=nextjs:nodejs /app/node_modules/@prisma ./node_modules/@prisma
+
+# Copy startup script
+COPY --chown=nextjs:nodejs scripts/start.sh ./start.sh
+RUN chmod +x ./start.sh
 
 USER nextjs
 
@@ -66,6 +72,5 @@ EXPOSE 3000
 
 ENV PORT=3000
 
-# server.js is created by next build from the standalone output
-# https://nextjs.org/docs/pages/api-reference/next-config-js/output
-CMD ["node", "server.js"]
+# Use startup script that runs migrations then starts the server
+CMD ["./start.sh"]
