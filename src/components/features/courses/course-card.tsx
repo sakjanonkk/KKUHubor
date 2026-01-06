@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Course } from "@/types";
 import { Star, BookOpen } from "lucide-react";
+import { AddTagDialog } from "./add-tag-dialog";
 
 interface CourseCardProps {
   course: Course;
@@ -57,6 +58,29 @@ export function CourseCard({ course }: CourseCardProps) {
             {course.facultyNameEN || course.facultyNameTH}
           </Badge>
         </div>
+
+        {/* Course Tags */}
+        {course.tags && course.tags.length > 0 && (
+          <div className="mt-3 flex flex-wrap gap-2">
+            {course.tags.slice(0, 3).map((tag, index) => (
+              <Badge key={index} variant="secondary" className="text-xs">
+                {tag}
+              </Badge>
+            ))}
+            {course.tags.length > 3 && (
+              <Badge variant="secondary" className="text-xs">
+                +{course.tags.length - 3} more
+              </Badge>
+            )}
+            <AddTagDialog courseId={course.id} />
+          </div>
+        )}
+
+        {(!course.tags || course.tags.length === 0) && (
+          <div className="mt-3 flex">
+            <AddTagDialog courseId={course.id} />
+          </div>
+        )}
 
         <div className="mt-4 pt-4 border-t flex items-center justify-between">
           <div className="text-xs text-muted-foreground">

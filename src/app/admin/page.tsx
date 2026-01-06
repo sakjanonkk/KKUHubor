@@ -14,6 +14,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { LogoutButton } from "@/components/features/admin/logout-button";
 import { ReportRow } from "./report-row";
 import { CourseManagement } from "@/components/features/admin/course-management";
+import { TagRequestManagement } from "@/components/features/admin/tag-request-management";
 
 async function getReports() {
   const query = `
@@ -34,6 +35,23 @@ async function getReports() {
 
 async function getPendingRequests() {
   const query = `SELECT * FROM course_requests WHERE status = 'pending' ORDER BY created_at ASC`;
+  const result = await db.query(query);
+  return result.rows;
+}
+
+async function getTagRequests() {
+  const query = `
+    SELECT 
+      tr.request_id, 
+      tr.tag_name, 
+      tr.created_at, 
+      c.name_th as course_name,
+      c.course_code
+    FROM tag_requests tr 
+    JOIN courses c ON tr.course_id = c.course_id 
+    WHERE tr.status = 'pending' 
+    ORDER BY tr.created_at ASC
+  `;
   const result = await db.query(query);
   return result.rows;
 }
@@ -79,6 +97,7 @@ export default async function AdminDashboard() {
 
   const reports = await getReports();
   const pendingRequests = await getPendingRequests();
+  const tagRequests = await getTagRequests();
   const analytics = await getAnalytics();
   const facultiesResult = await db.query(
     "SELECT faculty_id, name_th, name_en FROM faculties ORDER BY name_th"
@@ -146,6 +165,7 @@ export default async function AdminDashboard() {
         <TabsList>
           <TabsTrigger value="reports">Reported Reviews</TabsTrigger>
           <TabsTrigger value="courses">Course Management</TabsTrigger>
+          <TabsTrigger value="tags">Tag Requests</TabsTrigger>
         </TabsList>
 
         <TabsContent value="reports" className="space-y-4">
@@ -181,6 +201,10 @@ export default async function AdminDashboard() {
 
         <TabsContent value="courses" className="space-y-4">
           <CourseManagement requests={pendingRequests} faculties={faculties} />
+        </TabsContent>
+
+        <TabsContent value="tags" className="space-y-4">
+          <TagRequestManagement requests={tagRequests} />
         </TabsContent>
       </Tabs>
     </div>

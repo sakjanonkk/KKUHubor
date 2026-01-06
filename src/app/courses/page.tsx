@@ -16,6 +16,7 @@ async function getCourses(queryStr?: string): Promise<Course[]> {
         f.name_th as "facultyNameTH",
         f.name_en as "facultyNameEN",
         f.color_code as "facultyColor",
+        c.tags,
         COALESCE(ROUND(AVG(r.rating), 1), 0)::float as "avgRating",
         COUNT(r.review_id)::int as "reviewCount"
       FROM courses c

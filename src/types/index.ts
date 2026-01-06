@@ -11,6 +11,7 @@ export interface Course {
   credit?: number;
   avgRating?: number;
   reviewCount?: number;
+  tags?: string[];
 }
 
 export interface Review {
