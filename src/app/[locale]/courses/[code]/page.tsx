@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Star } from "lucide-react";
 import { notFound } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 
 import { getCourseDistribution } from "@/actions/get-course-distribution";
 import { ScoreDistribution } from "@/components/features/courses/score-distribution";
@@ -59,6 +60,7 @@ async function getReviews(courseId: number): Promise<Review[]> {
 export default async function CourseDetailPage({ params }: PageProps) {
   const { code } = await params;
   const course = await getCourse(decodedCode(code));
+  const t = await getTranslations("CourseDetail");
 
   if (!course) {
     notFound();
@@ -89,7 +91,9 @@ export default async function CourseDetailPage({ params }: PageProps) {
           <div className="md:col-span-1 space-y-6">
             <Card className="bg-card/50 backdrop-blur-sm border-border/50">
               <CardHeader>
-                <CardTitle className="text-lg">Rating Distribution</CardTitle>
+                <CardTitle className="text-lg">
+                  {t("ratingDistribution")}
+                </CardTitle>
               </CardHeader>
               <CardContent>
                 <ScoreDistribution
@@ -104,7 +108,7 @@ export default async function CourseDetailPage({ params }: PageProps) {
           {/* Right Column: Reviews */}
           <div className="md:col-span-2">
             <h3 className="text-2xl font-bold mb-6 flex items-center gap-2">
-              Student Reviews
+              {t("studentReviews")}
               {reviews.length > 0 && (
                 <Badge variant="secondary" className="rounded-full">
                   {reviews.length}
@@ -117,10 +121,11 @@ export default async function CourseDetailPage({ params }: PageProps) {
                 <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mb-4">
                   <Star className="w-8 h-8 text-muted-foreground fill-muted-foreground/20" />
                 </div>
-                <h3 className="text-xl font-bold mb-2">No reviews yet</h3>
+                <h3 className="text-xl font-bold mb-2">
+                  {t("noReviewsTitle")}
+                </h3>
                 <p className="text-muted-foreground max-w-sm mx-auto mb-6">
-                  Be the first to share your experience with this course. Help
-                  others make better decisions!
+                  {t("noReviewsDesc")}
                 </p>
                 <ReviewForm courseId={course.id} />
               </div>

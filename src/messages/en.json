@@ -1,0 +1,80 @@
+{
+  "Navbar": {
+    "brand": "KKUHubor",
+    "home": "Home",
+    "courses": "Courses",
+    "bookmarks": "Bookmarks",
+    "admin": "Admin",
+    "theme": "Theme",
+    "identity": "Identity"
+  },
+  "Hero": {
+    "title": "Course Review",
+    "subtitle": "for KKU Students",
+    "description": "Discover reviews, find easy-A electives, and plan your study with real feedback from seniors.",
+    "searchPlaceholder": "Search by course code or name...",
+    "browseButton": "Browse All Courses",
+    "totalReviews": "Total Reviews",
+    "usersHelp": "Students Helped",
+    "coursesListed": "Courses Listed",
+    "badge": "The best way to review KKU courses",
+    "connectReview": "Connect. Review.",
+    "surviveSemester": "Survive Semester.",
+    "heroDescription": "Find honest reviews, share your experiences, and make better decisions for your academic journey at KKU.",
+    "trustedBy": "Trusted by 5,000+ students",
+    "anonymous": "100% Anonymous",
+    "statCourses": "Courses",
+    "statReviews": "Reviews",
+    "statUsers": "Users",
+    "statFree": "Free",
+    "statForever": "Forever",
+    "latestReviews": "Fresh from the Community",
+    "latestReviewsDesc": "See what students are saying about their classes right now.",
+    "featuresTitle": "Why use KKUHubor?",
+    "featuresDesc": "We built this platform to solve the biggest pain points of course registration.",
+    "feature1Title": "Easy Search",
+    "feature1Desc": "Quickly find any course by code or name to see all available reviews.",
+    "feature2Title": "Anonymous Reviews",
+    "feature2Desc": "Share your honest feedback without worry. Your identity is always protected.",
+    "feature3Title": "Better Decisions",
+    "feature3Desc": "Plan your semester with confidence using insights from other students."
+  },
+  "Common": {
+    "loading": "Loading...",
+    "searchPlaceholder": "Search for a course (e.g. EN813701)...",
+    "searchButton": "Search",
+    "searching": "Searching...",
+    "noResults": "No courses found. Press Enter to browse all."
+  },
+  "Courses": {
+    "title": "Available Courses",
+    "description": "Browse and review courses offered this semester. Find the perfect elective or check reviews for your major requirements.",
+    "activeFilters": "Active filters:",
+    "foundPrefix": "Found",
+    "courseUnit": "course",
+    "coursesUnit": "courses",
+    "noResultTitle": "No courses found",
+    "noResultDescription": "We couldn't find any courses matching your criteria. Try adjusting your filters or search terms.",
+    "clearFilters": "Clear all filters"
+  },
+  "Bookmarks": {
+    "title": "Bookmarked Courses",
+    "description": "Your saved courses for quick access. Bookmarks are stored locally in your browser so you can easily find them later.",
+    "clearAll": "Clear All",
+    "confirmClear": "Are you sure you want to clear all bookmarks?",
+    "failedTitle": "Failed to load courses",
+    "tryAgain": "Try Again",
+    "emptyTitle": "No bookmarks yet",
+    "emptyDescription": "Start building your schedule by clicking the heart icon on any course card.",
+    "browseButton": "Browse Courses",
+    "showingPrefix": "Showing",
+    "savedCourse": "saved course",
+    "savedCourses": "saved courses"
+  },
+  "CourseDetail": {
+    "ratingDistribution": "Rating Distribution",
+    "studentReviews": "Student Reviews",
+    "noReviewsTitle": "No reviews yet",
+    "noReviewsDesc": "Be the first to share your experience with this course. Help others make better decisions!"
+  }
+}

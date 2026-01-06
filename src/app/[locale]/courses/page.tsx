@@ -1,10 +1,11 @@
-import Link from "next/link";
+import { Link } from "@/i18n/routing";
+import { getTranslations } from "next-intl/server";
 import { getCourses, SortOption } from "@/actions/get-courses";
 import { CourseCard } from "@/components/features/courses/course-card";
 import { CourseRequestDialog } from "@/components/features/courses/course-request-dialog";
 import { CourseFilter } from "@/components/features/courses/course-filter";
 import { PageHeader } from "@/components/layout/page-header";
-import { CourseCategory, GradingType } from "@prisma/client";
+import { CourseCategory, GradingType } from "@/lib/enums";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Search } from "lucide-react";
@@ -31,6 +32,8 @@ export default async function CoursesPage({ searchParams }: CoursesPageProps) {
     hasReviews,
     sortBy,
   } = await searchParams;
+
+  const t = await getTranslations("Courses");
 
   // Validate Enums
   const validCategory = Object.values(CourseCategory).includes(
@@ -68,15 +71,12 @@ export default async function CoursesPage({ searchParams }: CoursesPageProps) {
     validGradingType && `Grading: ${validGradingType}`,
     validFacultyId && `Faculty ID: ${validFacultyId}`,
     validMinRating && `Rating ≥ ${validMinRating}`,
-    validHasReviews && "Has Reviews",
+    validHasReviews && t("activeFilters"), // Or logic for "Has Reviews" specific text
   ].filter(Boolean);
 
   return (
     <main className="min-h-screen bg-background">
-      <PageHeader
-        title="Available Courses"
-        description="Browse and review courses offered this semester. Find the perfect elective or check reviews for your major requirements."
-      >
+      <PageHeader title={t("title")} description={t("description")}>
         <div className="flex gap-3">
           <CourseRequestDialog />
           <CourseFilter />
@@ -88,7 +88,7 @@ export default async function CoursesPage({ searchParams }: CoursesPageProps) {
         {activeFilters.length > 0 && (
           <div className="flex flex-wrap gap-2 items-center mb-6 animate-in fade-in slide-in-from-top-2 duration-300">
             <span className="text-sm text-muted-foreground font-medium">
-              Active filters:
+              {t("activeFilters")}
             </span>
             {activeFilters.map((filter, index) => (
               <Badge
@@ -104,9 +104,9 @@ export default async function CoursesPage({ searchParams }: CoursesPageProps) {
 
         {/* Results Count */}
         <div className="text-sm text-muted-foreground mb-6 font-medium">
-          Found{" "}
+          {t("foundPrefix")}{" "}
           <span className="text-foreground font-bold">{courses.length}</span>{" "}
-          course{courses.length !== 1 ? "s" : ""}
+          {courses.length !== 1 ? t("coursesUnit") : t("courseUnit")}
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -125,13 +125,12 @@ export default async function CoursesPage({ searchParams }: CoursesPageProps) {
               <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mb-4">
                 <Search className="w-8 h-8 text-muted-foreground" />
               </div>
-              <h3 className="text-xl font-bold mb-2">No courses found</h3>
+              <h3 className="text-xl font-bold mb-2">{t("noResultTitle")}</h3>
               <p className="text-muted-foreground max-w-sm mx-auto mb-6">
-                We couldn't find any courses matching your criteria. Try
-                adjusting your filters or search terms.
+                {t("noResultDescription")}
               </p>
               <Button variant="outline" asChild>
-                <Link href="/courses">Clear all filters</Link>
+                <Link href="/courses">{t("clearFilters")}</Link>
               </Button>
             </div>
           )}

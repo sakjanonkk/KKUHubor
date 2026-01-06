@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useFormatter } from "next-intl";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -20,6 +21,7 @@ interface ReportRowProps {
 
 export function ReportRow({ report }: ReportRowProps) {
   const router = useRouter();
+  const format = useFormatter();
   const [loading, setLoading] = useState(false);
 
   async function handleKeepReview() {
@@ -73,7 +75,11 @@ export function ReportRow({ report }: ReportRowProps) {
       </TableCell>
       <TableCell>{report.reason}</TableCell>
       <TableCell className="whitespace-nowrap">
-        {new Date(report.report_date).toLocaleDateString()}
+        {format.dateTime(new Date(report.report_date), {
+          year: "numeric",
+          month: "numeric",
+          day: "numeric",
+        })}
       </TableCell>
       <TableCell className="text-right space-x-2">
         <Button

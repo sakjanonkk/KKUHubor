@@ -1,12 +1,18 @@
 "use client";
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { Link, usePathname } from "@/i18n/routing";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { ModeToggle } from "@/components/mode-toggle";
 import { Separator } from "@/components/ui/separator";
-import { Menu, Home, BookOpen, ShieldCheck, Heart } from "lucide-react";
+import {
+  Menu,
+  Home,
+  BookOpen,
+  ShieldCheck,
+  Heart,
+  Languages,
+} from "lucide-react";
 import {
   Sheet,
   SheetContent,
@@ -16,6 +22,8 @@ import {
   SheetClose,
 } from "@/components/ui/sheet";
 import { UserIdentityDialog } from "@/components/features/user/user-identity-dialog";
+import { LanguageSwitcher } from "@/components/language-switcher";
+import { useTranslations } from "next-intl";
 
 interface NavbarProps {
   isAdmin?: boolean;
@@ -23,12 +31,15 @@ interface NavbarProps {
 
 export function Navbar({ isAdmin = false }: NavbarProps) {
   const pathname = usePathname();
+  const t = useTranslations("Navbar");
 
   const navItems = [
-    { name: "Home", href: "/", icon: Home },
-    { name: "Courses", href: "/courses", icon: BookOpen },
-    { name: "Bookmarks", href: "/bookmarks", icon: Heart },
-    ...(isAdmin ? [{ name: "Admin", href: "/admin", icon: ShieldCheck }] : []),
+    { name: t("home"), href: "/", icon: Home },
+    { name: t("courses"), href: "/courses", icon: BookOpen },
+    { name: t("bookmarks"), href: "/bookmarks", icon: Heart },
+    ...(isAdmin
+      ? [{ name: t("admin"), href: "/admin", icon: ShieldCheck }]
+      : []),
   ];
 
   return (
@@ -36,7 +47,7 @@ export function Navbar({ isAdmin = false }: NavbarProps) {
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         {/* Logo */}
         <Link href="/" className="font-bold text-xl tracking-tight">
-          KKUHubor
+          {t("brand")}
         </Link>
 
         {/* Desktop Navigation */}
@@ -56,9 +67,11 @@ export function Navbar({ isAdmin = false }: NavbarProps) {
             </Link>
           ))}
           <UserIdentityDialog />
+          <LanguageSwitcher />
           <ModeToggle />
         </div>
 
+        {/* Mobile Navigation */}
         <div className="md:hidden">
           <Sheet>
             <SheetTrigger asChild>
@@ -85,7 +98,7 @@ export function Navbar({ isAdmin = false }: NavbarProps) {
                     <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
                       <BookOpen className="h-5 w-5" />
                     </div>
-                    KKUHubor
+                    {t("brand")}
                   </SheetTitle>
                 </SheetHeader>
 
@@ -129,9 +142,21 @@ export function Navbar({ isAdmin = false }: NavbarProps) {
                     <div className="flex items-center justify-between p-3 rounded-xl bg-muted/30 border border-border/50">
                       <div className="flex items-center gap-3">
                         <div className="p-2 rounded-lg bg-background shadow-sm">
+                          <Languages className="h-4 w-4 text-orange-500" />
+                        </div>
+                        <span className="font-medium text-sm">Language</span>
+                      </div>
+                      <LanguageSwitcher />
+                    </div>
+
+                    <div className="flex items-center justify-between p-3 rounded-xl bg-muted/30 border border-border/50">
+                      <div className="flex items-center gap-3">
+                        <div className="p-2 rounded-lg bg-background shadow-sm">
                           <Heart className="h-4 w-4 text-rose-500" />
                         </div>
-                        <span className="font-medium text-sm">Theme</span>
+                        <span className="font-medium text-sm">
+                          {t("theme")}
+                        </span>
                       </div>
                       <ModeToggle />
                     </div>
@@ -141,7 +166,9 @@ export function Navbar({ isAdmin = false }: NavbarProps) {
                         <div className="p-2 rounded-lg bg-background shadow-sm">
                           <ShieldCheck className="h-4 w-4 text-emerald-500" />
                         </div>
-                        <span className="font-medium text-sm">My Identity</span>
+                        <span className="font-medium text-sm">
+                          {t("identity")}
+                        </span>
                       </div>
                       <UserIdentityDialog />
                     </div>

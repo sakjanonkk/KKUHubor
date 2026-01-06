@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Search, Loader2, BookOpen } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useTranslations } from "next-intl";
 
 interface SearchResult {
   course_code: string;
@@ -91,13 +92,15 @@ export function SearchBar() {
     setQuery("");
   };
 
+  const t = useTranslations("Common");
+
   return (
     <div className="relative w-full max-w-xl" ref={dropdownRef}>
       <div className="flex items-center gap-2">
         <div className="relative w-full">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
-            placeholder="Search for a course (e.g. EN813701)..."
+            placeholder={t("searchPlaceholder")}
             className="pl-10 h-12 text-base shadow-sm"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
@@ -108,7 +111,7 @@ export function SearchBar() {
           />
         </div>
         <Button size="lg" className="h-12 px-8" onClick={handleSearch}>
-          Search
+          {t("searchButton")}
         </Button>
       </div>
 
@@ -119,7 +122,7 @@ export function SearchBar() {
             {loading ? (
               <div className="flex items-center justify-center p-4 text-sm text-muted-foreground">
                 <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                Searching...
+                {t("searching")}
               </div>
             ) : results.length > 0 ? (
               <div className="flex flex-col gap-1">
@@ -146,7 +149,7 @@ export function SearchBar() {
               </div>
             ) : (
               <div className="p-4 text-center text-sm text-muted-foreground">
-                No courses found. Press Enter to browse all.
+                {t("noResults")}
               </div>
             )}
           </div>

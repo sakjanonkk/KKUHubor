@@ -1,7 +1,7 @@
 "use server";
 
 import { prisma } from "@/lib/database";
-import { CourseCategory, GradingType, Prisma } from "@prisma/client";
+import { CourseCategory, GradingType } from "@/lib/enums";
 
 export type Course = {
   id: number;
@@ -45,7 +45,7 @@ export async function getCourses(
   sortBy?: SortOption
 ): Promise<Course[]> {
   try {
-    const whereClause: Prisma.CourseWhereInput = {};
+    const whereClause: any = {};
 
     // Text search
     if (queryStr) {
@@ -114,19 +114,21 @@ export async function getCourses(
 
     // Apply post-processing filters
     if (hasReviews) {
-      formattedCourses = formattedCourses.filter((c) => c.reviewCount > 0);
+      formattedCourses = formattedCourses.filter(
+        (c: Course) => c.reviewCount > 0
+      );
     }
 
     if (minRating && minRating > 0) {
       formattedCourses = formattedCourses.filter(
-        (c) => c.avgRating >= minRating
+        (c: Course) => c.avgRating >= minRating
       );
     }
 
     // Apply sorting
     const sortOption = sortBy || "reviews_desc";
 
-    formattedCourses.sort((a, b) => {
+    formattedCourses.sort((a: Course, b: Course) => {
       switch (sortOption) {
         case "reviews_desc":
           if (b.reviewCount !== a.reviewCount) {
