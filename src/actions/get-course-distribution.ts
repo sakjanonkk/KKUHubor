@@ -18,7 +18,7 @@ export async function getCourseDistribution(courseId: number): Promise<{
   }
 
   try {
-    const groupedRatings = await prisma.review.groupBy({
+    const groupedRatings = await prisma.reviews.groupBy({
       by: ["rating"],
       where: {
         course_id: courseId,
