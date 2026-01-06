@@ -13,12 +13,14 @@ import { Course } from "@/types";
 import { Star } from "lucide-react";
 import { AddTagDialog } from "./add-tag-dialog";
 import { BookmarkButton } from "./bookmark-button";
+import { useLocale } from "next-intl";
 
 interface CourseCardProps {
   course: Course;
 }
 
 export function CourseCard({ course }: CourseCardProps) {
+  const locale = useLocale();
   const hasReviews = (course.reviewCount || 0) > 0;
 
   return (
@@ -111,7 +113,7 @@ export function CourseCard({ course }: CourseCardProps) {
           className="w-full"
           asChild
         >
-          <a href={`/courses/${course.code}`}>
+          <a href={`/${locale}/courses/${course.code}`}>
             {hasReviews ? "View Reviews" : "Write First Review"}
           </a>
         </Button>

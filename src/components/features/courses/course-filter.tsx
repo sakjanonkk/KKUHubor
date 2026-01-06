@@ -42,6 +42,7 @@ import {
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
+import { useLocale } from "next-intl";
 
 // Filter options
 const CATEGORIES = [
@@ -118,6 +119,7 @@ interface Faculty {
 export function CourseFilter() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const locale = useLocale();
 
   const [category, setCategory] = useState<string>(
     searchParams.get("category") || ""
@@ -188,7 +190,7 @@ export function CourseFilter() {
     if (sortBy && sortBy !== "reviews_desc") params.set("sortBy", sortBy);
     else params.delete("sortBy");
 
-    router.push(`/courses?${params.toString()}`);
+    router.push(`/${locale}/courses?${params.toString()}`);
     setIsOpen(false);
   };
 
@@ -204,7 +206,7 @@ export function CourseFilter() {
     const query = searchParams.get("query");
     if (query) params.set("query", query);
 
-    router.push(`/courses?${params.toString()}`);
+    router.push(`/${locale}/courses?${params.toString()}`);
     setIsOpen(false);
   };
 

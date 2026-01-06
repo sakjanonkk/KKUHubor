@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Search, Loader2, BookOpen } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 
 interface SearchResult {
   course_code: string;
@@ -16,6 +16,7 @@ interface SearchResult {
 
 export function SearchBar() {
   const router = useRouter();
+  const locale = useLocale();
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<SearchResult[]>([]);
   const [showDropdown, setShowDropdown] = useState(false);
@@ -74,9 +75,9 @@ export function SearchBar() {
   const handleSearch = () => {
     setShowDropdown(false);
     if (query.trim()) {
-      router.push(`/courses?query=${encodeURIComponent(query)}`);
+      router.push(`/${locale}/courses?query=${encodeURIComponent(query)}`);
     } else {
-      router.push("/courses");
+      router.push(`/${locale}/courses`);
     }
   };
 
@@ -87,7 +88,7 @@ export function SearchBar() {
   };
 
   const handleSelectResult = (code: string) => {
-    router.push(`/courses/${code}`);
+    router.push(`/${locale}/courses/${code}`);
     setShowDropdown(false);
     setQuery("");
   };
