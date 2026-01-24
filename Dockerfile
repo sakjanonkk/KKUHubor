@@ -55,8 +55,8 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 COPY --from=builder --chown=nextjs:nodejs /app/prisma ./prisma
 COPY --from=builder --chown=nextjs:nodejs /app/prisma.config.ts ./
 
-# Install Prisma CLI and dotenv for migrations (required by prisma.config.ts)
-RUN npm install -g prisma dotenv
+# Install Prisma CLI globally and dotenv locally for migrations
+RUN npm install -g prisma && npm install dotenv
 
 USER nextjs
 
