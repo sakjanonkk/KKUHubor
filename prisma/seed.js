@@ -1,17 +1,17 @@
 require('dotenv').config();
 const { PrismaClient } = require("@prisma/client");
-const { PrismaNeon } = require("@prisma/adapter-neon");
-const { Pool } = require("@neondatabase/serverless");
-const ws = require("ws");
-
-// Configure Neon to use websocket
-const { neonConfig } = require('@neondatabase/serverless');
-neonConfig.webSocketConstructor = ws;
+const { PrismaPg } = require("@prisma/adapter-pg");
 
 const connectionString = process.env.DATABASE_URL;
 
-const pool = new Pool({ connectionString });
-const adapter = new PrismaNeon(pool);
+if (!connectionString) {
+    console.error("ERROR: DATABASE_URL is not set!");
+    process.exit(1);
+}
+
+console.log("DATABASE_URL is set, connecting to PostgreSQL...");
+
+const adapter = new PrismaPg({ connectionString });
 const prisma = new PrismaClient({ adapter });
 
 async function main() {
@@ -125,6 +125,7 @@ async function main() {
 main()
     .then(async () => {
         await prisma.$disconnect();
+        console.log("Database seeding completed!");
     })
     .catch(async (e) => {
         console.error(e);

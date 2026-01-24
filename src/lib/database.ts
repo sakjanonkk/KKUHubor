@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { PrismaNeon } from "@prisma/adapter-neon";
+import { PrismaPg } from "@prisma/adapter-pg";
 
 const globalForPrisma = global as unknown as {
   prismaV4: PrismaClient | undefined;
@@ -14,9 +14,9 @@ function createPrismaClient(): PrismaClient {
     throw new Error("DATABASE_URL is missing in environment variables");
   }
 
-  console.log("[database.ts] Creating new PrismaClient with Neon adapter...");
+  console.log("[database.ts] Creating new PrismaClient with pg adapter...");
 
-  const adapter = new PrismaNeon({ connectionString });
+  const adapter = new PrismaPg({ connectionString });
 
   return new PrismaClient({
     adapter,
