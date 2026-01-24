@@ -1,6 +1,7 @@
 require('dotenv').config();
 const { PrismaClient } = require("@prisma/client");
 const { PrismaPg } = require("@prisma/adapter-pg");
+const bcrypt = require("bcrypt");
 
 const connectionString = process.env.DATABASE_URL;
 
@@ -14,21 +15,30 @@ console.log("DATABASE_URL is set, connecting to PostgreSQL...");
 const adapter = new PrismaPg({ connectionString });
 const prisma = new PrismaClient({ adapter });
 
+const SALT_ROUNDS = 10;
+
+async function hashPassword(password) {
+    return await bcrypt.hash(password, SALT_ROUNDS);
+}
+
 async function main() {
     console.log("Seeding database...");
 
     // 1. Create Admin User
     const adminEmail = "admin@example.com";
     const adminUsername = "admin";
+    const adminPassword = await hashPassword("admin");
 
     try {
         const admin = await prisma.users.upsert({
             where: { email: adminEmail },
-            update: {},
+            update: {
+                password_hash: adminPassword, // Update password to hashed version
+            },
             create: {
                 username: adminUsername,
                 email: adminEmail,
-                password_hash: "admin", // Plain text as per project config
+                password_hash: adminPassword,
                 role: "admin",
                 image: "https://ui-avatars.com/api/?name=Admin&background=random",
             },
@@ -65,14 +75,17 @@ async function main() {
     console.log("Faculties seeded");
 
     // 3. Create Basic Users (Optional)
+    const studentPassword = await hashPassword("1234");
     try {
         const user1 = await prisma.users.upsert({
             where: { email: "student1@example.com" },
-            update: {},
+            update: {
+                password_hash: studentPassword,
+            },
             create: {
                 username: "student1",
                 email: "student1@example.com",
-                password_hash: "1234",
+                password_hash: studentPassword,
                 role: "user",
             }
         });

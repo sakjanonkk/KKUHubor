@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import db from "@/lib/db";
+import bcrypt from "bcrypt";
 
 export async function POST(req: Request) {
   try {
@@ -12,18 +13,22 @@ export async function POST(req: Request) {
 
     const user = result.rows[0];
 
-    // Simple plain text check for this implementation as established
-    if (user && user.password_hash === password && user.role === "admin") {
-      // Set HTTP-only cookie
-      const cookieStore = await cookies();
-      cookieStore.set("admin_session", "true", {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        path: "/",
-        maxAge: 60 * 60 * 24, // 1 day
-      });
+    if (user && user.role === "admin") {
+      // Compare password with bcrypt hash
+      const isValidPassword = await bcrypt.compare(password, user.password_hash);
 
-      return NextResponse.json({ success: true });
+      if (isValidPassword) {
+        // Set HTTP-only cookie
+        const cookieStore = await cookies();
+        cookieStore.set("admin_session", "true", {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === "production",
+          path: "/",
+          maxAge: 60 * 60 * 24, // 1 day
+        });
+
+        return NextResponse.json({ success: true });
+      }
     }
 
     return NextResponse.json(
