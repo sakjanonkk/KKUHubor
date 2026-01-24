@@ -15,6 +15,13 @@ WORKDIR /app
 # Copy only package files first (better caching)
 COPY package.json package-lock.json* ./
 
+# Copy prisma files for postinstall script (prisma generate)
+COPY prisma ./prisma
+COPY prisma.config.ts ./
+
+# Set dummy DATABASE_URL for prisma generate during install
+ENV DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy"
+
 # Install dependencies
 RUN npm install && npm cache clean --force
 
