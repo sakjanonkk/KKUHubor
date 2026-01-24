@@ -7,6 +7,7 @@ WORKDIR /app
 # Install dependencies based on the preferred package manager
 COPY package.json package-lock.json* ./
 COPY ./prisma ./prisma
+COPY prisma.config.ts ./
 RUN npm install
 
 # Rebuild the source code only when needed
@@ -50,11 +51,12 @@ RUN chown nextjs:nodejs .next
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
-# Copy Prisma schema for migrations
+# Copy Prisma schema and config for migrations (Prisma 7)
 COPY --from=builder --chown=nextjs:nodejs /app/prisma ./prisma
+COPY --from=builder --chown=nextjs:nodejs /app/prisma.config.ts ./
 
-# Install Prisma CLI for migrations
-RUN npm install -g prisma
+# Install Prisma CLI and dotenv for migrations (required by prisma.config.ts)
+RUN npm install -g prisma dotenv
 
 USER nextjs
 
