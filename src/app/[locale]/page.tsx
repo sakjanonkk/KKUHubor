@@ -91,7 +91,7 @@ export default async function Home() {
             </p>
 
             <div className="flex flex-col items-center justify-center gap-6 max-w-2xl mx-auto mb-16 w-full">
-              <div className="w-full relative group">
+              <div className="w-full max-w-xl relative group">
                 <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 to-blue-600/20 rounded-lg blur opacity-50 group-hover:opacity-100 transition duration-500" />
                 <div className="relative">
                   <SearchBar />

@@ -15,6 +15,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { useTranslations } from "next-intl";
 
 interface AddTagDialogProps {
   courseId: number;
@@ -24,6 +25,7 @@ export function AddTagDialog({ courseId }: AddTagDialogProps) {
   const [open, setOpen] = useState(false);
   const [tag, setTag] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const t = useTranslations("AddTag");
   // Router refresh removed as per requirements
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -33,7 +35,7 @@ export function AddTagDialog({ courseId }: AddTagDialogProps) {
     if (!trimmedTag) return;
 
     if (trimmedTag.length > 20) {
-      toast.error("Tag must be 20 characters or less.");
+      toast.error(t("errorLength"));
       return;
     }
 
@@ -56,7 +58,7 @@ export function AddTagDialog({ courseId }: AddTagDialogProps) {
       if (!response.ok) {
         throw new Error(data.error || "Failed to submit request");
       } else {
-        toast.success("Request submitted! Waiting for admin approval.");
+        toast.success(t("successToast"));
         setTag("");
         setOpen(false);
       }
@@ -76,17 +78,16 @@ export function AddTagDialog({ courseId }: AddTagDialogProps) {
           variant="ghost"
           size="icon"
           className="h-6 w-6 rounded-full hover:bg-muted ml-1"
-          title="Add Tag"
+          title={t("button")}
         >
           <Plus className="h-3 w-3" />
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Add Course Tag</DialogTitle>
+          <DialogTitle>{t("title")}</DialogTitle>
           <DialogDescription>
-            Add a short tag to describe this course (e.g., "Easy A", "Check
-            Name"). Your tag will be reviewed by an admin.
+            {t("description")}
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit}>
@@ -95,7 +96,7 @@ export function AddTagDialog({ courseId }: AddTagDialogProps) {
               id="tag"
               value={tag}
               onChange={(e) => setTag(e.target.value)}
-              placeholder="Enter tag (max 20 chars)..."
+              placeholder={t("placeholder")}
               maxLength={20}
               className="col-span-3"
               disabled={isLoading}
@@ -104,7 +105,7 @@ export function AddTagDialog({ courseId }: AddTagDialogProps) {
           </div>
           <DialogFooter>
             <Button type="submit" disabled={isLoading || !tag.trim()}>
-              {isLoading ? "Submitting..." : "Submit Tag"}
+              {isLoading ? t("submitting") : t("submit")}
             </Button>
           </DialogFooter>
         </form>
@@ -112,3 +113,4 @@ export function AddTagDialog({ courseId }: AddTagDialogProps) {
     </Dialog>
   );
 }
+

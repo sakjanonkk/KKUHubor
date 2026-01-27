@@ -32,22 +32,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { toast } from "sonner"; // Using sonner as requested/installed
-
-const formSchema = z.object({
-  reviewerName: z.string().optional(),
-  rating: z
-    .string()
-    .refine(
-      (val) => !isNaN(Number(val)) && Number(val) >= 1 && Number(val) <= 5,
-      {
-        message: "Rating must be between 1 and 5",
-      }
-    ),
-  gradeReceived: z.string().optional(),
-  semester: z.string().min(1, "Semester is required (e.g., 1/2024)"),
-  content: z.string().min(10, "Review must be at least 10 characters"),
-});
+import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 
 interface ReviewFormProps {
   courseId: number;
@@ -56,10 +42,28 @@ interface ReviewFormProps {
 export function ReviewForm({ courseId }: ReviewFormProps) {
   const [open, setOpen] = useState(false);
   const router = useRouter();
+  const t = useTranslations("Review.Form");
 
   const { name: storedName } = useUserIdentity();
 
-  const form = useForm<z.infer<typeof formSchema>>({
+  const formSchema = z.object({
+    reviewerName: z.string().optional(),
+    rating: z
+      .string()
+      .refine(
+        (val) => !isNaN(Number(val)) && Number(val) >= 1 && Number(val) <= 5,
+        {
+          message: t("validation.rating"),
+        }
+      ),
+    gradeReceived: z.string().optional(),
+    semester: z.string().min(1, t("validation.semester")),
+    content: z.string().min(10, t("validation.contentLength")),
+  });
+
+  type FormValues = z.infer<typeof formSchema>;
+
+  const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       reviewerName: storedName || "",
@@ -77,7 +81,7 @@ export function ReviewForm({ courseId }: ReviewFormProps) {
     }
   }, [storedName, form]);
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: FormValues) {
     try {
       const response = await fetch("/api/reviews", {
         method: "POST",
@@ -96,12 +100,12 @@ export function ReviewForm({ courseId }: ReviewFormProps) {
         throw new Error("Failed to submit review");
       }
 
-      toast.success("Review submitted successfully!");
+      toast.success(t("successToast"));
       setOpen(false);
       form.reset();
       router.refresh();
     } catch (error) {
-      toast.error("Something went wrong. Please try again.");
+      toast.error(t("errorToast"));
       console.error(error);
     }
   }
@@ -109,13 +113,13 @@ export function ReviewForm({ courseId }: ReviewFormProps) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>Write a Review</Button>
+        <Button>{t("button")}</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Write a Review</DialogTitle>
+          <DialogTitle>{t("title")}</DialogTitle>
           <DialogDescription>
-            Share your experience with this course. Reviews are anonymous.
+            {t("subtitle")}
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -125,9 +129,9 @@ export function ReviewForm({ courseId }: ReviewFormProps) {
               name="reviewerName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Name (Optional)</FormLabel>
+                  <FormLabel>{t("nameLabel")}</FormLabel>
                   <FormControl>
-                    <Input placeholder="Anonymous" {...field} />
+                    <Input placeholder={t("namePlaceholder")} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -139,20 +143,20 @@ export function ReviewForm({ courseId }: ReviewFormProps) {
                 name="rating"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Rating (1-5)</FormLabel>
+                    <FormLabel>{t("ratingLabel")}</FormLabel>
                     <Select
                       onValueChange={field.onChange}
                       defaultValue={field.value}
                     >
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Select rating" />
+                          <SelectValue placeholder={t("selectRating")} />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
                         {[5, 4, 3, 2, 1].map((rating) => (
                           <SelectItem key={rating} value={rating.toString()}>
-                            {rating} Stars
+                            {rating} {t("ratingSuffix")}
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -166,14 +170,14 @@ export function ReviewForm({ courseId }: ReviewFormProps) {
                 name="gradeReceived"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Grade (Optional)</FormLabel>
+                    <FormLabel>{t("gradeLabel")}</FormLabel>
                     <Select
                       onValueChange={field.onChange}
                       defaultValue={field.value}
                     >
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Select" />
+                          <SelectValue placeholder={t("select")} />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
@@ -196,9 +200,9 @@ export function ReviewForm({ courseId }: ReviewFormProps) {
               name="semester"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Semester</FormLabel>
+                  <FormLabel>{t("semesterLabel")}</FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g. 1/2024" {...field} />
+                    <Input placeholder={t("semesterPlaceholder")} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -209,10 +213,10 @@ export function ReviewForm({ courseId }: ReviewFormProps) {
               name="content"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Review</FormLabel>
+                  <FormLabel>{t("contentLabel")}</FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder="Tell us about the course content, difficulty, etc."
+                      placeholder={t("contentPlaceholder")}
                       {...field}
                     />
                   </FormControl>
@@ -221,7 +225,7 @@ export function ReviewForm({ courseId }: ReviewFormProps) {
               )}
             />
             <Button type="submit" className="w-full">
-              Submit Review
+              {t("submit")}
             </Button>
           </form>
         </Form>

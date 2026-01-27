@@ -7,6 +7,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Loader2, Send } from "lucide-react";
 import { toast } from "sonner";
 import { useUserIdentity } from "@/hooks/use-user-identity";
+import { useTranslations } from "next-intl";
 
 interface Comment {
   comment_id: number;
@@ -24,6 +25,7 @@ export function CommentSection({ reviewId }: CommentSectionProps) {
   const [loading, setLoading] = useState(true);
   const [newComment, setNewComment] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const t = useTranslations("Comments");
 
   useEffect(() => {
     fetchComments();
@@ -64,12 +66,12 @@ export function CommentSection({ reviewId }: CommentSectionProps) {
         const savedComment = await res.json();
         setComments((prev) => [...prev, savedComment]);
         setNewComment("");
-        toast.success("Comment posted!");
+        toast.success(t("success"));
       } else {
-        toast.error("Failed to post comment");
+        toast.error(t("error"));
       }
     } catch (error) {
-      toast.error("Error posting comment");
+      toast.error(t("error"));
     } finally {
       setSubmitting(false);
     }
@@ -77,7 +79,7 @@ export function CommentSection({ reviewId }: CommentSectionProps) {
 
   return (
     <div className="mt-4 pt-4 border-t">
-      <h4 className="text-sm font-semibold mb-3">Comments</h4>
+      <h4 className="text-sm font-semibold mb-3">{t("title")}</h4>
 
       {/* Comment List */}
       <div className="mb-4 space-y-3">
@@ -109,7 +111,7 @@ export function CommentSection({ reviewId }: CommentSectionProps) {
           </div>
         ) : (
           <p className="text-xs text-muted-foreground italic">
-            No comments yet. Be the first!
+            {t("noComments")}
           </p>
         )}
       </div>
@@ -117,7 +119,7 @@ export function CommentSection({ reviewId }: CommentSectionProps) {
       {/* Input */}
       <div className="flex gap-2">
         <Input
-          placeholder="Write a comment..."
+          placeholder={t("placeholder")}
           value={newComment}
           onChange={(e) => setNewComment(e.target.value)}
           className="h-8 text-sm"

@@ -19,6 +19,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
+import { useTranslations } from "next-intl";
 
 interface ReportDialogProps {
   reviewId: number;
@@ -33,10 +34,11 @@ export function ReportDialog({
 }: ReportDialogProps) {
   const [reason, setReason] = useState("");
   const [loading, setLoading] = useState(false);
+  const t = useTranslations("Report");
 
   async function handleSubmit() {
     if (!reason) {
-      toast.error("Please select a reason");
+      toast.error(t("selectReasonError"));
       return;
     }
 
@@ -50,10 +52,10 @@ export function ReportDialog({
 
       if (!res.ok) throw new Error("Failed to submit report");
 
-      toast.success("Review reported. Thank you for your feedback.");
+      toast.success(t("success"));
       onOpenChange(false);
     } catch (error) {
-      toast.error("Failed to report review. Please try again.");
+      toast.error(t("error"));
     } finally {
       setLoading(false);
     }
@@ -63,38 +65,44 @@ export function ReportDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Report Review</DialogTitle>
+          <DialogTitle>{t("title")}</DialogTitle>
           <DialogDescription>
-            Why are you reporting this review? We will review your report.
+            {t("description")}
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
           <div className="grid gap-2">
-            <Label htmlFor="reason">Reason</Label>
+            <Label htmlFor="reason">{t("reason")}</Label>
             <Select onValueChange={setReason}>
               <SelectTrigger id="reason">
-                <SelectValue placeholder="Select a reason" />
+                <SelectValue placeholder={t("selectReason")} />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="Inappropriate Content">
-                  Inappropriate Content
+                  {t("reasons.inappropriate")}
                 </SelectItem>
-                <SelectItem value="Spam">Spam/Bot</SelectItem>
+                <SelectItem value="Spam">
+                  {t("reasons.spam")}
+                </SelectItem>
                 <SelectItem value="Misleading Information">
-                  Misleading Information
+                  {t("reasons.misleading")}
                 </SelectItem>
-                <SelectItem value="Harassment">Harassment</SelectItem>
-                <SelectItem value="Other">Other</SelectItem>
+                <SelectItem value="Harassment">
+                  {t("reasons.harassment")}
+                </SelectItem>
+                <SelectItem value="Other">
+                  {t("reasons.other")}
+                </SelectItem>
               </SelectContent>
             </Select>
           </div>
         </div>
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)}>
-            Cancel
+            {t("cancel")}
           </Button>
           <Button onClick={handleSubmit} disabled={loading}>
-            {loading ? "Submitting..." : "Submit Report"}
+            {loading ? t("submitting") : t("submit")}
           </Button>
         </DialogFooter>
       </DialogContent>

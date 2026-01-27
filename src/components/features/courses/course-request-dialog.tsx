@@ -38,6 +38,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { cn } from "@/lib/utils";
+import { useTranslations } from "next-intl";
 
 const requestSchema = z.object({
   courseCode: z.string().min(1, "Course code is required"),
@@ -57,6 +58,7 @@ export function CourseRequestDialog() {
   const [open, setOpen] = useState(false);
   const [faculties, setFaculties] = useState<Faculty[]>([]);
   const [loadingFaculties, setLoadingFaculties] = useState(false);
+  const t = useTranslations("CourseRequest");
 
   // Combobox state
   const [openCombobox, setOpenCombobox] = useState(false);
@@ -106,11 +108,11 @@ export function CourseRequestDialog() {
 
       if (!response.ok) throw new Error("Failed to submit request");
 
-      toast.success("Request submitted! Admins will review it shortly.");
+      toast.success(t("successToast"));
       setOpen(false);
       form.reset();
     } catch (error) {
-      toast.error("Something went wrong. Please try again.");
+      toast.error(t("errorToast"));
     }
   }
 
@@ -122,7 +124,7 @@ export function CourseRequestDialog() {
           className="gap-2 border-neutral-200 dark:border-neutral-800 hover:border-primary/50 hover:bg-primary/5 transition-all duration-300"
         >
           <PlusCircle className="h-4 w-4" />
-          Request a Course
+          {t("button")}
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto border-none shadow-2xl bg-background/95 backdrop-blur-xl">
@@ -135,11 +137,10 @@ export function CourseRequestDialog() {
             <div className="p-2 rounded-lg bg-primary/10 text-primary">
               <PlusCircle className="h-6 w-6" />
             </div>
-            Request a New Course
+            {t("title")}
           </DialogTitle>
           <DialogDescription className="text-base text-muted-foreground/80">
-            Can't find what you're looking for? Submit a request and we'll add
-            it to the database.
+            {t("description")}
           </DialogDescription>
         </DialogHeader>
 
@@ -155,11 +156,11 @@ export function CourseRequestDialog() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="font-semibold">
-                      Course Code *
+                      {t("courseCode")} *
                     </FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="e.g. 01234567"
+                        placeholder={t("courseCodePlaceholder")}
                         {...field}
                         className="h-11 bg-muted/30 border-muted-foreground/20 focus-visible:ring-primary/30 text-lg font-mono tracking-wide"
                       />
@@ -176,11 +177,11 @@ export function CourseRequestDialog() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="font-semibold">
-                        Thai Name *
+                        {t("thaiName")} *
                       </FormLabel>
                       <FormControl>
                         <Input
-                          placeholder="e.g. การเขียนโปรแกรม"
+                          placeholder={t("thaiNamePlaceholder")}
                           {...field}
                           className="h-11 bg-muted/30 border-muted-foreground/20 focus-visible:ring-primary/30"
                         />
@@ -195,11 +196,11 @@ export function CourseRequestDialog() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="font-semibold">
-                        English Name
+                        {t("englishName")}
                       </FormLabel>
                       <FormControl>
                         <Input
-                          placeholder="e.g. Computer Programming"
+                          placeholder={t("englishNamePlaceholder")}
                           {...field}
                           className="h-11 bg-muted/30 border-muted-foreground/20 focus-visible:ring-primary/30"
                         />
@@ -215,7 +216,7 @@ export function CourseRequestDialog() {
                 name="facultyId"
                 render={({ field }) => (
                   <FormItem className="flex flex-col">
-                    <FormLabel className="font-semibold">Faculty *</FormLabel>
+                    <FormLabel className="font-semibold">{t("faculty")} *</FormLabel>
                     <Popover open={openCombobox} onOpenChange={setOpenCombobox}>
                       <PopoverTrigger asChild>
                         <FormControl>
@@ -230,9 +231,9 @@ export function CourseRequestDialog() {
                           >
                             {field.value
                               ? faculties.find(
-                                  (f) => f.faculty_id.toString() === field.value
-                                )?.name_th
-                              : "Select Faculty"}
+                                (f) => f.faculty_id.toString() === field.value
+                              )?.name_th
+                              : t("selectFaculty")}
                             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                           </Button>
                         </FormControl>
@@ -242,9 +243,9 @@ export function CourseRequestDialog() {
                         align="start"
                       >
                         <Command>
-                          <CommandInput placeholder="Search faculty..." />
+                          <CommandInput placeholder={t("searchFaculty")} />
                           <CommandList>
-                            <CommandEmpty>No faculty found.</CommandEmpty>
+                            <CommandEmpty>{t("noFacultyFound")}</CommandEmpty>
                             <CommandGroup>
                               {faculties.map((faculty) => (
                                 <CommandItem
@@ -289,7 +290,7 @@ export function CourseRequestDialog() {
               {isSubmitting && (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               )}
-              Submit Request
+              {t("submit")}
             </Button>
           </form>
         </Form>

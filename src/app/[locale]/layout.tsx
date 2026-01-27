@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import { cookies } from "next/headers"; // Keep this if used, otherwise remove
+import { cookies } from "next/headers";
 import "../globals.css";
 import { Navbar } from "@/components/layout/navbar";
 import { Toaster } from "@/components/ui/sonner";
@@ -45,6 +45,10 @@ export default async function RootLayout({
   // side is the easiest way to get started
   const messages = await getMessages();
 
+  // Check if admin is logged in
+  const cookieStore = await cookies();
+  const isAdmin = !!cookieStore.get("admin_session");
+
   return (
     <html lang={locale} suppressHydrationWarning>
       <body className="font-sans antialiased">
@@ -57,7 +61,7 @@ export default async function RootLayout({
           >
             <BookmarkProvider>
               <div className="flex flex-col min-h-screen">
-                <Navbar />
+                <Navbar isAdmin={isAdmin} />
                 <div className="flex-1 w-full">{children}</div>
               </div>
               <Toaster />
@@ -68,3 +72,4 @@ export default async function RootLayout({
     </html>
   );
 }
+

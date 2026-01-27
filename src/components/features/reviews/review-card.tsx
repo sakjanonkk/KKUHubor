@@ -15,6 +15,7 @@ import { ReportDialog } from "./report-dialog";
 import { CommentSection } from "./comment-section";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 
 interface ReviewCardProps {
   review: Review;
@@ -22,6 +23,7 @@ interface ReviewCardProps {
 
 export function ReviewCard({ review }: ReviewCardProps) {
   const [reportOpen, setReportOpen] = useState(false);
+  const t = useTranslations("Review");
 
   // Social State
   // Default to 0 if not provided, though we should ideally fetch it.
@@ -84,7 +86,7 @@ export function ReviewCard({ review }: ReviewCardProps) {
         // Revert on failure
         setLikes(prevLikes);
         setIsLiked(prevIsLiked);
-        toast.error("Failed to update like");
+        toast.error(t("likeError"));
       }
     } catch (error) {
       setLikes(prevLikes);
@@ -100,7 +102,7 @@ export function ReviewCard({ review }: ReviewCardProps) {
             <div className="flex-1">
               <div className="flex justify-between items-center">
                 <div className="font-semibold">
-                  {review.reviewerName || "Anonymous"}
+                  {review.reviewerName || t("anonymous")}
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="flex items-center gap-1 text-yellow-500 text-sm font-bold">
@@ -121,7 +123,7 @@ export function ReviewCard({ review }: ReviewCardProps) {
                         className="text-red-600 focus:text-red-600"
                       >
                         <Flag className="mr-2 h-4 w-4" />
-                        Report this review
+                        {t("report")}
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
@@ -129,7 +131,7 @@ export function ReviewCard({ review }: ReviewCardProps) {
               </div>
               <div className="text-xs text-muted-foreground flex gap-2 mt-1">
                 <span>{review.semester}</span> |
-                <span>Grade: {review.gradeReceived || "-"}</span> |
+                <span>{t("grade")}: {review.gradeReceived || "-"}</span> |
                 <span suppressHydrationWarning>
                   {new Date(review.createdAt).toLocaleDateString()}
                 </span>
@@ -162,7 +164,7 @@ export function ReviewCard({ review }: ReviewCardProps) {
               onClick={() => setShowComments(!showComments)}
             >
               <MessageCircle className="h-4 w-4" />
-              <span className="text-xs">Comments</span>
+              <span className="text-xs">{t("comments")}</span>
             </Button>
           </div>
 

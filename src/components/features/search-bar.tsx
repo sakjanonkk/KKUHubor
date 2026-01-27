@@ -102,7 +102,7 @@ export function SearchBar() {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             placeholder={t("searchPlaceholder")}
-            className="pl-10 h-12 text-base shadow-sm"
+            className="pl-10 !h-12 text-base shadow-sm"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={handleKeyDown}
@@ -111,7 +111,7 @@ export function SearchBar() {
             }}
           />
         </div>
-        <Button size="lg" className="h-12 px-8" onClick={handleSearch}>
+        <Button size="lg" className="!h-12 px-8" onClick={handleSearch}>
           {t("searchButton")}
         </Button>
       </div>

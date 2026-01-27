@@ -42,28 +42,28 @@ import {
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 // Filter options
 const CATEGORIES = [
   {
     value: "GENERAL",
-    label: "General Education",
+    labelKey: "generalEd",
     icon: <BookOpen className="h-5 w-5 text-blue-500" />,
   },
   {
     value: "MAJOR",
-    label: "Major",
+    labelKey: "major",
     icon: <Target className="h-5 w-5 text-red-500" />,
   },
   {
     value: "ELECTIVE",
-    label: "Elective",
+    labelKey: "elective",
     icon: <Sparkles className="h-5 w-5 text-amber-500" />,
   },
   {
     value: "FREE_ELECTIVE",
-    label: "Free Elective",
+    labelKey: "freeElective",
     icon: <LayoutGrid className="h-5 w-5 text-emerald-500" />,
   },
 ];
@@ -71,14 +71,14 @@ const CATEGORIES = [
 const GRADING_TYPES = [
   {
     value: "NORM",
-    label: "Norm-referenced",
-    description: "Curve grading",
+    labelKey: "normRef",
+    descKey: "normRefDesc",
     icon: <Activity className="h-6 w-6 text-orange-500" />,
   },
   {
     value: "CRITERION",
-    label: "Criterion-referenced",
-    description: "Fixed criteria",
+    labelKey: "criterionRef",
+    descKey: "criterionRefDesc",
     icon: <CheckCircle2 className="h-6 w-6 text-green-500" />,
   },
 ];
@@ -86,27 +86,27 @@ const GRADING_TYPES = [
 const SORT_OPTIONS = [
   {
     value: "reviews_desc",
-    label: "Most Reviews",
+    labelKey: "mostReviews",
     icon: <BarChart3 className="h-5 w-5 text-purple-500" />,
   },
   {
     value: "rating_desc",
-    label: "Highest Rated",
+    labelKey: "highestRated",
     icon: <Star className="h-5 w-5 text-yellow-500 fill-yellow-500" />,
   },
   {
     value: "rating_asc",
-    label: "Lowest Rated",
+    labelKey: "lowestRated",
     icon: <TrendingDown className="h-5 w-5 text-red-500" />,
   },
   {
     value: "name_asc",
-    label: "Name (A-Z)",
+    labelKey: "nameAZ",
     icon: <ArrowUpDown className="h-5 w-5 text-blue-400" />,
   },
   {
     value: "code_asc",
-    label: "Code (A-Z)",
+    labelKey: "codeAZ",
     icon: <Binary className="h-5 w-5 text-slate-500" />,
   },
 ];
@@ -120,6 +120,7 @@ export function CourseFilter() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const locale = useLocale();
+  const t = useTranslations("Filter");
 
   const [category, setCategory] = useState<string>(
     searchParams.get("category") || ""
@@ -218,7 +219,7 @@ export function CourseFilter() {
           className="gap-2 relative border-neutral-200 dark:border-neutral-800 hover:border-primary/50 hover:bg-primary/5 transition-all duration-300"
         >
           <SlidersHorizontal className="h-4 w-4" />
-          <span className="hidden sm:inline">Filters</span>
+          <span className="hidden sm:inline">{t("button")}</span>
           {activeFilterCount > 0 && (
             <span className="absolute -top-2 -right-2 bg-gradient-to-r from-primary to-violet-600 text-primary-foreground text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold shadow-lg shadow-primary/25 animate-in zoom-in-50">
               {activeFilterCount}
@@ -236,10 +237,10 @@ export function CourseFilter() {
             <div className="p-2.5 rounded-xl bg-primary/10 text-primary">
               <SlidersHorizontal className="h-6 w-6" />
             </div>
-            Filter & Sort
+            {t("title")}
           </SheetTitle>
           <SheetDescription className="text-base text-muted-foreground/80">
-            Customize how you explore courses
+            {t("description")}
           </SheetDescription>
         </SheetHeader>
 
@@ -248,7 +249,7 @@ export function CourseFilter() {
           <section className="space-y-4">
             <div className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-muted-foreground/70">
               <ArrowUpDown className="h-4 w-4" />
-              Sort By
+              {t("sortBy")}
             </div>
             <div className="grid grid-cols-2 gap-4">
               {SORT_OPTIONS.map((option) => (
@@ -272,7 +273,7 @@ export function CourseFilter() {
                   >
                     {option.icon}
                   </div>
-                  <span className="truncate font-semibold">{option.label}</span>
+                  <span className="truncate font-semibold">{t(option.labelKey)}</span>
                   {sortBy === option.value && (
                     <div className="absolute inset-0 border-2 border-primary rounded-xl pointer-events-none" />
                   )}
@@ -291,10 +292,10 @@ export function CourseFilter() {
                 </div>
                 <div>
                   <Label className="text-base font-bold cursor-pointer block mb-1">
-                    Has Reviews Only
+                    {t("hasReviewsOnly")}
                   </Label>
                   <p className="text-sm text-muted-foreground">
-                    Show courses with student feedback
+                    {t("hasReviewsDesc")}
                   </p>
                 </div>
               </div>
@@ -310,17 +311,17 @@ export function CourseFilter() {
           <section className="space-y-4">
             <div className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-muted-foreground/70">
               <Building2 className="h-4 w-4" />
-              Faculty
+              {t("faculty")}
             </div>
             <Select value={facultyId} onValueChange={setFacultyId}>
               <SelectTrigger className="h-12 border-input bg-background/50 backdrop-blur-sm hover:border-primary/50 transition-colors rounded-xl px-4 text-base">
-                <SelectValue placeholder="All Faculties" />
+                <SelectValue placeholder={t("allFaculties")} />
               </SelectTrigger>
               <SelectContent className="max-h-[300px]">
                 <SelectItem value="all" className="font-medium py-3">
                   <span className="flex items-center gap-2">
                     <Building2 className="h-4 w-4 text-primary" />
-                    <span className="ml-1">All Faculties</span>
+                    <span className="ml-1">{t("allFaculties")}</span>
                   </span>
                 </SelectItem>
                 {faculties.map((faculty) => (
@@ -340,7 +341,7 @@ export function CourseFilter() {
           <section className="space-y-4">
             <div className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-muted-foreground/70">
               <Star className="h-4 w-4" />
-              Minimum Rating
+              {t("minRating")}
             </div>
             <div className="flex gap-2 p-1.5 bg-muted/30 rounded-xl border border-border/50">
               {[0, 1, 2, 3, 4, 5].map((rating) => (
@@ -355,7 +356,7 @@ export function CourseFilter() {
                   )}
                 >
                   {rating === 0 ? (
-                    "Any"
+                    t("any")
                   ) : (
                     <span className="flex flex-col items-center justify-center gap-1">
                       <span className="font-bold text-base">{rating}</span>
@@ -378,7 +379,7 @@ export function CourseFilter() {
           <section className="space-y-4">
             <div className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-muted-foreground/70">
               <GraduationCap className="h-4 w-4" />
-              Category
+              {t("category")}
             </div>
             <div className="grid grid-cols-2 gap-4">
               <button
@@ -398,7 +399,7 @@ export function CourseFilter() {
                     )}
                   />
                 </div>
-                <span>All Categories</span>
+                <span>{t("allCategories")}</span>
               </button>
               {CATEGORIES.map((cat) => (
                 <button
@@ -414,7 +415,7 @@ export function CourseFilter() {
                   <div className="p-2 bg-background rounded-lg shadow-sm">
                     {cat.icon}
                   </div>
-                  <span className="truncate">{cat.label}</span>
+                  <span className="truncate">{t(cat.labelKey)}</span>
                 </button>
               ))}
             </div>
@@ -424,7 +425,7 @@ export function CourseFilter() {
           <section className="space-y-4">
             <div className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-muted-foreground/70">
               <ClipboardList className="h-4 w-4" />
-              Grading Type
+              {t("gradingType")}
             </div>
             <div className="space-y-3">
               <button
@@ -453,10 +454,10 @@ export function CourseFilter() {
                       gradingType === "" ? "text-primary" : "text-foreground"
                     )}
                   >
-                    All Types
+                    {t("allTypes")}
                   </div>
                   <div className="text-xs text-muted-foreground">
-                    Show all grading methods
+                    {t("allTypesDesc")}
                   </div>
                 </div>
               </button>
@@ -483,10 +484,10 @@ export function CourseFilter() {
                           : "text-foreground"
                       )}
                     >
-                      {type.label}
+                      {t(type.labelKey)}
                     </div>
                     <div className="text-xs text-muted-foreground">
-                      {type.description}
+                      {t(type.descKey)}
                     </div>
                   </div>
                 </button>
@@ -504,14 +505,14 @@ export function CourseFilter() {
               className="flex-1 gap-2 text-muted-foreground hover:text-destructive hover:border-destructive/30 hover:bg-destructive/5 rounded-xl h-12"
             >
               <X className="h-4 w-4" />
-              Clear ({activeFilterCount})
+              {t("clear")} ({activeFilterCount})
             </Button>
           )}
           <Button
             onClick={handleApply}
             className="flex-1 gap-2 font-bold rounded-xl h-12 shadow-lg shadow-primary/20"
           >
-            Apply
+            {t("apply")}
             <span className="ml-1 opacity-60">
               {activeFilterCount > 0 ? `(${activeFilterCount})` : ""}
             </span>

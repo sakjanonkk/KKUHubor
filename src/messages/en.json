@@ -8,6 +8,12 @@
     "theme": "Theme",
     "identity": "Identity"
   },
+  "Theme": {
+    "toggle": "Toggle theme",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System"
+  },
   "Hero": {
     "title": "Course Review",
     "subtitle": "for KKU Students",
@@ -55,7 +61,11 @@
     "coursesUnit": "courses",
     "noResultTitle": "No courses found",
     "noResultDescription": "We couldn't find any courses matching your criteria. Try adjusting your filters or search terms.",
-    "clearFilters": "Clear all filters"
+    "clearFilters": "Clear all filters",
+    "viewReviews": "View Reviews",
+    "writeFirstReview": "Write First Review",
+    "reviewsSuffix": "reviews",
+    "noReviews": "No reviews yet"
   },
   "Bookmarks": {
     "title": "Bookmarked Courses",
@@ -76,5 +86,150 @@
     "studentReviews": "Student Reviews",
     "noReviewsTitle": "No reviews yet",
     "noReviewsDesc": "Be the first to share your experience with this course. Help others make better decisions!"
+  },
+  "UserSettings": {
+    "title": "User Settings",
+    "description": "Set your display name for reviews and comments. This is stored locally in your browser.",
+    "nameLabel": "Name",
+    "namePlaceholder": "Anonymous",
+    "saveButton": "Save Changes",
+    "savedToast": "Display name updated"
+  },
+  "Filter": {
+    "button": "Filters",
+    "title": "Filter & Sort",
+    "description": "Customize how you explore courses",
+    "sortBy": "Sort By",
+    "mostReviews": "Most Reviews",
+    "highestRated": "Highest Rated",
+    "lowestRated": "Lowest Rated",
+    "nameAZ": "Name (A-Z)",
+    "codeAZ": "Code (A-Z)",
+    "hasReviewsOnly": "Has Reviews Only",
+    "hasReviewsDesc": "Show courses with student feedback",
+    "faculty": "Faculty",
+    "allFaculties": "All Faculties",
+    "minRating": "Minimum Rating",
+    "any": "Any",
+    "category": "Category",
+    "allCategories": "All Categories",
+    "generalEd": "General Education",
+    "major": "Major",
+    "elective": "Elective",
+    "freeElective": "Free Elective",
+    "gradingType": "Grading Type",
+    "allTypes": "All Types",
+    "allTypesDesc": "Show all grading methods",
+    "normRef": "Norm-referenced",
+    "normRefDesc": "Curve grading",
+    "criterionRef": "Criterion-referenced",
+    "criterionRefDesc": "Fixed criteria",
+    "clear": "Clear",
+    "apply": "Apply"
+  },
+  "CourseRequest": {
+    "button": "Request a Course",
+    "title": "Request a New Course",
+    "description": "Can't find what you're looking for? Submit a request and we'll add it to the database.",
+    "courseCode": "Course Code",
+    "courseCodePlaceholder": "e.g. 01234567",
+    "thaiName": "Thai Name",
+    "thaiNamePlaceholder": "e.g. การเขียนโปรแกรม",
+    "englishName": "English Name",
+    "englishNamePlaceholder": "e.g. Computer Programming",
+    "faculty": "Faculty",
+    "selectFaculty": "Select Faculty",
+    "searchFaculty": "Search faculty...",
+    "noFacultyFound": "No faculty found.",
+    "submit": "Submit Request",
+    "successToast": "Request submitted! Admins will review it shortly.",
+    "errorToast": "Something went wrong. Please try again."
+  },
+  "Admin": {
+    "title": "Admin Dashboard",
+    "logout": "Logout",
+    "totalReviews": "Total Reviews",
+    "totalComments": "Total Comments",
+    "pendingRequests": "Pending Requests",
+    "trendingCourse": "Trending Course",
+    "tabReports": "Reported Reviews",
+    "tabCourses": "Course Management",
+    "tabTags": "Tag Requests",
+    "reviewContent": "Review Content",
+    "reportReason": "Report Reason",
+    "date": "Date",
+    "actions": "Actions",
+    "noReports": "No reports found.",
+    "dismiss": "Dismiss",
+    "deleteReview": "Delete Review"
+  },
+  "AddTag": {
+    "button": "Add Tag",
+    "title": "Add Course Tag",
+    "description": "Add a short tag to describe this course (e.g., \"Easy A\", \"Check Name\"). Your tag will be reviewed by an admin.",
+    "placeholder": "Enter tag (max 20 chars)...",
+    "submit": "Submit Tag",
+    "submitting": "Submitting...",
+    "successToast": "Request submitted! Waiting for admin approval.",
+    "errorLength": "Tag must be 20 characters or less."
+  },
+  "Review": {
+    "report": "Report this review",
+    "grade": "Grade",
+    "anonymous": "Anonymous",
+    "comments": "Comments",
+    "likeError": "Failed to update like",
+    "Form": {
+      "button": "Write a Review",
+      "title": "Write a Review",
+      "subtitle": "Share your experience with this course. Reviews are anonymous.",
+      "nameLabel": "Name (Optional)",
+      "namePlaceholder": "Anonymous",
+      "ratingLabel": "Rating (1-5)",
+      "selectRating": "Select rating",
+      "ratingSuffix": "Stars",
+      "gradeLabel": "Grade (Optional)",
+      "select": "Select",
+      "semesterLabel": "Semester",
+      "semesterPlaceholder": "e.g. 1/2024",
+      "contentLabel": "Review",
+      "contentPlaceholder": "Tell us about the course content, difficulty, etc.",
+      "submit": "Submit Review",
+      "successToast": "Review submitted successfully!",
+      "errorToast": "Something went wrong. Please try again.",
+      "validation": {
+        "rating": "Rating must be between 1 and 5",
+        "semester": "Semester is required (e.g., 1/2024)",
+        "contentLength": "Review must be at least 10 characters"
+      }
+    }
+  },
+  "Report": {
+    "title": "Report Review",
+    "description": "Why are you reporting this review? We will review your report.",
+    "reason": "Reason",
+    "selectReason": "Select a reason",
+    "reasons": {
+      "inappropriate": "Inappropriate Content",
+      "spam": "Spam/Bot",
+      "misleading": "Misleading Information",
+      "harassment": "Harassment",
+      "other": "Other"
+    },
+    "cancel": "Cancel",
+    "submit": "Submit Report",
+    "submitting": "Submitting...",
+    "success": "Review reported. Thank you for your feedback.",
+    "error": "Failed to report review. Please try again.",
+    "selectReasonError": "Please select a reason"
+  },
+  "Comments": {
+    "title": "Comments",
+    "noComments": "No comments yet. Be the first!",
+    "placeholder": "Write a comment...",
+    "post": "Post",
+    "posting": "Posting...",
+    "success": "Comment posted!",
+    "error": "Failed to post comment"
   }
 }

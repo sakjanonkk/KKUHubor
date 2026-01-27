@@ -13,7 +13,7 @@ import { Course } from "@/types";
 import { Star } from "lucide-react";
 import { AddTagDialog } from "./add-tag-dialog";
 import { BookmarkButton } from "./bookmark-button";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 interface CourseCardProps {
   course: Course;
@@ -21,6 +21,7 @@ interface CourseCardProps {
 
 export function CourseCard({ course }: CourseCardProps) {
   const locale = useLocale();
+  const t = useTranslations("Courses");
   const hasReviews = (course.reviewCount || 0) > 0;
 
   return (
@@ -99,10 +100,10 @@ export function CourseCard({ course }: CourseCardProps) {
                 <span className="font-semibold text-foreground">
                   {course.reviewCount}
                 </span>{" "}
-                reviews
+                {t("reviewsSuffix")}
               </span>
             ) : (
-              <span className="italic opacity-70">No reviews yet</span>
+              <span className="italic opacity-70">{t("noReviews")}</span>
             )}
           </div>
         </div>
@@ -114,7 +115,7 @@ export function CourseCard({ course }: CourseCardProps) {
           asChild
         >
           <a href={`/${locale}/courses/${course.code}`}>
-            {hasReviews ? "View Reviews" : "Write First Review"}
+            {hasReviews ? t("viewReviews") : t("writeFirstReview")}
           </a>
         </Button>
       </CardFooter>

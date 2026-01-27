@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import db from "@/lib/db";
+import { getTranslations } from "next-intl/server";
 import {
   Table,
   TableBody,
@@ -103,6 +104,7 @@ export default async function AdminDashboard() {
     "SELECT faculty_id, name_th, name_en FROM faculties ORDER BY name_th"
   );
   const faculties = facultiesResult.rows;
+  const t = await getTranslations("Admin");
 
   const topCourseName =
     analytics.topCourses.length > 0 ? analytics.topCourses[0].name_th : "N/A";
@@ -111,7 +113,7 @@ export default async function AdminDashboard() {
     <div className="container mx-auto p-8 space-y-8">
       {/* Header */}
       <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold tracking-tight">Admin Dashboard</h1>
+        <h1 className="text-3xl font-bold tracking-tight">{t("title")}</h1>
         <LogoutButton />
       </div>
 
@@ -119,7 +121,7 @@ export default async function AdminDashboard() {
       <div className="grid gap-4 md:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Reviews</CardTitle>
+            <CardTitle className="text-sm font-medium">{t("totalReviews")}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{analytics.totalReviews}</div>
@@ -128,7 +130,7 @@ export default async function AdminDashboard() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
-              Total Comments
+              {t("totalComments")}
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -138,7 +140,7 @@ export default async function AdminDashboard() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
-              Pending Requests
+              {t("pendingRequests")}
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -150,7 +152,7 @@ export default async function AdminDashboard() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
-              Trending Course
+              {t("trendingCourse")}
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -163,9 +165,9 @@ export default async function AdminDashboard() {
 
       <Tabs defaultValue="reports" className="space-y-4">
         <TabsList>
-          <TabsTrigger value="reports">Reported Reviews</TabsTrigger>
-          <TabsTrigger value="courses">Course Management</TabsTrigger>
-          <TabsTrigger value="tags">Tag Requests</TabsTrigger>
+          <TabsTrigger value="reports">{t("tabReports")}</TabsTrigger>
+          <TabsTrigger value="courses">{t("tabCourses")}</TabsTrigger>
+          <TabsTrigger value="tags">{t("tabTags")}</TabsTrigger>
         </TabsList>
 
         <TabsContent value="reports" className="space-y-4">
@@ -173,10 +175,10 @@ export default async function AdminDashboard() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Review Content</TableHead>
-                  <TableHead>Report Reason</TableHead>
-                  <TableHead>Date</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
+                  <TableHead>{t("reviewContent")}</TableHead>
+                  <TableHead>{t("reportReason")}</TableHead>
+                  <TableHead>{t("date")}</TableHead>
+                  <TableHead className="text-right">{t("actions")}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -186,7 +188,7 @@ export default async function AdminDashboard() {
                       colSpan={4}
                       className="text-center h-24 text-muted-foreground"
                     >
-                      No reports found.
+                      {t("noReports")}
                     </TableCell>
                   </TableRow>
                 ) : (
