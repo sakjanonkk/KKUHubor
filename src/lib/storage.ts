@@ -4,6 +4,8 @@ import {
   PutObjectCommand,
   DeleteObjectCommand,
   GetObjectCommand,
+  HeadBucketCommand,
+  CreateBucketCommand,
 } from "@aws-sdk/client-s3";
 
 const s3 = new S3Client({
@@ -17,6 +19,18 @@ const s3 = new S3Client({
 });
 
 const BUCKET = process.env.S3_BUCKET || "kkuhubor";
+
+let bucketReady = false;
+
+async function ensureBucket() {
+  if (bucketReady) return;
+  try {
+    await s3.send(new HeadBucketCommand({ Bucket: BUCKET }));
+  } catch {
+    await s3.send(new CreateBucketCommand({ Bucket: BUCKET }));
+  }
+  bucketReady = true;
+}
 
 export const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10 MB
 
@@ -42,6 +56,8 @@ export async function saveFile(
   file: File,
   courseCode: string
 ): Promise<string> {
+  await ensureBucket();
+
   const ext = ALLOWED_TYPES[file.type] || "";
   const storedName = `${randomUUID()}${ext}`;
   const buffer = Buffer.from(await file.arrayBuffer());
