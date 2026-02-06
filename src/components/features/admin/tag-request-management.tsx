@@ -56,7 +56,7 @@ export function TagRequestManagement({ requests }: TagRequestManagementProps) {
   };
 
   return (
-    <div className="bg-white dark:bg-zinc-900 rounded-lg shadow border">
+    <div className="bg-white dark:bg-zinc-900 rounded-lg shadow border overflow-x-auto">
       <Table>
         <TableHeader>
           <TableRow>

@@ -144,15 +144,15 @@ export default async function AdminDashboard() {
     analytics.topCourses.length > 0 ? analytics.topCourses[0].name_th : "N/A";
 
   return (
-    <div className="container mx-auto p-8 space-y-8">
+    <div className="container mx-auto px-4 py-6 sm:p-8 space-y-6 sm:space-y-8">
       {/* Header */}
       <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold tracking-tight">{t("title")}</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">{t("title")}</h1>
         <LogoutButton />
       </div>
 
       {/* Analytics Overview */}
-      <div className="grid gap-4 md:grid-cols-4">
+      <div className="grid gap-3 sm:gap-4 grid-cols-2 md:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">{t("totalReviews")}</CardTitle>
@@ -232,7 +232,7 @@ export default async function AdminDashboard() {
         </TabsList>
 
         <TabsContent value="reports" className="space-y-4">
-          <div className="bg-white dark:bg-zinc-900 rounded-lg shadow border">
+          <div className="bg-white dark:bg-zinc-900 rounded-lg shadow border overflow-x-auto">
             <Table>
               <TableHeader>
                 <TableRow>

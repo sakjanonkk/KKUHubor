@@ -251,13 +251,14 @@ export function CourseFilter() {
               <ArrowUpDown className="h-4 w-4" />
               {t("sortBy")}
             </div>
-            <div className="grid grid-cols-2 gap-4">
-              {SORT_OPTIONS.map((option) => (
+            <div className="grid grid-cols-2 gap-3">
+              {SORT_OPTIONS.map((option, idx) => (
                 <button
                   key={option.value}
                   onClick={() => setSortBy(option.value)}
                   className={cn(
-                    "flex flex-col gap-3 p-4 rounded-xl border text-sm font-medium transition-all duration-200 text-left relative overflow-hidden group",
+                    "flex items-center gap-3 p-3.5 rounded-xl border text-sm font-medium transition-all duration-200 text-left relative overflow-hidden group",
+                    idx === SORT_OPTIONS.length - 1 && SORT_OPTIONS.length % 2 !== 0 && "col-span-2",
                     sortBy === option.value
                       ? "border-primary bg-primary/5 text-primary shadow-sm"
                       : "border-transparent bg-muted/40 hover:bg-muted hover:scale-[1.02]"
@@ -265,7 +266,7 @@ export function CourseFilter() {
                 >
                   <div
                     className={cn(
-                      "p-2 w-fit rounded-lg transition-colors duration-200",
+                      "p-2 rounded-lg transition-colors duration-200 shrink-0",
                       sortBy === option.value
                         ? "bg-primary/10"
                         : "bg-background"
@@ -381,11 +382,11 @@ export function CourseFilter() {
               <GraduationCap className="h-4 w-4" />
               {t("category")}
             </div>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-3">
               <button
                 onClick={() => setCategory("")}
                 className={cn(
-                  "flex items-center gap-3 px-4 py-4 rounded-xl border text-sm font-medium transition-all duration-200 text-left",
+                  "col-span-2 flex items-center gap-3 px-4 py-3 rounded-xl border text-sm font-medium transition-all duration-200 text-left",
                   category === ""
                     ? "border-primary bg-primary/5 text-primary shadow-sm ring-1 ring-primary/20"
                     : "border-transparent bg-muted/40 hover:bg-muted hover:scale-[1.02]"
@@ -406,7 +407,7 @@ export function CourseFilter() {
                   key={cat.value}
                   onClick={() => setCategory(cat.value)}
                   className={cn(
-                    "flex items-center gap-3 px-4 py-4 rounded-xl border text-sm font-medium transition-all duration-200 text-left",
+                    "flex items-center gap-3 px-4 py-3 rounded-xl border text-sm font-medium transition-all duration-200 text-left",
                     category === cat.value
                       ? "border-primary bg-primary/5 text-primary shadow-sm ring-1 ring-primary/20"
                       : "border-transparent bg-muted/40 hover:bg-muted hover:scale-[1.02]"

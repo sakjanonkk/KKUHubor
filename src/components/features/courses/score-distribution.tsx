@@ -25,8 +25,8 @@ export function ScoreDistribution({
 }: ScoreDistributionProps) {
   return (
     <div className="space-y-4">
-      <div className="flex items-center gap-4 mb-4">
-        <div className="flex flex-col items-center justify-center p-4 bg-gray-50 dark:bg-zinc-900 rounded-lg">
+      <div className="flex flex-col sm:flex-row items-center gap-4 mb-4">
+        <div className="flex flex-col items-center justify-center p-4 bg-gray-50 dark:bg-zinc-900 rounded-lg w-full sm:w-auto">
           <span className="text-4xl font-bold text-gray-900 dark:text-gray-100">
             {averageRating.toFixed(1)}
           </span>

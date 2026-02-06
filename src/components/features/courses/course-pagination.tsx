@@ -55,19 +55,18 @@ export function CoursePagination({
       <Button
         variant="outline"
         size="sm"
-        className="gap-1"
         asChild={currentPage > 1}
         disabled={currentPage <= 1}
       >
         {currentPage > 1 ? (
-          <Link href={createPageUrl(currentPage - 1)}>
+          <Link href={createPageUrl(currentPage - 1)} className="flex items-center gap-1">
             <ChevronLeft className="h-4 w-4" />
-            {t("previous")}
+            <span className="hidden sm:inline">{t("previous")}</span>
           </Link>
         ) : (
-          <span>
+          <span className="flex items-center gap-1">
             <ChevronLeft className="h-4 w-4" />
-            {t("previous")}
+            <span className="hidden sm:inline">{t("previous")}</span>
           </span>
         )}
       </Button>
@@ -102,18 +101,17 @@ export function CoursePagination({
       <Button
         variant="outline"
         size="sm"
-        className="gap-1"
         asChild={currentPage < totalPages}
         disabled={currentPage >= totalPages}
       >
         {currentPage < totalPages ? (
-          <Link href={createPageUrl(currentPage + 1)}>
-            {t("next")}
+          <Link href={createPageUrl(currentPage + 1)} className="flex items-center gap-1">
+            <span className="hidden sm:inline">{t("next")}</span>
             <ChevronRight className="h-4 w-4" />
           </Link>
         ) : (
-          <span>
-            {t("next")}
+          <span className="flex items-center gap-1">
+            <span className="hidden sm:inline">{t("next")}</span>
             <ChevronRight className="h-4 w-4" />
           </span>
         )}

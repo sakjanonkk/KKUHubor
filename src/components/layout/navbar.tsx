@@ -10,9 +10,11 @@ import {
   Home,
   BookOpen,
   ShieldCheck,
-  Heart,
+  Bookmark,
+  Palette,
   Languages,
   Search,
+  Info,
 } from "lucide-react";
 import {
   Sheet,
@@ -40,10 +42,14 @@ export function Navbar({ isAdmin = false }: NavbarProps) {
   const navItems = [
     { name: t("home"), href: "/", icon: Home },
     { name: t("courses"), href: "/courses", icon: BookOpen },
-    { name: t("bookmarks"), href: "/bookmarks", icon: Heart },
+    { name: t("bookmarks"), href: "/bookmarks", icon: Bookmark },
     ...(isAdmin
       ? [{ name: t("admin"), href: "/admin", icon: ShieldCheck }]
       : []),
+  ];
+
+  const mobileOnlyItems = [
+    { name: t("about"), href: "/about", icon: Info },
   ];
 
   return (
@@ -110,7 +116,7 @@ export function Navbar({ isAdmin = false }: NavbarProps) {
             </SheetTrigger>
             <SheetContent
               side="right"
-              className="w-[300px] border-l-0 shadow-2xl p-0 bg-background/95 backdrop-blur-xl"
+              className="w-full sm:w-[300px] border-l-0 shadow-2xl p-0 bg-background/95 backdrop-blur-xl"
             >
               {/* Background Gradients */}
               <div className="absolute top-0 right-0 w-[150px] h-[150px] bg-primary/10 blur-[80px] rounded-full pointer-events-none -z-10" />
@@ -131,7 +137,7 @@ export function Navbar({ isAdmin = false }: NavbarProps) {
                     <div className="px-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">
                       {t("menu")}
                     </div>
-                    {navItems.map((item) => (
+                    {[...navItems, ...mobileOnlyItems].map((item) => (
                       <SheetClose asChild key={item.href}>
                         <Link
                           href={item.href}
@@ -176,7 +182,7 @@ export function Navbar({ isAdmin = false }: NavbarProps) {
                     <div className="flex items-center justify-between p-3 rounded-xl bg-muted/30 border border-border/50">
                       <div className="flex items-center gap-3">
                         <div className="p-2 rounded-lg bg-background shadow-sm">
-                          <Heart className="h-4 w-4 text-rose-500" />
+                          <Palette className="h-4 w-4 text-violet-500" />
                         </div>
                         <span className="font-medium text-sm">
                           {t("theme")}

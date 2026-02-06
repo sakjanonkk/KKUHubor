@@ -138,7 +138,7 @@ export default async function CourseDetailPage({ params }: PageProps) {
             { label: course.code },
           ]}
         />
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8">
           {/* Left Column: Stats & Distribution */}
           <div className="md:col-span-1 space-y-6">
             <CourseStats

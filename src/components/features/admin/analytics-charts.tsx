@@ -39,7 +39,7 @@ export function AnalyticsCharts({
   const maxDaily = Math.max(...reviewsPerDay.map((d) => d.count), 1);
 
   return (
-    <div className="grid gap-4 md:grid-cols-3">
+    <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
       {/* Reviews per day (7 days) */}
       <Card>
         <CardHeader className="pb-2">

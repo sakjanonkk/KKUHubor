@@ -108,18 +108,26 @@ export function CourseCard({ course }: CourseCardProps) {
               )}
             </div>
           </div>
-          {/* Mini Rating Distribution */}
+          {/* Mini Rating Distribution Bar Chart */}
           {hasReviews && course.ratingDistribution && (
-            <div className="flex items-center gap-0.5">
+            <div className="flex items-end justify-between gap-1">
               {[...course.ratingDistribution].reverse().map((count, i) => {
+                const star = 5 - i;
                 const max = Math.max(...course.ratingDistribution!, 1);
-                const height = Math.max(4, (count / max) * 16);
+                const barHeight = Math.max(3, Math.round((count / max) * 28));
                 return (
                   <div
-                    key={i}
-                    className="flex-1 rounded-sm bg-yellow-400/80 dark:bg-yellow-500/60 transition-all"
-                    style={{ height: `${height}px` }}
-                  />
+                    key={star}
+                    className="flex-1 flex flex-col items-center gap-0.5"
+                  >
+                    <div
+                      className="w-full rounded-t-sm bg-yellow-400 dark:bg-yellow-500/70"
+                      style={{ height: `${barHeight}px` }}
+                    />
+                    <span className="text-[9px] text-muted-foreground leading-none">
+                      {star}
+                    </span>
+                  </div>
                 );
               })}
             </div>

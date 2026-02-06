@@ -125,7 +125,7 @@ export function CourseManagement({
   }
 
   return (
-    <div className="grid gap-6 md:grid-cols-2">
+    <div className="grid gap-4 sm:gap-6 md:grid-cols-2">
       {/* 1. Add Course Manually */}
       <Card>
         <CardHeader>
@@ -134,7 +134,7 @@ export function CourseManagement({
         </CardHeader>
         <CardContent>
           <form onSubmit={handleAddCourse} className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Input
                 placeholder={t("courseCode")}
                 value={newCourse.courseCode}
@@ -190,7 +190,7 @@ export function CourseManagement({
       </Card>
 
       {/* 2. Pending Requests */}
-      <Card className="md:col-span-2 lg:col-span-1">
+      <Card className="md:col-span-1 overflow-x-auto">
         <CardHeader>
           <CardTitle>{t("pendingRequestsTitle")}</CardTitle>
           <CardDescription>{t("pendingRequestsDesc")}</CardDescription>

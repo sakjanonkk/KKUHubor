@@ -37,6 +37,7 @@ export default async function CoursesPage({ searchParams }: CoursesPageProps) {
   } = await searchParams;
 
   const t = await getTranslations("Courses");
+  const tFilter = await getTranslations("Filter");
 
   // Validate Enums
   const validCategory = Object.values(CourseCategory).includes(
@@ -70,14 +71,25 @@ export default async function CoursesPage({ searchParams }: CoursesPageProps) {
     validPage
   );
 
+  // Map enum values to translated labels
+  const categoryLabels: Record<string, string> = {
+    GENERAL: tFilter("generalEd"),
+    MAJOR: tFilter("major"),
+    ELECTIVE: tFilter("elective"),
+    FREE_ELECTIVE: tFilter("freeElective"),
+  };
+  const gradingLabels: Record<string, string> = {
+    NORM: tFilter("normRef"),
+    CRITERION: tFilter("criterionRef"),
+  };
+
   // Count active filters for display
   const activeFilters = [
     query && `"${query}"`,
-    validCategory && `Category: ${validCategory}`,
-    validGradingType && `Grading: ${validGradingType}`,
-    validFacultyId && `Faculty ID: ${validFacultyId}`,
-    validMinRating && `Rating ≥ ${validMinRating}`,
-    validHasReviews && t("activeFilters"), // Or logic for "Has Reviews" specific text
+    validCategory && categoryLabels[validCategory],
+    validGradingType && gradingLabels[validGradingType],
+    validMinRating && `${tFilter("minRating")} ${validMinRating}+`,
+    validHasReviews && tFilter("hasReviewsOnly"),
   ].filter(Boolean);
 
   return (

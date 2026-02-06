@@ -1,7 +1,7 @@
 "use client";
 
 import { Link } from "@/i18n/routing";
-import { BookOpen, Home, Heart } from "lucide-react";
+import { BookOpen, Home, Bookmark, Info } from "lucide-react";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { ModeToggle } from "@/components/mode-toggle";
 import { useTranslations } from "next-intl";
@@ -48,8 +48,15 @@ export function Footer() {
                 href="/bookmarks"
                 className="text-sm text-muted-foreground hover:text-foreground transition-colors inline-flex items-center gap-2"
               >
-                <Heart className="h-3.5 w-3.5" />
+                <Bookmark className="h-3.5 w-3.5" />
                 {tNav("bookmarks")}
+              </Link>
+              <Link
+                href="/about"
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors inline-flex items-center gap-2"
+              >
+                <Info className="h-3.5 w-3.5" />
+                {tNav("about")}
               </Link>
             </nav>
           </div>

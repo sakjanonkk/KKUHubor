@@ -9,7 +9,8 @@
     "identity": "ตัวตน",
     "menu": "เมนู",
     "settings": "ตั้งค่า",
-    "language": "ภาษา"
+    "language": "ภาษา",
+    "about": "เกี่ยวกับ"
   },
   "Theme": {
     "toggle": "เปลี่ยนธีม",
@@ -30,7 +31,7 @@
     "connectReview": "รีวิว. แชร์.",
     "surviveSemester": "รอดทุกเทอม",
     "heroDescription": "อ่านรีวิวจากคนเรียนจริง แชร์ประสบการณ์ เลือกวิชาได้ตรงใจกว่าเดิม",
-    "trustedBy": "นักศึกษา 5,000+ คนใช้งาน",
+    "trustedBy": "โดยนักศึกษา มข.",
     "anonymous": "ไม่เปิดเผยตัวตน",
     "statCourses": "วิชา",
     "statReviews": "รีวิว",
@@ -336,5 +337,20 @@
     "anonymous": "ไม่ระบุชื่อ",
     "tabReviews": "รีวิว",
     "tabSummaries": "ไฟล์สรุป"
+  },
+  "About": {
+    "title": "เกี่ยวกับ KKUHubor",
+    "subtitle": "แพลตฟอร์มรีวิววิชาเรียนสำหรับนักศึกษามหาวิทยาลัยขอนแก่น",
+    "projectDescription": "KKUHubor เป็นเว็บแอปพลิเคชันที่ให้นักศึกษา มข. สามารถค้นหาวิชาเรียน อ่านรีวิวจากคนเรียนจริง เขียนรีวิวแบ่งปันประสบการณ์ และแชร์ไฟล์สรุปกันได้",
+    "developer": "ผู้พัฒนา",
+    "techStack": "เทคโนโลยีที่ใช้",
+    "frontend": "Frontend",
+    "backend": "Backend",
+    "infrastructure": "Infrastructure",
+    "links": "ลิงก์",
+    "sourceCode": "ซอร์สโค้ด",
+    "facebookPage": "Facebook Page",
+    "viewOnGitHub": "ดูบน GitHub",
+    "madeWith": "สร้างด้วยความตั้งใจเพื่อนักศึกษา มข."
   }
 }

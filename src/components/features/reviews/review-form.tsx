@@ -58,7 +58,7 @@ export function ReviewForm({ courseId }: ReviewFormProps) {
         }
       ),
     gradeReceived: z.string().optional(),
-    semester: z.string().min(1, t("validation.semester")),
+    semester: z.string().regex(/^[1-3]\/\d{4}$/, t("validation.semester")),
     content: z.string().min(10, t("validation.contentLength")),
   });
 
@@ -199,25 +199,12 @@ export function ReviewForm({ courseId }: ReviewFormProps) {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>{t("semesterLabel")}</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder={t("semesterPlaceholder")} />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {["1/2568", "2/2568", "3/2568", "1/2567", "2/2567", "3/2567", "1/2566", "2/2566"].map(
-                        (sem) => (
-                          <SelectItem key={sem} value={sem}>
-                            {sem}
-                          </SelectItem>
-                        )
-                      )}
-                    </SelectContent>
-                  </Select>
+                  <FormControl>
+                    <Input
+                      placeholder={t("semesterPlaceholder")}
+                      {...field}
+                    />
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}

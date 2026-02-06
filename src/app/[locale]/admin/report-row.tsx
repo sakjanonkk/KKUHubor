@@ -77,26 +77,28 @@ export function ReportRow({ report }: ReportRowProps) {
           day: "numeric",
         })}
       </TableCell>
-      <TableCell className="text-right space-x-2">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={handleDismissReport}
-          disabled={loading}
-          className="text-green-600 hover:text-green-700 hover:bg-green-50"
-        >
-          <CheckCircle className="w-4 h-4 mr-1" />
-          {t("dismiss")}
-        </Button>
-        <Button
-          variant="destructive"
-          size="sm"
-          onClick={handleDeleteReview}
-          disabled={loading}
-        >
-          <Trash2 className="w-4 h-4 mr-1" />
-          {t("deleteReview")}
-        </Button>
+      <TableCell className="text-right">
+        <div className="flex justify-end gap-1 sm:gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleDismissReport}
+            disabled={loading}
+            className="text-green-600 hover:text-green-700 hover:bg-green-50"
+          >
+            <CheckCircle className="w-4 h-4 sm:mr-1" />
+            <span className="hidden sm:inline">{t("dismiss")}</span>
+          </Button>
+          <Button
+            variant="destructive"
+            size="sm"
+            onClick={handleDeleteReview}
+            disabled={loading}
+          >
+            <Trash2 className="w-4 h-4 sm:mr-1" />
+            <span className="hidden sm:inline">{t("deleteReview")}</span>
+          </Button>
+        </div>
       </TableCell>
     </TableRow>
   );

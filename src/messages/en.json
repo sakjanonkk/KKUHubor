@@ -9,7 +9,8 @@
     "identity": "Identity",
     "menu": "Menu",
     "settings": "Settings",
-    "language": "Language"
+    "language": "Language",
+    "about": "About"
   },
   "Theme": {
     "toggle": "Toggle theme",
@@ -30,7 +31,7 @@
     "connectReview": "Connect. Review.",
     "surviveSemester": "Survive Semester.",
     "heroDescription": "Find honest reviews, share your experiences, and make better decisions for your academic journey at KKU.",
-    "trustedBy": "Trusted by 5,000+ students",
+    "trustedBy": "By KKU Students",
     "anonymous": "100% Anonymous",
     "statCourses": "Courses",
     "statReviews": "Reviews",
@@ -336,5 +337,20 @@
     "anonymous": "Anonymous",
     "tabReviews": "Reviews",
     "tabSummaries": "Summary Files"
+  },
+  "About": {
+    "title": "About KKUHubor",
+    "subtitle": "A course review platform for Khon Kaen University students",
+    "projectDescription": "KKUHubor is a web application that allows KKU students to discover courses, read reviews from real students, share their own experiences, and exchange summary files.",
+    "developer": "Developer",
+    "techStack": "Tech Stack",
+    "frontend": "Frontend",
+    "backend": "Backend",
+    "infrastructure": "Infrastructure",
+    "links": "Links",
+    "sourceCode": "Source Code",
+    "facebookPage": "Facebook Page",
+    "viewOnGitHub": "View on GitHub",
+    "madeWith": "Made with care for KKU students"
   }
 }

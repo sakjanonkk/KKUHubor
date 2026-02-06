@@ -29,6 +29,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { StarRatingInput } from "./star-rating-input";
 import { toast } from "sonner";
@@ -58,7 +59,7 @@ export function EditReviewDialog({
         { message: tForm("validation.rating") }
       ),
     gradeReceived: z.string().optional(),
-    semester: z.string().min(1, tForm("validation.semester")),
+    semester: z.string().regex(/^[1-3]\/\d{4}$/, tForm("validation.semester")),
     content: z.string().min(10, tForm("validation.contentLength")),
   });
 
@@ -167,25 +168,12 @@ export function EditReviewDialog({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>{tForm("semesterLabel")}</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder={tForm("semesterPlaceholder")} />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {["1/2568", "2/2568", "3/2568", "1/2567", "2/2567", "3/2567", "1/2566", "2/2566"].map(
-                        (sem) => (
-                          <SelectItem key={sem} value={sem}>
-                            {sem}
-                          </SelectItem>
-                        )
-                      )}
-                    </SelectContent>
-                  </Select>
+                  <FormControl>
+                    <Input
+                      placeholder={tForm("semesterPlaceholder")}
+                      {...field}
+                    />
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}

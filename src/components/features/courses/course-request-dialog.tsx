@@ -124,7 +124,7 @@ export function CourseRequestDialog() {
           className="gap-2 border-neutral-200 dark:border-neutral-800 hover:border-primary/50 hover:bg-primary/5 transition-all duration-300"
         >
           <PlusCircle className="h-4 w-4" />
-          {t("button")}
+          <span className="hidden sm:inline">{t("button")}</span>
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto border-none shadow-2xl bg-background/95 backdrop-blur-xl">
