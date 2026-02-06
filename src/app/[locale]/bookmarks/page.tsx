@@ -97,14 +97,35 @@ export default function BookmarksPage() {
             </Button>
           </div>
         ) : courses.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-24 text-center border rounded-3xl bg-muted/20 border-border/50 border-dashed">
-            <div className="w-20 h-20 rounded-full bg-muted flex items-center justify-center mb-6">
-              <Heart className="w-10 h-10 text-muted-foreground fill-muted-foreground/20" />
+          <div className="flex flex-col items-center justify-center py-24 text-center border rounded-3xl bg-muted/20 border-border/50 border-dashed animate-in fade-in zoom-in duration-500">
+            <div className="relative mb-6">
+              <div className="w-20 h-20 rounded-full bg-muted flex items-center justify-center">
+                <Heart className="w-10 h-10 text-muted-foreground fill-muted-foreground/20" />
+              </div>
+              <div className="absolute -top-1 -right-1 w-8 h-8 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center">
+                <BookOpen className="w-4 h-4 text-red-500" />
+              </div>
             </div>
             <h2 className="text-2xl font-bold mb-3">{t("emptyTitle")}</h2>
-            <p className="text-muted-foreground max-w-md mx-auto mb-8 text-lg">
+            <p className="text-muted-foreground max-w-md mx-auto mb-6 text-base leading-relaxed">
               {t("emptyDescription")}
             </p>
+            <div className="flex items-center gap-4 text-sm text-muted-foreground mb-8">
+              <div className="flex items-center gap-1.5">
+                <span className="w-6 h-6 rounded-full bg-primary/10 text-primary text-xs font-bold flex items-center justify-center">1</span>
+                {t("browseButton")}
+              </div>
+              <span className="w-1 h-1 rounded-full bg-border" />
+              <div className="flex items-center gap-1.5">
+                <span className="w-6 h-6 rounded-full bg-red-100 dark:bg-red-900/30 text-red-500 text-xs font-bold flex items-center justify-center">2</span>
+                <Heart className="w-3.5 h-3.5" />
+              </div>
+              <span className="w-1 h-1 rounded-full bg-border" />
+              <div className="flex items-center gap-1.5">
+                <span className="w-6 h-6 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-500 text-xs font-bold flex items-center justify-center">3</span>
+                {t("savedCourse")}
+              </div>
+            </div>
             <Button size="lg" asChild className="rounded-full px-8">
               <Link href="/courses">{t("browseButton")}</Link>
             </Button>

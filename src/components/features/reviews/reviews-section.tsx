@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { Badge } from "@/components/ui/badge";
-import { Star } from "lucide-react";
+import { Star, MessageSquare } from "lucide-react";
 import { Review } from "@/types";
 import { ReviewCard } from "./review-card";
 import { ReviewForm } from "./review-form";
@@ -45,12 +45,17 @@ export function ReviewsSection({ reviews, courseId }: ReviewsSectionProps) {
       </div>
 
       {sortedReviews.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-16 text-center border rounded-3xl bg-muted/20 border-border/50 border-dashed animate-in fade-in zoom-in duration-500">
-          <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mb-4">
-            <Star className="w-8 h-8 text-muted-foreground fill-muted-foreground/20" />
+        <div className="flex flex-col items-center justify-center py-20 text-center border rounded-3xl bg-muted/20 border-border/50 border-dashed animate-in fade-in zoom-in duration-500">
+          <div className="relative mb-6">
+            <div className="w-20 h-20 rounded-full bg-muted flex items-center justify-center">
+              <Star className="w-10 h-10 text-muted-foreground fill-muted-foreground/20" />
+            </div>
+            <div className="absolute -bottom-1 -right-1 w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+              <MessageSquare className="w-4 h-4 text-primary" />
+            </div>
           </div>
-          <h3 className="text-xl font-bold mb-2">{t("noReviewsTitle")}</h3>
-          <p className="text-muted-foreground max-w-sm mx-auto mb-6">
+          <h3 className="text-2xl font-bold mb-3">{t("noReviewsTitle")}</h3>
+          <p className="text-muted-foreground max-w-sm mx-auto mb-8 text-base leading-relaxed">
             {t("noReviewsDesc")}
           </p>
           <ReviewForm courseId={courseId} />

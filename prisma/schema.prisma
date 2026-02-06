@@ -100,6 +100,7 @@ model reviews {
   semester       String?        @db.VarChar(20)
   content        String?
   status         String?        @default("approved") @db.VarChar(20)
+  session_id     String?        @db.VarChar(255)
   created_at     DateTime?      @default(now()) @db.Timestamp(6)
   comments       comments[]
   reports        reports[]

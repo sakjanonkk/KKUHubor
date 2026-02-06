@@ -79,7 +79,7 @@ export function CommentSection({ reviewId }: CommentSectionProps) {
   };
 
   return (
-    <div className="mt-4 pt-4 border-t">
+    <div className="mt-4 pt-4 border-t animate-in fade-in slide-in-from-top-2 duration-300">
       <h4 className="text-sm font-semibold mb-3">{t("title")}</h4>
 
       {/* Comment List */}

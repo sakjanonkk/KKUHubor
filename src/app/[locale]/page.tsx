@@ -7,7 +7,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { SearchBar } from "@/components/features/search-bar";
 import { ReviewCard } from "@/components/features/reviews/review-card";
-import { Star, Search, BookOpen, MessageSquare } from "lucide-react";
+import { TrendingCourseCard } from "@/components/features/courses/trending-course-card";
+import { Star, Search, BookOpen, MessageSquare, TrendingUp } from "lucide-react";
 
 async function getStats() {
   const coursesRes = await db.query(
@@ -20,6 +21,33 @@ async function getStats() {
     courses: coursesRes.rows[0].count,
     reviews: reviewsRes.rows[0].count,
   };
+}
+
+async function getTrendingCourses() {
+  const res = await db.query(`
+    SELECT
+      c.course_code, c.name_th, c.name_en,
+      COUNT(r.review_id)::int as review_count,
+      ROUND(AVG(r.rating)::numeric, 1) as avg_rating,
+      f.color_code, f.name_en as faculty_name
+    FROM courses c
+    JOIN reviews r ON c.course_id = r.course_id
+    LEFT JOIN faculties f ON c.faculty_id = f.faculty_id
+    GROUP BY c.course_id, f.faculty_id
+    HAVING COUNT(r.review_id) >= 1
+    ORDER BY COUNT(r.review_id) DESC, AVG(r.rating) DESC
+    LIMIT 6
+  `);
+
+  return res.rows.map((row: any) => ({
+    code: row.course_code,
+    nameTH: row.name_th,
+    nameEN: row.name_en,
+    reviewCount: row.review_count,
+    avgRating: Number(row.avg_rating),
+    facultyColor: row.color_code,
+    facultyName: row.faculty_name,
+  }));
 }
 
 async function getLatestReviews() {
@@ -62,6 +90,7 @@ async function getLatestReviews() {
 export default async function Home() {
   const stats = await getStats();
   const latestReviews = await getLatestReviews();
+  const trendingCourses = await getTrendingCourses();
   const t = await getTranslations("Hero");
 
   return (
@@ -125,7 +154,8 @@ export default async function Home() {
               ].map((stat, i) => (
                 <div
                   key={stat.label}
-                  className="flex flex-col items-center p-4 rounded-2xl bg-background/50 backdrop-blur-sm border border-border/50 hover:bg-background/80 transition-all hover:scale-105 duration-300"
+                  className="flex flex-col items-center p-4 rounded-2xl bg-background/50 backdrop-blur-sm border border-border/50 hover:bg-background/80 transition-all hover:scale-105 duration-300 animate-in fade-in slide-in-from-bottom-4 fill-mode-backwards"
+                  style={{ animationDelay: `${400 + i * 100}ms` }}
                 >
                   <span className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground/70">
                     {stat.value}
@@ -178,8 +208,37 @@ export default async function Home() {
         </div>
       </section>
 
+      {/* Trending Courses Section */}
+      {trendingCourses.length > 0 && (
+        <section className="py-24 bg-background">
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-12">
+              <div className="inline-flex items-center gap-2 mb-4">
+                <TrendingUp className="w-5 h-5 text-primary" />
+                <h2 className="text-3xl font-bold">{t("trendingTitle")}</h2>
+              </div>
+              <p className="text-muted-foreground max-w-lg mx-auto">
+                {t("trendingDesc")}
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-w-5xl mx-auto">
+              {trendingCourses.map((course, i) => (
+                <div
+                  key={course.code}
+                  className="animate-in fade-in slide-in-from-bottom-4 fill-mode-backwards"
+                  style={{ animationDelay: `${i * 80}ms` }}
+                >
+                  <TrendingCourseCard course={course} />
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* Features Section */}
-      <section className="py-24 bg-background">
+      <section className="py-24 bg-muted/30">
         <div className="container mx-auto px-4">
           <div className="text-center max-w-2xl mx-auto mb-16">
             <h2 className="text-3xl font-bold mb-4">{t("featuresTitle")}</h2>

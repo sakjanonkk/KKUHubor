@@ -13,6 +13,7 @@ import {
 import { Check, X, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 interface TagRequest {
   request_id: number;
@@ -29,6 +30,7 @@ interface TagRequestManagementProps {
 export function TagRequestManagement({ requests }: TagRequestManagementProps) {
   const [processingId, setProcessingId] = useState<number | null>(null);
   const router = useRouter();
+  const t = useTranslations("Admin");
 
   const handleAction = async (
     requestId: number,
@@ -44,10 +46,10 @@ export function TagRequestManagement({ requests }: TagRequestManagementProps) {
 
       if (!res.ok) throw new Error("Failed to process request");
 
-      toast.success(`Request ${action}ed successfully`);
+      toast.success(action === "approve" ? t("tagApproveSuccess") : t("tagRejectSuccess"));
       router.refresh();
-    } catch (error) {
-      toast.error("Something went wrong");
+    } catch {
+      toast.error(t("tagError"));
     } finally {
       setProcessingId(null);
     }
@@ -58,10 +60,10 @@ export function TagRequestManagement({ requests }: TagRequestManagementProps) {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Course</TableHead>
-            <TableHead>Requested Tag</TableHead>
-            <TableHead>Date</TableHead>
-            <TableHead className="text-right">Actions</TableHead>
+            <TableHead>{t("tagCourse")}</TableHead>
+            <TableHead>{t("tagRequested")}</TableHead>
+            <TableHead>{t("tagDate")}</TableHead>
+            <TableHead className="text-right">{t("tagActions")}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -71,7 +73,7 @@ export function TagRequestManagement({ requests }: TagRequestManagementProps) {
                 colSpan={4}
                 className="text-center h-24 text-muted-foreground"
               >
-                No pending tag requests.
+                {t("noTagRequests")}
               </TableCell>
             </TableRow>
           ) : (
@@ -88,7 +90,7 @@ export function TagRequestManagement({ requests }: TagRequestManagementProps) {
                     {req.tag_name}
                   </span>
                 </TableCell>
-                <TableCell>
+                <TableCell suppressHydrationWarning>
                   {new Date(req.created_at).toLocaleDateString()}
                 </TableCell>
                 <TableCell className="text-right">

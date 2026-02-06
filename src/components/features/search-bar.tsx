@@ -14,7 +14,12 @@ interface SearchResult {
   name_en: string;
 }
 
-export function SearchBar() {
+interface SearchBarProps {
+  variant?: "hero" | "navbar";
+  onSelect?: () => void;
+}
+
+export function SearchBar({ variant = "hero", onSelect }: SearchBarProps) {
   const router = useRouter();
   const locale = useLocale();
   const [query, setQuery] = useState("");
@@ -91,29 +96,45 @@ export function SearchBar() {
     router.push(`/${locale}/courses/${code}`);
     setShowDropdown(false);
     setQuery("");
+    onSelect?.();
   };
 
   const t = useTranslations("Common");
 
+  const isNavbar = variant === "navbar";
+
   return (
-    <div className="relative w-full max-w-xl" ref={dropdownRef}>
+    <div className={cn("relative w-full", isNavbar ? "max-w-[280px]" : "max-w-xl")} ref={dropdownRef}>
       <div className="flex items-center gap-2">
         <div className="relative w-full">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Search className={cn(
+            "absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground",
+            isNavbar ? "h-3.5 w-3.5" : "h-4 w-4"
+          )} />
           <Input
             placeholder={t("searchPlaceholder")}
-            className="pl-10 !h-12 text-base shadow-sm"
+            className={cn(
+              "pl-9",
+              isNavbar
+                ? "h-9 text-sm bg-muted/40 border-border/50 focus:bg-background"
+                : "pl-10 !h-12 text-base shadow-sm"
+            )}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            onKeyDown={handleKeyDown}
+            onKeyDown={(e) => {
+              handleKeyDown(e);
+              if (e.key === "Enter") onSelect?.();
+            }}
             onFocus={() => {
               if (query.trim()) setShowDropdown(true);
             }}
           />
         </div>
-        <Button size="lg" className="!h-12 px-8" onClick={handleSearch}>
-          {t("searchButton")}
-        </Button>
+        {!isNavbar && (
+          <Button size="lg" className="!h-12 px-8" onClick={handleSearch}>
+            {t("searchButton")}
+          </Button>
+        )}
       </div>
 
       {/* Autocomplete Dropdown */}

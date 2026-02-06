@@ -12,6 +12,7 @@ export interface Course {
   avgRating?: number;
   reviewCount?: number;
   tags?: string[];
+  ratingDistribution?: number[];
 }
 
 export interface Review {
@@ -24,4 +25,5 @@ export interface Review {
   content: string;
   createdAt: Date;
   likeCount?: number;
+  sessionId?: string;
 }

@@ -32,6 +32,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { StarRatingInput } from "./star-rating-input";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
 
@@ -83,6 +84,13 @@ export function ReviewForm({ courseId }: ReviewFormProps) {
 
   async function onSubmit(values: FormValues) {
     try {
+      // Get or create session ID for review ownership
+      let sessionId = localStorage.getItem("session_id");
+      if (!sessionId) {
+        sessionId = Math.random().toString(36).substring(2);
+        localStorage.setItem("session_id", sessionId);
+      }
+
       const response = await fetch("/api/reviews", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -93,6 +101,7 @@ export function ReviewForm({ courseId }: ReviewFormProps) {
           grade_received: values.gradeReceived,
           semester: values.semester,
           content: values.content,
+          session_id: sessionId,
         }),
       });
 
@@ -144,23 +153,12 @@ export function ReviewForm({ courseId }: ReviewFormProps) {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>{t("ratingLabel")}</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder={t("selectRating")} />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {[5, 4, 3, 2, 1].map((rating) => (
-                          <SelectItem key={rating} value={rating.toString()}>
-                            {rating} {t("ratingSuffix")}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                    <FormControl>
+                      <StarRatingInput
+                        value={Number(field.value)}
+                        onChange={(val) => field.onChange(val.toString())}
+                      />
+                    </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -201,9 +199,25 @@ export function ReviewForm({ courseId }: ReviewFormProps) {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>{t("semesterLabel")}</FormLabel>
-                  <FormControl>
-                    <Input placeholder={t("semesterPlaceholder")} {...field} />
-                  </FormControl>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder={t("semesterPlaceholder")} />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {["1/2568", "2/2568", "3/2568", "1/2567", "2/2567", "3/2567", "1/2566", "2/2566"].map(
+                        (sem) => (
+                          <SelectItem key={sem} value={sem}>
+                            {sem}
+                          </SelectItem>
+                        )
+                      )}
+                    </SelectContent>
+                  </Select>
                   <FormMessage />
                 </FormItem>
               )}
@@ -220,7 +234,12 @@ export function ReviewForm({ courseId }: ReviewFormProps) {
                       {...field}
                     />
                   </FormControl>
-                  <FormMessage />
+                  <div className="flex justify-between items-center">
+                    <FormMessage />
+                    <span className={`text-xs ${(field.value?.length || 0) > 2000 ? "text-destructive" : "text-muted-foreground"}`}>
+                      {field.value?.length || 0}/2000
+                    </span>
+                  </div>
                 </FormItem>
               )}
             />

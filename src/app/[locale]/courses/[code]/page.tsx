@@ -8,6 +8,9 @@ import { getTranslations } from "next-intl/server";
 
 import { getCourseDistribution } from "@/actions/get-course-distribution";
 import { ScoreDistribution } from "@/components/features/courses/score-distribution";
+import { CourseStats } from "@/components/features/courses/course-stats";
+import { ShareButton } from "@/components/features/courses/share-button";
+import { Breadcrumb } from "@/components/layout/breadcrumb";
 import { PageHeader } from "@/components/layout/page-header";
 
 // Define Page Props manually for Next.js 15+ compatibility
@@ -37,7 +40,7 @@ async function getCourse(code: string): Promise<Course | null> {
 async function getReviews(courseId: number): Promise<Review[]> {
   // Using explicit column selection to match interface
   const query = `
-    SELECT 
+    SELECT
       review_id as id,
       course_id as "courseId",
       reviewer_name as "reviewerName",
@@ -46,6 +49,7 @@ async function getReviews(courseId: number): Promise<Review[]> {
       semester,
       content,
       created_at as "createdAt",
+      session_id as "sessionId",
       (SELECT COUNT(*)::int FROM review_likes WHERE review_id = reviews.review_id) as "likeCount"
     FROM reviews
     WHERE course_id = $1
@@ -59,6 +63,7 @@ export default async function CourseDetailPage({ params }: PageProps) {
   const { code } = await params;
   const course = await getCourse(decodedCode(code));
   const t = await getTranslations("CourseDetail");
+  const tNav = await getTranslations("Navbar");
 
   if (!course) {
     notFound();
@@ -70,6 +75,26 @@ export default async function CourseDetailPage({ params }: PageProps) {
     getCourseDistribution(course.id),
   ]);
 
+  // Compute grade and semester stats from reviews
+  const gradeCounts: Record<string, number> = {};
+  const semesterCounts: Record<string, number> = {};
+  for (const r of reviews) {
+    if (r.gradeReceived) {
+      gradeCounts[r.gradeReceived] = (gradeCounts[r.gradeReceived] || 0) + 1;
+    }
+    if (r.semester) {
+      semesterCounts[r.semester] = (semesterCounts[r.semester] || 0) + 1;
+    }
+  }
+  const avgGrade =
+    Object.keys(gradeCounts).length > 0
+      ? Object.entries(gradeCounts).sort((a, b) => b[1] - a[1])[0][0]
+      : null;
+  const commonSemester =
+    Object.keys(semesterCounts).length > 0
+      ? Object.entries(semesterCounts).sort((a, b) => b[1] - a[1])[0][0]
+      : null;
+
   return (
     <main className="min-h-screen bg-background pb-20">
       <PageHeader
@@ -78,15 +103,28 @@ export default async function CourseDetailPage({ params }: PageProps) {
           course.facultyNameEN || course.facultyNameTH
         }`}
       >
-        <div className="mt-4 md:mt-0">
+        <div className="mt-4 md:mt-0 flex items-center gap-2">
+          <ShareButton />
           <ReviewForm courseId={course.id} />
         </div>
       </PageHeader>
 
       <div className="container mx-auto px-4 py-8">
+        <Breadcrumb
+          items={[
+            { label: tNav("courses"), href: "/courses" },
+            { label: course.code },
+          ]}
+        />
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Left Column: Stats & Distribution */}
           <div className="md:col-span-1 space-y-6">
+            <CourseStats
+              totalReviews={reviews.length}
+              avgGrade={avgGrade}
+              commonSemester={commonSemester}
+              t={t}
+            />
             <Card className="bg-card/50 backdrop-blur-sm border-border/50">
               <CardHeader>
                 <CardTitle className="text-lg">
@@ -98,6 +136,10 @@ export default async function CourseDetailPage({ params }: PageProps) {
                   distribution={distributionData.distribution}
                   totalReviews={distributionData.totalReviews}
                   averageRating={distributionData.averageRating}
+                  translations={{
+                    reviews: t("reviewsCount"),
+                    star: t("star"),
+                  }}
                 />
               </CardContent>
             </Card>

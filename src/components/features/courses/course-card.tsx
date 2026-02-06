@@ -25,7 +25,7 @@ export function CourseCard({ course }: CourseCardProps) {
   const hasReviews = (course.reviewCount || 0) > 0;
 
   return (
-    <Card className="flex flex-col h-full hover:shadow-xl hover:shadow-primary/5 hover:-translate-y-1 hover:border-primary/20 transition-all duration-300 group relative bg-card/50 backdrop-blur-sm">
+    <Card className="flex flex-col h-full hover:shadow-xl hover:shadow-primary/5 hover:-translate-y-1 hover:border-primary/20 active:scale-[0.98] transition-all duration-300 group relative bg-card/50 backdrop-blur-sm">
       {/* Bookmark Button - Top Right */}
       <div className="absolute top-2 right-2 z-10">
         <BookmarkButton courseCode={course.code} />
@@ -80,7 +80,7 @@ export function CourseCard({ course }: CourseCardProps) {
             ))}
             {course.tags.length > 3 && (
               <Badge variant="secondary" className="text-xs">
-                +{course.tags.length - 3} more
+                {t("moreTag", { count: course.tags.length - 3 })}
               </Badge>
             )}
             <AddTagDialog courseId={course.id} />
@@ -93,19 +93,37 @@ export function CourseCard({ course }: CourseCardProps) {
           </div>
         )}
 
-        <div className="mt-4 pt-4 border-t flex items-center justify-between">
-          <div className="text-xs text-muted-foreground">
-            {hasReviews ? (
-              <span className="flex items-center gap-1">
-                <span className="font-semibold text-foreground">
-                  {course.reviewCount}
-                </span>{" "}
-                {t("reviewsSuffix")}
-              </span>
-            ) : (
-              <span className="italic opacity-70">{t("noReviews")}</span>
-            )}
+        <div className="mt-4 pt-4 border-t">
+          <div className="flex items-center justify-between mb-2">
+            <div className="text-xs text-muted-foreground">
+              {hasReviews ? (
+                <span className="flex items-center gap-1">
+                  <span className="font-semibold text-foreground">
+                    {course.reviewCount}
+                  </span>{" "}
+                  {t("reviewsSuffix")}
+                </span>
+              ) : (
+                <span className="italic opacity-70">{t("noReviews")}</span>
+              )}
+            </div>
           </div>
+          {/* Mini Rating Distribution */}
+          {hasReviews && course.ratingDistribution && (
+            <div className="flex items-center gap-0.5">
+              {[...course.ratingDistribution].reverse().map((count, i) => {
+                const max = Math.max(...course.ratingDistribution!, 1);
+                const height = Math.max(4, (count / max) * 16);
+                return (
+                  <div
+                    key={i}
+                    className="flex-1 rounded-sm bg-yellow-400/80 dark:bg-yellow-500/60 transition-all"
+                    style={{ height: `${height}px` }}
+                  />
+                );
+              })}
+            </div>
+          )}
         </div>
       </CardContent>
       <CardFooter className="pt-0">

@@ -11,12 +11,17 @@ interface ScoreDistributionProps {
   distribution: RatingDistribution[];
   totalReviews: number;
   averageRating: number;
+  translations?: {
+    reviews: string;
+    star: string;
+  };
 }
 
 export function ScoreDistribution({
   distribution,
   totalReviews,
   averageRating,
+  translations,
 }: ScoreDistributionProps) {
   return (
     <div className="space-y-4">
@@ -38,14 +43,14 @@ export function ScoreDistribution({
             ))}
           </div>
           <span className="text-xs text-muted-foreground">
-            {totalReviews} reviews
+            {totalReviews} {translations?.reviews ?? "reviews"}
           </span>
         </div>
         <div className="flex-1 space-y-2">
           {distribution.map((item) => (
             <div key={item.rating} className="flex items-center gap-2 text-sm">
               <div className="w-12 text-right whitespace-nowrap text-muted-foreground">
-                {item.rating} star
+                {item.rating} {translations?.star ?? "star"}
               </div>
               <Progress value={item.percentage} className="h-2.5 flex-1" />
               <div className="w-12 text-right text-muted-foreground text-xs">

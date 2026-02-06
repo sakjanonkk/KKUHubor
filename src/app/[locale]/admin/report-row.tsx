@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useFormatter } from "next-intl";
+import { useFormatter, useTranslations } from "next-intl";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -22,20 +22,21 @@ interface ReportRowProps {
 export function ReportRow({ report }: ReportRowProps) {
   const router = useRouter();
   const format = useFormatter();
+  const t = useTranslations("Admin");
   const [loading, setLoading] = useState(false);
 
-  async function handleKeepReview() {
-    if (!confirm("Are you sure you want to dismiss this report?")) return;
+  async function handleDismissReport() {
+    if (!confirm(t("dismissConfirm"))) return;
     setLoading(true);
     try {
       const res = await fetch(`/api/admin/reports/${report.report_id}`, {
-        method: "DELETE",
+        method: "PATCH",
       });
       if (res.ok) {
-        toast.success("Report dismissed");
+        toast.success(t("dismissSuccess"));
         router.refresh();
       } else {
-        toast.error("Failed to dismiss report");
+        toast.error(t("dismissError"));
       }
     } finally {
       setLoading(false);
@@ -43,22 +44,17 @@ export function ReportRow({ report }: ReportRowProps) {
   }
 
   async function handleDeleteReview() {
-    if (
-      !confirm(
-        "Are you sure you want to delete this review? This cannot be undone."
-      )
-    )
-      return;
+    if (!confirm(t("deleteConfirm"))) return;
     setLoading(true);
     try {
       const res = await fetch(`/api/admin/reviews/${report.review_id}`, {
         method: "DELETE",
       });
       if (res.ok) {
-        toast.success("Review deleted");
+        toast.success(t("deleteSuccess"));
         router.refresh();
       } else {
-        toast.error("Failed to delete review");
+        toast.error(t("deleteError"));
       }
     } finally {
       setLoading(false);
@@ -85,12 +81,12 @@ export function ReportRow({ report }: ReportRowProps) {
         <Button
           variant="outline"
           size="sm"
-          onClick={handleKeepReview}
+          onClick={handleDismissReport}
           disabled={loading}
           className="text-green-600 hover:text-green-700 hover:bg-green-50"
         >
           <CheckCircle className="w-4 h-4 mr-1" />
-          Keep
+          {t("dismiss")}
         </Button>
         <Button
           variant="destructive"
@@ -99,7 +95,7 @@ export function ReportRow({ report }: ReportRowProps) {
           disabled={loading}
         >
           <Trash2 className="w-4 h-4 mr-1" />
-          Delete
+          {t("deleteReview")}
         </Button>
       </TableCell>
     </TableRow>

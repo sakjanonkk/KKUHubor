@@ -12,6 +12,7 @@ import {
   ShieldCheck,
   Heart,
   Languages,
+  Search,
 } from "lucide-react";
 import {
   Sheet,
@@ -23,7 +24,9 @@ import {
 } from "@/components/ui/sheet";
 import { UserIdentityDialog } from "@/components/features/user/user-identity-dialog";
 import { LanguageSwitcher } from "@/components/language-switcher";
+import { SearchBar } from "@/components/features/search-bar";
 import { useTranslations } from "next-intl";
+import { useState } from "react";
 
 interface NavbarProps {
   isAdmin?: boolean;
@@ -32,6 +35,7 @@ interface NavbarProps {
 export function Navbar({ isAdmin = false }: NavbarProps) {
   const pathname = usePathname();
   const t = useTranslations("Navbar");
+  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
 
   const navItems = [
     { name: t("home"), href: "/", icon: Home },
@@ -51,13 +55,13 @@ export function Navbar({ isAdmin = false }: NavbarProps) {
         </Link>
 
         {/* Desktop Navigation */}
-        <div className="hidden md:flex items-center gap-6">
+        <div className="hidden md:flex items-center gap-4">
           {navItems.map((item) => (
             <Link
               key={item.href}
               href={item.href}
               className={cn(
-                "text-sm font-medium transition-colors hover:text-primary",
+                "text-sm font-medium transition-colors hover:text-primary whitespace-nowrap",
                 pathname === item.href
                   ? "text-foreground"
                   : "text-muted-foreground"
@@ -66,13 +70,33 @@ export function Navbar({ isAdmin = false }: NavbarProps) {
               {item.name}
             </Link>
           ))}
+          <SearchBar variant="navbar" />
           <UserIdentityDialog />
           <LanguageSwitcher />
           <ModeToggle />
         </div>
 
         {/* Mobile Navigation */}
-        <div className="md:hidden">
+        <div className="md:hidden flex items-center gap-1">
+          {/* Mobile Search */}
+          <Sheet open={mobileSearchOpen} onOpenChange={setMobileSearchOpen}>
+            <SheetTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="hover:bg-muted/50"
+              >
+                <Search className="h-5 w-5" />
+                <span className="sr-only">Search</span>
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="top" className="h-auto border-b shadow-lg p-0 bg-background/95 backdrop-blur-xl">
+              <div className="p-4 pt-10">
+                <SearchBar variant="hero" onSelect={() => setMobileSearchOpen(false)} />
+              </div>
+            </SheetContent>
+          </Sheet>
+
           <Sheet>
             <SheetTrigger asChild>
               <Button
@@ -105,7 +129,7 @@ export function Navbar({ isAdmin = false }: NavbarProps) {
                 <div className="flex-1 overflow-y-auto py-6 px-4">
                   <div className="flex flex-col gap-3">
                     <div className="px-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">
-                      Menu
+                      {t("menu")}
                     </div>
                     {navItems.map((item) => (
                       <SheetClose asChild key={item.href}>
@@ -136,7 +160,7 @@ export function Navbar({ isAdmin = false }: NavbarProps) {
 
                   <div className="space-y-4">
                     <div className="px-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                      Settings
+                      {t("settings")}
                     </div>
 
                     <div className="flex items-center justify-between p-3 rounded-xl bg-muted/30 border border-border/50">
@@ -144,7 +168,7 @@ export function Navbar({ isAdmin = false }: NavbarProps) {
                         <div className="p-2 rounded-lg bg-background shadow-sm">
                           <Languages className="h-4 w-4 text-orange-500" />
                         </div>
-                        <span className="font-medium text-sm">Language</span>
+                        <span className="font-medium text-sm">{t("language")}</span>
                       </div>
                       <LanguageSwitcher />
                     </div>

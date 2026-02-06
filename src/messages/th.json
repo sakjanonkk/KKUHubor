@@ -2,11 +2,14 @@
   "Navbar": {
     "brand": "KKUHubor",
     "home": "หน้าหลัก",
-    "courses": "รายวิชาทั้งหมด",
-    "bookmarks": "วิชาเรียนที่บันทึกไว้",
+    "courses": "รายวิชา",
+    "bookmarks": "บันทึกไว้",
     "admin": "แอดมิน",
     "theme": "ธีม",
-    "identity": "ตัวตน"
+    "identity": "ตัวตน",
+    "menu": "เมนู",
+    "settings": "ตั้งค่า",
+    "language": "ภาษา"
   },
   "Theme": {
     "toggle": "เปลี่ยนธีม",
@@ -43,7 +46,9 @@
     "feature2Title": "รีวิวแบบไม่เปิดเผยตัว",
     "feature2Desc": "รีวิวตรงๆ ไม่ต้องกลัวใครรู้ว่าเราเขียน",
     "feature3Title": "เลือกวิชาได้ดีขึ้น",
-    "feature3Desc": "วางแผนตารางเรียนจากรีวิวคนที่เรียนมาก่อน"
+    "feature3Desc": "วางแผนตารางเรียนจากรีวิวคนที่เรียนมาก่อน",
+    "trendingTitle": "วิชายอดนิยม",
+    "trendingDesc": "วิชาที่มีคนรีวิวเยอะที่สุด ดูว่าเพื่อนๆ ลงอะไรกัน"
   },
   "Common": {
     "loading": "กำลังโหลด...",
@@ -75,7 +80,14 @@
     "sortMostRecent": "ล่าสุด",
     "sortMostHelpful": "มีประโยชน์ที่สุด",
     "sortHighestRated": "คะแนนสูงสุด",
-    "sortLowestRated": "คะแนนต่ำสุด"
+    "sortLowestRated": "คะแนนต่ำสุด",
+    "share": "แชร์",
+    "copied": "คัดลอกลิงก์แล้ว",
+    "totalReviews": "รีวิวทั้งหมด",
+    "avgGrade": "เกรดยอดนิยม",
+    "commonSemester": "เทอมล่าสุด",
+    "reviewsCount": "รีวิว",
+    "star": "ดาว"
   },
   "UserSettings": {
     "title": "ตั้งค่าผู้ใช้",
@@ -151,7 +163,49 @@
     "actions": "ดำเนินการ",
     "noReports": "ไม่มีรายงาน",
     "dismiss": "ยกเลิก",
-    "deleteReview": "ลบรีวิว"
+    "deleteReview": "ลบรีวิว",
+    "reviewsPerDay": "รีวิวต่อวัน (7 วัน)",
+    "ratingOverview": "ภาพรวมคะแนน",
+    "topCoursesTitle": "วิชายอดนิยม Top 5",
+    "reviewsUnit": "รีวิว",
+    "noData": "ยังไม่มีข้อมูล",
+    "recentActivity": "กิจกรรมล่าสุด",
+    "noActivity": "ยังไม่มีกิจกรรม",
+    "activityReview": "เขียนรีวิว",
+    "activityComment": "แสดงความคิดเห็น",
+    "activityReport": "รายงาน",
+    "dismissConfirm": "ต้องการยกเลิกรายงานนี้ใช่ไหม?",
+    "dismissSuccess": "ยกเลิกรายงานเรียบร้อย",
+    "dismissError": "ยกเลิกรายงานไม่สำเร็จ",
+    "deleteConfirm": "ต้องการลบรีวิวนี้จริงๆ ใช่ไหม? ย้อนกลับไม่ได้นะ",
+    "deleteSuccess": "ลบรีวิวเรียบร้อย",
+    "deleteError": "ลบรีวิวไม่สำเร็จ",
+    "addCourseTitle": "เพิ่มวิชาด้วยตนเอง",
+    "addCourseDesc": "เพิ่มวิชาลงฐานข้อมูลโดยตรง",
+    "courseCode": "รหัสวิชา",
+    "selectFaculty": "เลือกคณะ",
+    "courseNameTH": "ชื่อวิชา (ไทย)",
+    "courseNameEN": "ชื่อวิชา (อังกฤษ)",
+    "addCourse": "เพิ่มวิชา",
+    "pendingRequestsTitle": "คำขอเพิ่มวิชา",
+    "pendingRequestsDesc": "ตรวจสอบคำขอจากผู้ใช้",
+    "code": "รหัส",
+    "name": "ชื่อ",
+    "noPendingRequests": "ไม่มีคำขอรอดำเนินการ",
+    "approveSuccess": "อนุมัติและเพิ่มวิชาแล้ว",
+    "approveError": "อนุมัติไม่สำเร็จ",
+    "rejectSuccess": "ปฏิเสธคำขอแล้ว",
+    "rejectError": "ปฏิเสธไม่สำเร็จ",
+    "addCourseSuccess": "เพิ่มวิชาสำเร็จ",
+    "addCourseError": "เพิ่มวิชาไม่สำเร็จ",
+    "tagCourse": "วิชา",
+    "tagRequested": "แท็กที่ขอ",
+    "tagDate": "วันที่",
+    "tagActions": "ดำเนินการ",
+    "noTagRequests": "ไม่มีคำขอแท็กรอดำเนินการ",
+    "tagApproveSuccess": "อนุมัติแท็กแล้ว",
+    "tagRejectSuccess": "ปฏิเสธแท็กแล้ว",
+    "tagError": "เกิดข้อผิดพลาด"
   },
   "AddTag": {
     "button": "เพิ่มแท็ก",
@@ -169,6 +223,16 @@
     "anonymous": "ไม่ระบุชื่อ",
     "comments": "ความคิดเห็น",
     "likeError": "ไม่สามารถกดไลก์ได้",
+    "edit": "แก้ไขรีวิว",
+    "delete": "ลบรีวิว",
+    "deleteConfirm": "ต้องการลบรีวิวนี้จริงๆ ใช่ไหม?",
+    "deleteSuccess": "ลบรีวิวเรียบร้อยแล้ว",
+    "deleteError": "ลบรีวิวไม่สำเร็จ",
+    "editTitle": "แก้ไขรีวิว",
+    "editSubtitle": "แก้ไขรีวิวของคุณ",
+    "editSuccess": "แก้ไขรีวิวเรียบร้อยแล้ว",
+    "editError": "แก้ไขรีวิวไม่สำเร็จ",
+    "update": "บันทึก",
     "Form": {
       "button": "เขียนรีวิว",
       "title": "เขียนรีวิว",
@@ -207,7 +271,10 @@
     "viewReviews": "ดูรีวิว",
     "writeFirstReview": "เขียนรีวิวคนแรก",
     "reviewsSuffix": "รีวิว",
-    "noReviews": "ยังไม่มีรีวิว"
+    "noReviews": "ยังไม่มีรีวิว",
+    "previous": "ก่อนหน้า",
+    "next": "ถัดไป",
+    "moreTag": "อีก {count} แท็ก"
   },
   "Report": {
     "title": "รายงานรีวิว",
@@ -227,6 +294,12 @@
     "success": "ส่งรายงานเรียบร้อย ขอบคุณสำหรับข้อมูล",
     "error": "เกิดข้อผิดพลาด ลองใหม่อีกครั้ง",
     "selectReasonError": "กรุณาเลือกเหตุผล"
+  },
+  "Footer": {
+    "description": "แพลตฟอร์มรีวิววิชาเรียนสำหรับนักศึกษา มข.",
+    "quickLinks": "ลิงก์ด่วน",
+    "settings": "ตั้งค่า",
+    "builtFor": "สร้างเพื่อนักศึกษา มข."
   },
   "Comments": {
     "title": "ความคิดเห็น",

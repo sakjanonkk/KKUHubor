@@ -4,11 +4,12 @@ import { getCourses, SortOption } from "@/actions/get-courses";
 import { CourseCard } from "@/components/features/courses/course-card";
 import { CourseRequestDialog } from "@/components/features/courses/course-request-dialog";
 import { CourseFilter } from "@/components/features/courses/course-filter";
+import { CoursePagination } from "@/components/features/courses/course-pagination";
 import { PageHeader } from "@/components/layout/page-header";
 import { CourseCategory, GradingType } from "@/lib/enums";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Search } from "lucide-react";
+import { Search, BookOpen } from "lucide-react";
 
 interface CoursesPageProps {
   searchParams: Promise<{
@@ -19,6 +20,7 @@ interface CoursesPageProps {
     minRating?: string;
     hasReviews?: string;
     sortBy?: string;
+    page?: string;
   }>;
 }
 
@@ -31,6 +33,7 @@ export default async function CoursesPage({ searchParams }: CoursesPageProps) {
     minRating,
     hasReviews,
     sortBy,
+    page,
   } = await searchParams;
 
   const t = await getTranslations("Courses");
@@ -54,14 +57,17 @@ export default async function CoursesPage({ searchParams }: CoursesPageProps) {
   const validHasReviews = hasReviews === "true";
   const validSortBy = sortBy as SortOption | undefined;
 
-  const courses = await getCourses(
+  const validPage = page ? parseInt(page, 10) : 1;
+
+  const { courses, totalCount, totalPages, currentPage } = await getCourses(
     query,
     validCategory,
     validGradingType,
     validFacultyId,
     validMinRating,
     validHasReviews,
-    validSortBy
+    validSortBy,
+    validPage
   );
 
   // Count active filters for display
@@ -105,8 +111,8 @@ export default async function CoursesPage({ searchParams }: CoursesPageProps) {
         {/* Results Count */}
         <div className="text-sm text-muted-foreground mb-6 font-medium">
           {t("foundPrefix")}{" "}
-          <span className="text-foreground font-bold">{courses.length}</span>{" "}
-          {courses.length !== 1 ? t("coursesUnit") : t("courseUnit")}
+          <span className="text-foreground font-bold">{totalCount}</span>{" "}
+          {totalCount !== 1 ? t("coursesUnit") : t("courseUnit")}
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -121,20 +127,28 @@ export default async function CoursesPage({ searchParams }: CoursesPageProps) {
               </div>
             ))
           ) : (
-            <div className="col-span-full flex flex-col items-center justify-center py-20 text-center border rounded-3xl bg-muted/20 border-border/50 border-dashed">
-              <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mb-4">
-                <Search className="w-8 h-8 text-muted-foreground" />
+            <div className="col-span-full flex flex-col items-center justify-center py-24 text-center border rounded-3xl bg-muted/20 border-border/50 border-dashed animate-in fade-in zoom-in duration-500">
+              <div className="relative mb-6">
+                <div className="w-20 h-20 rounded-full bg-muted flex items-center justify-center">
+                  <Search className="w-10 h-10 text-muted-foreground" />
+                </div>
+                <div className="absolute -top-1 -right-1 w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+                  <BookOpen className="w-4 h-4 text-primary" />
+                </div>
               </div>
-              <h3 className="text-xl font-bold mb-2">{t("noResultTitle")}</h3>
-              <p className="text-muted-foreground max-w-sm mx-auto mb-6">
+              <h3 className="text-2xl font-bold mb-3">{t("noResultTitle")}</h3>
+              <p className="text-muted-foreground max-w-md mx-auto mb-8 text-base leading-relaxed">
                 {t("noResultDescription")}
               </p>
-              <Button variant="outline" asChild>
+              <Button variant="outline" size="lg" asChild className="rounded-full px-8">
                 <Link href="/courses">{t("clearFilters")}</Link>
               </Button>
             </div>
           )}
         </div>
+
+        {/* Pagination */}
+        <CoursePagination totalPages={totalPages} currentPage={currentPage} />
       </div>
     </main>
   );

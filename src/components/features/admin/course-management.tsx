@@ -28,6 +28,7 @@ import {
 import { Check, X, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 interface CourseRequest {
   request_id: number;
@@ -54,6 +55,7 @@ export function CourseManagement({
   faculties,
 }: CourseManagementProps) {
   const router = useRouter();
+  const t = useTranslations("Admin");
   const [loadingId, setLoadingId] = useState<number | null>(null);
 
   // Add Course Form State
@@ -73,10 +75,10 @@ export function CourseManagement({
         body: JSON.stringify({ requestId }),
       });
       if (!res.ok) throw new Error("Failed");
-      toast.success("Course approved and added.");
+      toast.success(t("approveSuccess"));
       router.refresh();
-    } catch (e) {
-      toast.error("Error approving request.");
+    } catch {
+      toast.error(t("approveError"));
     } finally {
       setLoadingId(null);
     }
@@ -90,10 +92,10 @@ export function CourseManagement({
         body: JSON.stringify({ requestId }),
       });
       if (!res.ok) throw new Error("Failed");
-      toast.success("Request rejected.");
+      toast.success(t("rejectSuccess"));
       router.refresh();
-    } catch (e) {
-      toast.error("Error rejecting request.");
+    } catch {
+      toast.error(t("rejectError"));
     } finally {
       setLoadingId(null);
     }
@@ -112,11 +114,11 @@ export function CourseManagement({
         body: JSON.stringify(payload),
       });
       if (!res.ok) throw new Error("Failed");
-      toast.success("Course added successfully.");
+      toast.success(t("addCourseSuccess"));
       setNewCourse({ courseCode: "", nameTH: "", nameEN: "", facultyId: "" });
       router.refresh();
-    } catch (e) {
-      toast.error("Error adding course.");
+    } catch {
+      toast.error(t("addCourseError"));
     } finally {
       setAddingCourse(false);
     }
@@ -127,16 +129,14 @@ export function CourseManagement({
       {/* 1. Add Course Manually */}
       <Card>
         <CardHeader>
-          <CardTitle>Add Course Manually</CardTitle>
-          <CardDescription>
-            Directly add a course to the database.
-          </CardDescription>
+          <CardTitle>{t("addCourseTitle")}</CardTitle>
+          <CardDescription>{t("addCourseDesc")}</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleAddCourse} className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <Input
-                placeholder="Course Code"
+                placeholder={t("courseCode")}
                 value={newCourse.courseCode}
                 onChange={(e) =>
                   setNewCourse({ ...newCourse, courseCode: e.target.value })
@@ -150,7 +150,7 @@ export function CourseManagement({
                 }
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="Select Faculty" />
+                  <SelectValue placeholder={t("selectFaculty")} />
                 </SelectTrigger>
                 <SelectContent>
                   {faculties.map((f) => (
@@ -165,7 +165,7 @@ export function CourseManagement({
               </Select>
             </div>
             <Input
-              placeholder="Course Name (Thai)"
+              placeholder={t("courseNameTH")}
               value={newCourse.nameTH}
               onChange={(e) =>
                 setNewCourse({ ...newCourse, nameTH: e.target.value })
@@ -173,7 +173,7 @@ export function CourseManagement({
               required
             />
             <Input
-              placeholder="Course Name (English)"
+              placeholder={t("courseNameEN")}
               value={newCourse.nameEN}
               onChange={(e) =>
                 setNewCourse({ ...newCourse, nameEN: e.target.value })
@@ -183,7 +183,7 @@ export function CourseManagement({
               {addingCourse && (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               )}
-              Add Course
+              {t("addCourse")}
             </Button>
           </form>
         </CardContent>
@@ -192,16 +192,16 @@ export function CourseManagement({
       {/* 2. Pending Requests */}
       <Card className="md:col-span-2 lg:col-span-1">
         <CardHeader>
-          <CardTitle>Pending Requests</CardTitle>
-          <CardDescription>Review user-submitted courses.</CardDescription>
+          <CardTitle>{t("pendingRequestsTitle")}</CardTitle>
+          <CardDescription>{t("pendingRequestsDesc")}</CardDescription>
         </CardHeader>
         <CardContent>
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Code</TableHead>
-                <TableHead>Name</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
+                <TableHead>{t("code")}</TableHead>
+                <TableHead>{t("name")}</TableHead>
+                <TableHead className="text-right">{t("actions")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -211,7 +211,7 @@ export function CourseManagement({
                     colSpan={3}
                     className="text-center text-muted-foreground h-24"
                   >
-                    No pending requests.
+                    {t("noPendingRequests")}
                   </TableCell>
                 </TableRow>
               ) : (

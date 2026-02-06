@@ -16,18 +16,21 @@ import { LogoutButton } from "@/components/features/admin/logout-button";
 import { ReportRow } from "./report-row";
 import { CourseManagement } from "@/components/features/admin/course-management";
 import { TagRequestManagement } from "@/components/features/admin/tag-request-management";
+import { AnalyticsCharts } from "@/components/features/admin/analytics-charts";
+import { RecentActivity } from "@/components/features/admin/recent-activity";
 
 async function getReports() {
   const query = `
-    SELECT 
-      r.report_id, 
-      r.reason, 
+    SELECT
+      r.report_id,
+      r.reason,
       r.created_at as report_date,
       rev.review_id,
       rev.content,
       rev.reviewer_name
     FROM reports r
     JOIN reviews rev ON r.review_id = rev.review_id
+    WHERE r.status = 'pending'
     ORDER BY r.created_at DESC
   `;
   const result = await db.query(query);
@@ -62,29 +65,60 @@ async function getAnalytics() {
   const totalCommentsQuery = `SELECT COUNT(*)::int as count FROM comments`;
   const pendingRequestsQuery = `SELECT COUNT(*)::int as count FROM course_requests WHERE status = 'pending'`;
   const topCoursesQuery = `
-    SELECT 
-      c.name_th, 
-      COUNT(r.review_id)::int as review_count 
-    FROM courses c 
-    JOIN reviews r ON c.course_id = r.course_id 
-    GROUP BY c.course_id, c.name_th 
-    ORDER BY review_count DESC 
+    SELECT
+      c.name_th,
+      c.course_code,
+      COUNT(r.review_id)::int as review_count
+    FROM courses c
+    JOIN reviews r ON c.course_id = r.course_id
+    GROUP BY c.course_id, c.name_th, c.course_code
+    ORDER BY review_count DESC
     LIMIT 5
   `;
+  const reviewsPerDayQuery = `
+    SELECT DATE(created_at)::text as day, COUNT(*)::int as count
+    FROM reviews WHERE created_at >= NOW() - INTERVAL '7 days'
+    GROUP BY DATE(created_at) ORDER BY day ASC
+  `;
+  const ratingDistQuery = `
+    SELECT rating, COUNT(*)::int as count
+    FROM reviews WHERE rating IS NOT NULL
+    GROUP BY rating ORDER BY rating ASC
+  `;
+  const recentActivityQuery = `
+    (SELECT 'review' as type, review_id as id, reviewer_name as actor, content, created_at FROM reviews ORDER BY created_at DESC LIMIT 5)
+    UNION ALL
+    (SELECT 'comment', comment_id, author_name, content, created_at FROM comments ORDER BY created_at DESC LIMIT 5)
+    ORDER BY created_at DESC LIMIT 10
+  `;
 
-  const [totalReviews, totalComments, pendingRequests, topCourses] =
+  const [totalReviews, totalComments, pendingRequests, topCourses, reviewsPerDay, ratingDist, recentActivity] =
     await Promise.all([
       db.query(totalReviewsQuery),
       db.query(totalCommentsQuery),
       db.query(pendingRequestsQuery),
       db.query(topCoursesQuery),
+      db.query(reviewsPerDayQuery),
+      db.query(ratingDistQuery),
+      db.query(recentActivityQuery),
     ]);
+
+  // Build rating distribution array [1-star, 2-star, ..., 5-star]
+  const ratingDistribution = [0, 0, 0, 0, 0];
+  for (const row of ratingDist.rows) {
+    if (row.rating >= 1 && row.rating <= 5) {
+      ratingDistribution[row.rating - 1] = row.count;
+    }
+  }
 
   return {
     totalReviews: totalReviews.rows[0]?.count || 0,
     totalComments: totalComments.rows[0]?.count || 0,
     pendingRequests: pendingRequests.rows[0]?.count || 0,
     topCourses: topCourses.rows,
+    reviewsPerDay: reviewsPerDay.rows,
+    ratingDistribution,
+    recentActivity: recentActivity.rows,
   };
 }
 
@@ -162,6 +196,33 @@ export default async function AdminDashboard() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Detailed Analytics */}
+      <AnalyticsCharts
+        reviewsPerDay={analytics.reviewsPerDay}
+        ratingDistribution={analytics.ratingDistribution}
+        topCourses={analytics.topCourses}
+        totalReviews={analytics.totalReviews}
+        translations={{
+          reviewsPerDay: t("reviewsPerDay"),
+          ratingOverview: t("ratingOverview"),
+          topCourses: t("topCoursesTitle"),
+          reviews: t("reviewsUnit"),
+          noData: t("noData"),
+        }}
+      />
+
+      {/* Recent Activity */}
+      <RecentActivity
+        activities={analytics.recentActivity}
+        translations={{
+          title: t("recentActivity"),
+          noActivity: t("noActivity"),
+          review: t("activityReview"),
+          comment: t("activityComment"),
+          report: t("activityReport"),
+        }}
+      />
 
       <Tabs defaultValue="reports" className="space-y-4">
         <TabsList>

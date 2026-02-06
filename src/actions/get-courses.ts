@@ -15,6 +15,7 @@ export type Course = {
   tags: string[];
   avgRating: number;
   reviewCount: number;
+  ratingDistribution: number[];
 };
 
 export type SortOption =
@@ -33,6 +34,15 @@ export interface GetCoursesParams {
   minRating?: number;
   hasReviews?: boolean;
   sortBy?: SortOption;
+  page?: number;
+  pageSize?: number;
+}
+
+export interface GetCoursesResult {
+  courses: Course[];
+  totalCount: number;
+  totalPages: number;
+  currentPage: number;
 }
 
 export async function getCourses(
@@ -42,8 +52,10 @@ export async function getCourses(
   facultyId?: number,
   minRating?: number,
   hasReviews?: boolean,
-  sortBy?: SortOption
-): Promise<Course[]> {
+  sortBy?: SortOption,
+  page: number = 1,
+  pageSize: number = 12
+): Promise<GetCoursesResult> {
   try {
     const whereClause: any = {};
 
@@ -71,8 +83,12 @@ export async function getCourses(
       whereClause.facultyId = facultyId;
     }
 
-    // Has reviews filter (handled in post-processing)
-    // Min rating filter (handled in post-processing)
+    // Has reviews filter - move to Prisma where clause
+    if (hasReviews) {
+      whereClause.reviews = { some: {} };
+    }
+
+    // Min rating filter (handled in post-processing since it needs aggregation)
 
     // Prisma findMany with relations
     const courses = await prisma.course.findMany({
@@ -97,6 +113,14 @@ export async function getCourses(
       const avgRating =
         reviewCount > 0 ? Number((totalRating / reviewCount).toFixed(1)) : 0;
 
+      // Calculate rating distribution [1-star, 2-star, 3-star, 4-star, 5-star]
+      const ratingDistribution = [0, 0, 0, 0, 0];
+      c.reviews.forEach((r: any) => {
+        if (r.rating >= 1 && r.rating <= 5) {
+          ratingDistribution[r.rating - 1]++;
+        }
+      });
+
       return {
         id: c.id,
         code: c.code,
@@ -109,16 +133,11 @@ export async function getCourses(
         tags: c.tags,
         avgRating,
         reviewCount,
+        ratingDistribution,
       };
     });
 
-    // Apply post-processing filters
-    if (hasReviews) {
-      formattedCourses = formattedCourses.filter(
-        (c: Course) => c.reviewCount > 0
-      );
-    }
-
+    // Apply post-processing filter for minRating (needs aggregation)
     if (minRating && minRating > 0) {
       formattedCourses = formattedCourses.filter(
         (c: Course) => c.avgRating >= minRating
@@ -165,9 +184,21 @@ export async function getCourses(
       }
     });
 
-    return formattedCourses;
+    // Apply pagination
+    const totalCount = formattedCourses.length;
+    const totalPages = Math.max(1, Math.ceil(totalCount / pageSize));
+    const currentPage = Math.min(Math.max(1, page), totalPages);
+    const startIndex = (currentPage - 1) * pageSize;
+    const paginatedCourses = formattedCourses.slice(startIndex, startIndex + pageSize);
+
+    return {
+      courses: paginatedCourses,
+      totalCount,
+      totalPages,
+      currentPage,
+    };
   } catch (error) {
     console.error("Failed to fetch courses:", error);
-    return [];
+    return { courses: [], totalCount: 0, totalPages: 1, currentPage: 1 };
   }
 }

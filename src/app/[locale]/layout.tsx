@@ -3,6 +3,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { cookies } from "next/headers";
 import "../globals.css";
 import { Navbar } from "@/components/layout/navbar";
+import { Footer } from "@/components/layout/footer";
+import { ScrollToTop } from "@/components/layout/scroll-to-top";
 import { Toaster } from "@/components/ui/sonner";
 import { BookmarkProvider } from "@/contexts/bookmark-context";
 import { ThemeProvider } from "@/components/theme-provider";
@@ -63,7 +65,9 @@ export default async function RootLayout({
               <div className="flex flex-col min-h-screen">
                 <Navbar isAdmin={isAdmin} />
                 <div className="flex-1 w-full">{children}</div>
+                <Footer />
               </div>
+              <ScrollToTop />
               <Toaster />
             </BookmarkProvider>
           </ThemeProvider>

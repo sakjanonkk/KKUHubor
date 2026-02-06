@@ -1,17 +1,20 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { Review } from "@/types";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Star, MoreHorizontal, Flag, Heart, MessageCircle } from "lucide-react";
+import { Star, MoreHorizontal, Flag, Heart, MessageCircle, Pencil, Trash2 } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { ReportDialog } from "./report-dialog";
+import { EditReviewDialog } from "./edit-review-dialog";
 import { CommentSection } from "./comment-section";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
@@ -23,11 +26,12 @@ interface ReviewCardProps {
 
 export function ReviewCard({ review }: ReviewCardProps) {
   const [reportOpen, setReportOpen] = useState(false);
+  const [editOpen, setEditOpen] = useState(false);
+  const [isOwner, setIsOwner] = useState(false);
+  const router = useRouter();
   const t = useTranslations("Review");
 
   // Social State
-  // Default to 0 if not provided, though we should ideally fetch it.
-  // For now we assume the parent passes it or we start at 0 (optimistic adjustment later)
   const [likes, setLikes] = useState(review.likeCount || 0);
   const [isLiked, setIsLiked] = useState(false);
   const [showComments, setShowComments] = useState(false);
@@ -40,7 +44,32 @@ export function ReviewCard({ review }: ReviewCardProps) {
     if (likedReviews.includes(review.id)) {
       setIsLiked(true);
     }
-  }, [review.id]);
+
+    // Check ownership via session_id
+    const sessionId = localStorage.getItem("session_id");
+    if (sessionId && review.sessionId && sessionId === review.sessionId) {
+      setIsOwner(true);
+    }
+  }, [review.id, review.sessionId]);
+
+  const handleDelete = async () => {
+    if (!confirm(t("deleteConfirm"))) return;
+    const sessionId = localStorage.getItem("session_id");
+    try {
+      const res = await fetch(
+        `/api/reviews?id=${review.id}&session_id=${sessionId}`,
+        { method: "DELETE" }
+      );
+      if (res.ok) {
+        toast.success(t("deleteSuccess"));
+        router.refresh();
+      } else {
+        toast.error(t("deleteError"));
+      }
+    } catch {
+      toast.error(t("deleteError"));
+    }
+  };
 
   const handleLike = async () => {
     // Get or create session ID
@@ -109,7 +138,7 @@ export function ReviewCard({ review }: ReviewCardProps) {
                     {review.rating} <Star className="fill-current" size={14} />
                   </div>
 
-                  {/* Dropdown Menu for Report */}
+                  {/* Dropdown Menu */}
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button variant="ghost" className="h-8 w-8 p-0">
@@ -118,6 +147,22 @@ export function ReviewCard({ review }: ReviewCardProps) {
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
+                      {isOwner && (
+                        <>
+                          <DropdownMenuItem onClick={() => setEditOpen(true)}>
+                            <Pencil className="mr-2 h-4 w-4" />
+                            {t("edit")}
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={handleDelete}
+                            className="text-red-600 focus:text-red-600"
+                          >
+                            <Trash2 className="mr-2 h-4 w-4" />
+                            {t("delete")}
+                          </DropdownMenuItem>
+                          <DropdownMenuSeparator />
+                        </>
+                      )}
                       <DropdownMenuItem
                         onClick={() => setReportOpen(true)}
                         className="text-red-600 focus:text-red-600"
@@ -148,7 +193,7 @@ export function ReviewCard({ review }: ReviewCardProps) {
               variant="ghost"
               size="sm"
               className={cn(
-                "h-8 px-2 gap-1.5",
+                "h-10 px-3 md:h-8 md:px-2 gap-1.5",
                 isLiked && "text-red-500 hover:text-red-600"
               )}
               onClick={handleLike}
@@ -160,7 +205,7 @@ export function ReviewCard({ review }: ReviewCardProps) {
             <Button
               variant="ghost"
               size="sm"
-              className="h-8 px-2 gap-1.5"
+              className="h-10 px-3 md:h-8 md:px-2 gap-1.5"
               onClick={() => setShowComments(!showComments)}
             >
               <MessageCircle className="h-4 w-4" />
@@ -178,6 +223,14 @@ export function ReviewCard({ review }: ReviewCardProps) {
         open={reportOpen}
         onOpenChange={setReportOpen}
       />
+
+      {isOwner && (
+        <EditReviewDialog
+          review={review}
+          open={editOpen}
+          onOpenChange={setEditOpen}
+        />
+      )}
     </>
   );
 }
