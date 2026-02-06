@@ -67,9 +67,8 @@ RUN addgroup --system --gid 1001 nodejs && \
 # Copy public assets
 COPY --from=builder /app/public ./public
 
-# Create .next and uploads directories with proper permissions
+# Create .next directory with proper permissions
 RUN mkdir .next && chown nextjs:nodejs .next
-RUN mkdir -p uploads/summaries && chown -R nextjs:nodejs uploads
 
 # Copy standalone build output
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./

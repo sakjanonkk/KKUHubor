@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import db from "@/lib/db";
-import { getFilePath } from "@/lib/storage";
-import fs from "fs/promises";
+import { getFileBuffer } from "@/lib/storage";
 
 interface RouteParams {
   params: Promise<{ id: string }>;
@@ -24,14 +23,13 @@ export async function GET(_req: Request, { params }: RouteParams) {
     }
 
     const file = result.rows[0];
-    const filePath = getFilePath(file.stored_name, file.course_code);
 
     let fileBuffer: Buffer;
     try {
-      fileBuffer = await fs.readFile(filePath);
+      fileBuffer = await getFileBuffer(file.stored_name, file.course_code);
     } catch {
       return NextResponse.json(
-        { error: "File not found on disk" },
+        { error: "File not found in storage" },
         { status: 404 }
       );
     }
