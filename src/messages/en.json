@@ -309,5 +309,32 @@
     "posting": "Posting...",
     "success": "Comment posted!",
     "error": "Failed to post comment"
+  },
+  "Summaries": {
+    "title": "Summary Files",
+    "upload": "Upload Summary",
+    "uploadTitle": "Upload Summary File",
+    "fileTitle": "Title",
+    "fileTitlePlaceholder": "e.g. Chapter 1-5 Midterm Summary",
+    "uploaderName": "Uploader Name",
+    "selectFile": "Select File",
+    "dragDrop": "Drag and drop a file here, or click to select",
+    "allowedTypes": "PDF, JPG, PNG, DOCX, PPTX (max 10 MB)",
+    "uploading": "Uploading...",
+    "uploadSuccess": "Upload successful!",
+    "uploadError": "Upload failed",
+    "download": "Download",
+    "downloads": "downloads",
+    "delete": "Delete",
+    "deleteConfirm": "Are you sure you want to delete this file?",
+    "deleteSuccess": "File deleted",
+    "noFiles": "No summary files yet",
+    "noFilesDescription": "Be the first to share a summary for this course!",
+    "fileSizeError": "File must be under 10 MB",
+    "fileTypeError": "This file type is not supported",
+    "by": "by",
+    "anonymous": "Anonymous",
+    "tabReviews": "Reviews",
+    "tabSummaries": "Summary Files"
   }
 }

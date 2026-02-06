@@ -309,5 +309,32 @@
     "posting": "กำลังโพสต์...",
     "success": "โพสต์ความคิดเห็นแล้ว!",
     "error": "โพสต์ไม่สำเร็จ ลองใหม่นะ"
+  },
+  "Summaries": {
+    "title": "ไฟล์สรุป",
+    "upload": "อัพโหลดสรุป",
+    "uploadTitle": "อัพโหลดไฟล์สรุป",
+    "fileTitle": "ชื่อไฟล์สรุป",
+    "fileTitlePlaceholder": "เช่น สรุปบทที่ 1-5 Midterm",
+    "uploaderName": "ชื่อผู้อัพโหลด",
+    "selectFile": "เลือกไฟล์",
+    "dragDrop": "ลากไฟล์มาวางที่นี่ หรือคลิกเพื่อเลือก",
+    "allowedTypes": "PDF, JPG, PNG, DOCX, PPTX (สูงสุด 10 MB)",
+    "uploading": "กำลังอัพโหลด...",
+    "uploadSuccess": "อัพโหลดสำเร็จ!",
+    "uploadError": "อัพโหลดไม่สำเร็จ",
+    "download": "ดาวน์โหลด",
+    "downloads": "ดาวน์โหลด",
+    "delete": "ลบ",
+    "deleteConfirm": "ต้องการลบไฟล์นี้?",
+    "deleteSuccess": "ลบสำเร็จ",
+    "noFiles": "ยังไม่มีไฟล์สรุป",
+    "noFilesDescription": "เป็นคนแรกที่แชร์ไฟล์สรุปรายวิชานี้!",
+    "fileSizeError": "ไฟล์ต้องมีขนาดไม่เกิน 10 MB",
+    "fileTypeError": "ไฟล์ประเภทนี้ไม่รองรับ",
+    "by": "โดย",
+    "anonymous": "ไม่ระบุชื่อ",
+    "tabReviews": "รีวิว",
+    "tabSummaries": "ไฟล์สรุป"
   }
 }

@@ -1,7 +1,7 @@
 import db from "@/lib/db";
-import { Course, Review } from "@/types";
+import { Course, Review, SummaryFile } from "@/types";
 import { ReviewForm } from "@/components/features/reviews/review-form";
-import { ReviewsSection } from "@/components/features/reviews/reviews-section";
+import { CourseContentTabs } from "@/components/features/courses/course-content-tabs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
@@ -37,6 +37,27 @@ async function getCourse(code: string): Promise<Course | null> {
   return result.rows[0] || null;
 }
 
+async function getSummaryFiles(courseId: number): Promise<SummaryFile[]> {
+  const query = `
+    SELECT
+      file_id as id,
+      course_id as "courseId",
+      uploader_name as "uploaderName",
+      title,
+      file_name as "fileName",
+      file_size as "fileSize",
+      file_type as "fileType",
+      session_id as "sessionId",
+      download_count as "downloadCount",
+      created_at as "createdAt"
+    FROM summary_files
+    WHERE course_id = $1
+    ORDER BY created_at DESC
+  `;
+  const result = await db.query(query, [courseId]);
+  return result.rows;
+}
+
 async function getReviews(courseId: number): Promise<Review[]> {
   // Using explicit column selection to match interface
   const query = `
@@ -70,9 +91,10 @@ export default async function CourseDetailPage({ params }: PageProps) {
   }
 
   // Fetch data in parallel
-  const [reviews, distributionData] = await Promise.all([
+  const [reviews, distributionData, summaryFiles] = await Promise.all([
     getReviews(course.id),
     getCourseDistribution(course.id),
+    getSummaryFiles(course.id),
   ]);
 
   // Compute grade and semester stats from reviews
@@ -145,8 +167,8 @@ export default async function CourseDetailPage({ params }: PageProps) {
             </Card>
           </div>
 
-          {/* Right Column: Reviews with Sorting */}
-          <ReviewsSection reviews={reviews} courseId={course.id} />
+          {/* Right Column: Reviews & Summary Files */}
+          <CourseContentTabs reviews={reviews} summaryFiles={summaryFiles} courseId={course.id} />
         </div>
       </div>
     </main>

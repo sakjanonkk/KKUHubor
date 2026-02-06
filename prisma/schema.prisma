@@ -39,6 +39,7 @@ model Course {
   faculty      faculties?     @relation(fields: [facultyId], references: [faculty_id], onDelete: NoAction, onUpdate: NoAction)
   reviews      reviews[]
   tagRequests  TagRequest[]
+  summaryFiles SummaryFile[]
 
   category     CourseCategory? @default(GENERAL)
   gradingType  GradingType?    @default(NORM)
@@ -107,6 +108,23 @@ model reviews {
   review_likes   review_likes[]
   course         Course?        @relation(fields: [course_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   users          users?         @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model SummaryFile {
+  id            Int       @id @default(autoincrement()) @map("file_id")
+  courseId       Int       @map("course_id")
+  uploaderName   String?   @default("Anonymous") @map("uploader_name") @db.VarChar(100)
+  title          String    @db.VarChar(255)
+  fileName       String    @map("file_name") @db.VarChar(255)
+  storedName     String    @map("stored_name") @db.VarChar(255)
+  fileSize       Int       @map("file_size")
+  fileType       String    @map("file_type") @db.VarChar(100)
+  sessionId      String?   @map("session_id") @db.VarChar(255)
+  downloadCount  Int       @default(0) @map("download_count")
+  createdAt      DateTime? @default(now()) @map("created_at") @db.Timestamp(6)
+  course         Course    @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@map("summary_files")
 }
 
 model TagRequest {

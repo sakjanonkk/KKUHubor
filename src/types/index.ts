@@ -15,6 +15,19 @@ export interface Course {
   ratingDistribution?: number[];
 }
 
+export interface SummaryFile {
+  id: number;
+  courseId: number;
+  uploaderName: string;
+  title: string;
+  fileName: string;
+  fileSize: number;
+  fileType: string;
+  sessionId?: string;
+  downloadCount: number;
+  createdAt: Date;
+}
+
 export interface Review {
   id: number;
   courseId: number;
