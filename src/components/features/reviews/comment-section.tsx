@@ -27,6 +27,9 @@ export function CommentSection({ reviewId }: CommentSectionProps) {
   const [submitting, setSubmitting] = useState(false);
   const t = useTranslations("Comments");
 
+  // Use the hook at component level (proper React pattern)
+  const userName = useUserIdentity((state) => state.name);
+
   useEffect(() => {
     fetchComments();
   }, [reviewId]);
@@ -48,8 +51,6 @@ export function CommentSection({ reviewId }: CommentSectionProps) {
   const handlePostComment = async () => {
     if (!newComment.trim()) return;
 
-    const { name } = useUserIdentity.getState(); // Access state directly or use hook at top level
-
     setSubmitting(true);
     try {
       const res = await fetch("/api/comments", {
@@ -58,7 +59,7 @@ export function CommentSection({ reviewId }: CommentSectionProps) {
         body: JSON.stringify({
           reviewId,
           content: newComment,
-          authorName: name || "Anonymous",
+          authorName: userName || "Anonymous",
         }),
       });
 

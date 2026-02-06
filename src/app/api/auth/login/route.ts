@@ -18,11 +18,12 @@ export async function POST(req: Request) {
       const isValidPassword = await bcrypt.compare(password, user.password_hash);
 
       if (isValidPassword) {
-        // Set HTTP-only cookie
+        // Set HTTP-only cookie with security flags
         const cookieStore = await cookies();
         cookieStore.set("admin_session", "true", {
           httpOnly: true,
           secure: process.env.NODE_ENV === "production",
+          sameSite: "strict", // CSRF protection
           path: "/",
           maxAge: 60 * 60 * 24, // 1 day
         });

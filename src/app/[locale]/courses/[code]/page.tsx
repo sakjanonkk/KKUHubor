@@ -1,10 +1,8 @@
 import db from "@/lib/db";
 import { Course, Review } from "@/types";
 import { ReviewForm } from "@/components/features/reviews/review-form";
-import { ReviewCard } from "@/components/features/reviews/review-card";
+import { ReviewsSection } from "@/components/features/reviews/reviews-section";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Star } from "lucide-react";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 
@@ -105,44 +103,8 @@ export default async function CourseDetailPage({ params }: PageProps) {
             </Card>
           </div>
 
-          {/* Right Column: Reviews */}
-          <div className="md:col-span-2">
-            <h3 className="text-2xl font-bold mb-6 flex items-center gap-2">
-              {t("studentReviews")}
-              {reviews.length > 0 && (
-                <Badge variant="secondary" className="rounded-full">
-                  {reviews.length}
-                </Badge>
-              )}
-            </h3>
-
-            {reviews.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-16 text-center border rounded-3xl bg-muted/20 border-border/50 border-dashed animate-in fade-in zoom-in duration-500">
-                <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mb-4">
-                  <Star className="w-8 h-8 text-muted-foreground fill-muted-foreground/20" />
-                </div>
-                <h3 className="text-xl font-bold mb-2">
-                  {t("noReviewsTitle")}
-                </h3>
-                <p className="text-muted-foreground max-w-sm mx-auto mb-6">
-                  {t("noReviewsDesc")}
-                </p>
-                <ReviewForm courseId={course.id} />
-              </div>
-            ) : (
-              <div className="space-y-6">
-                {reviews.map((review, i) => (
-                  <div
-                    key={review.id}
-                    className="animate-in fade-in slide-in-from-bottom-4 fill-mode-backwards"
-                    style={{ animationDelay: `${i * 100}ms` }}
-                  >
-                    <ReviewCard review={review} />
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
+          {/* Right Column: Reviews with Sorting */}
+          <ReviewsSection reviews={reviews} courseId={course.id} />
         </div>
       </div>
     </main>

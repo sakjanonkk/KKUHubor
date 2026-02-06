@@ -85,7 +85,12 @@
     "ratingDistribution": "Rating Distribution",
     "studentReviews": "Student Reviews",
     "noReviewsTitle": "No reviews yet",
-    "noReviewsDesc": "Be the first to share your experience with this course. Help others make better decisions!"
+    "noReviewsDesc": "Be the first to share your experience with this course. Help others make better decisions!",
+    "sortBy": "Sort by",
+    "sortMostRecent": "Most Recent",
+    "sortMostHelpful": "Most Helpful",
+    "sortHighestRated": "Highest Rated",
+    "sortLowestRated": "Lowest Rated"
   },
   "UserSettings": {
     "title": "User Settings",

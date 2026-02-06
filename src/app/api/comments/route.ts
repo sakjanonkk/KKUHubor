@@ -1,16 +1,28 @@
 import { NextResponse } from "next/server";
 import db from "@/lib/db";
+import { z } from "zod";
+
+// Input validation schema
+const commentSchema = z.object({
+  reviewId: z.number().positive("Review ID must be a positive number"),
+  content: z.string().min(1, "Content is required").max(1000, "Content too long"),
+  authorName: z.string().max(100, "Name too long").optional(),
+});
 
 export async function POST(req: Request) {
   try {
-    const { reviewId, content, authorName } = await req.json();
+    const body = await req.json();
 
-    if (!reviewId || !content) {
+    // Validate input with Zod
+    const validated = commentSchema.safeParse(body);
+    if (!validated.success) {
       return NextResponse.json(
-        { error: "Missing required fields" },
+        { error: "Invalid input", details: validated.error.issues.map(e => e.message) },
         { status: 400 }
       );
     }
+
+    const { reviewId, content, authorName } = validated.data;
 
     const query = `
       INSERT INTO comments (review_id, content, author_name)

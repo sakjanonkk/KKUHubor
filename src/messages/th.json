@@ -70,7 +70,12 @@
     "ratingDistribution": "คะแนนรีวิว",
     "studentReviews": "รีวิวจากนักศึกษา",
     "noReviewsTitle": "ยังไม่มีรีวิว",
-    "noReviewsDesc": "มาเป็นคนแรกที่รีวิววิชานี้เลย!"
+    "noReviewsDesc": "มาเป็นคนแรกที่รีวิววิชานี้เลย!",
+    "sortBy": "จัดเรียง",
+    "sortMostRecent": "ล่าสุด",
+    "sortMostHelpful": "มีประโยชน์ที่สุด",
+    "sortHighestRated": "คะแนนสูงสุด",
+    "sortLowestRated": "คะแนนต่ำสุด"
   },
   "UserSettings": {
     "title": "ตั้งค่าผู้ใช้",

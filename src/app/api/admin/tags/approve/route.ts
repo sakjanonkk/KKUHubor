@@ -1,8 +1,13 @@
 import { NextResponse } from "next/server";
 import db from "@/lib/db";
+import { requireAdminAuth } from "@/lib/auth";
 
 export async function PUT(req: Request) {
   try {
+    // Auth Check
+    const authError = await requireAdminAuth();
+    if (authError) return authError;
+
     const body = await req.json();
     const { requestId, action } = body; // action: 'approve' | 'reject'
 

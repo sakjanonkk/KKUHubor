@@ -1,17 +1,27 @@
 import { NextResponse } from "next/server";
-import { cookies } from "next/headers";
 import db from "@/lib/db";
+import { z } from "zod";
+
+// Input validation schema
+const likeSchema = z.object({
+  reviewId: z.number().positive("Review ID must be a positive number"),
+  sessionId: z.string().min(1, "Session ID is required").max(255, "Session ID too long"),
+});
 
 export async function POST(req: Request) {
   try {
-    const { reviewId, sessionId } = await req.json();
+    const body = await req.json();
 
-    if (!reviewId || !sessionId) {
+    // Validate input with Zod
+    const validated = likeSchema.safeParse(body);
+    if (!validated.success) {
       return NextResponse.json(
-        { error: "Missing required fields" },
+        { error: "Invalid input", details: validated.error.issues.map(e => e.message) },
         { status: 400 }
       );
     }
+
+    const { reviewId, sessionId } = validated.data;
 
     // Check if like exists
     const checkQuery = `
