@@ -25,8 +25,10 @@ export async function POST(request: NextRequest) {
       include: {
         faculty: true,
         reviews: {
-          select: {
-            rating: true,
+          include: {
+            _count: {
+              select: { review_likes: true },
+            },
           },
         },
       },
@@ -35,12 +37,10 @@ export async function POST(request: NextRequest) {
     // Transform to match the UI's expected shape
     const formattedCourses = courses.map((c: any) => {
       const reviewCount = c.reviews.length;
-      const totalRating = c.reviews.reduce(
-        (acc: number, r: any) => acc + (r.rating || 0),
+      const totalLikes = c.reviews.reduce(
+        (acc: number, r: any) => acc + (r._count?.review_likes || 0),
         0
       );
-      const avgRating =
-        reviewCount > 0 ? Number((totalRating / reviewCount).toFixed(1)) : 0;
 
       return {
         id: c.id,
@@ -52,7 +52,7 @@ export async function POST(request: NextRequest) {
         facultyNameEN: c.faculty?.name_en || null,
         facultyColor: c.faculty?.color_code || null,
         tags: c.tags,
-        avgRating,
+        totalLikes,
         reviewCount,
       };
     });

@@ -1,8 +1,7 @@
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
-import { Star, TrendingUp } from "lucide-react";
+import { ThumbsUp, TrendingUp } from "lucide-react";
 
 interface DailyReview {
   day: string;
@@ -17,12 +16,12 @@ interface TopCourse {
 
 interface AnalyticsChartsProps {
   reviewsPerDay: DailyReview[];
-  ratingDistribution: number[];
+  totalLikes: number;
   topCourses: TopCourse[];
   totalReviews: number;
   translations: {
     reviewsPerDay: string;
-    ratingOverview: string;
+    totalLikes: string;
     topCourses: string;
     reviews: string;
     noData: string;
@@ -31,9 +30,8 @@ interface AnalyticsChartsProps {
 
 export function AnalyticsCharts({
   reviewsPerDay,
-  ratingDistribution,
+  totalLikes,
   topCourses,
-  totalReviews,
   translations: t,
 }: AnalyticsChartsProps) {
   const maxDaily = Math.max(...reviewsPerDay.map((d) => d.count), 1);
@@ -82,31 +80,17 @@ export function AnalyticsCharts({
         </CardContent>
       </Card>
 
-      {/* Overall rating distribution */}
+      {/* Total Likes */}
       <Card>
         <CardHeader className="pb-2">
           <CardTitle className="text-sm font-medium flex items-center gap-2">
-            <Star className="h-4 w-4" />
-            {t.ratingOverview}
+            <ThumbsUp className="h-4 w-4" />
+            {t.totalLikes}
           </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-2">
-          {[5, 4, 3, 2, 1].map((star) => {
-            const count = ratingDistribution[star - 1] || 0;
-            const pct = totalReviews > 0 ? (count / totalReviews) * 100 : 0;
-            return (
-              <div key={star} className="flex items-center gap-2 text-sm">
-                <span className="w-6 text-right text-muted-foreground">
-                  {star}
-                </span>
-                <Star className="h-3 w-3 text-yellow-500 fill-yellow-500" />
-                <Progress value={pct} className="h-2 flex-1" />
-                <span className="w-8 text-right text-xs text-muted-foreground">
-                  {count}
-                </span>
-              </div>
-            );
-          })}
+        <CardContent className="flex flex-col items-center justify-center py-8">
+          <ThumbsUp className="w-10 h-10 fill-blue-500 text-blue-500 mb-2" />
+          <span className="text-4xl font-bold">{totalLikes}</span>
         </CardContent>
       </Card>
 

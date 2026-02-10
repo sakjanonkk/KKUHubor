@@ -1,7 +1,7 @@
 "use client";
 
 import { Badge } from "@/components/ui/badge";
-import { Star, MessageSquare } from "lucide-react";
+import { ThumbsUp, MessageSquare } from "lucide-react";
 import { useLocale } from "next-intl";
 
 interface TrendingCourse {
@@ -9,7 +9,7 @@ interface TrendingCourse {
   nameTH: string;
   nameEN: string | null;
   reviewCount: number;
-  avgRating: number;
+  totalLikes: number;
   facultyColor: string | null;
   facultyName: string | null;
 }
@@ -52,8 +52,8 @@ export function TrendingCourseCard({ course }: TrendingCourseCardProps) {
       {/* Stats */}
       <div className="flex flex-col items-end gap-1 shrink-0">
         <div className="flex items-center gap-1">
-          <Star className="w-3.5 h-3.5 fill-yellow-500 text-yellow-500" />
-          <span className="text-sm font-bold">{course.avgRating}</span>
+          <ThumbsUp className="w-3.5 h-3.5 fill-blue-500 text-blue-500" />
+          <span className="text-sm font-bold">{course.totalLikes}</span>
         </div>
         <div className="flex items-center gap-1 text-xs text-muted-foreground">
           <MessageSquare className="w-3 h-3" />

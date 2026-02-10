@@ -31,7 +31,6 @@ import {
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { StarRatingInput } from "./star-rating-input";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
 
@@ -52,12 +51,6 @@ export function EditReviewDialog({
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const formSchema = z.object({
-    rating: z
-      .string()
-      .refine(
-        (val) => !isNaN(Number(val)) && Number(val) >= 1 && Number(val) <= 5,
-        { message: tForm("validation.rating") }
-      ),
     gradeReceived: z.string().optional(),
     semester: z.string().regex(/^[1-3]\/\d{4}$/, tForm("validation.semester")),
     content: z.string().min(10, tForm("validation.contentLength")),
@@ -68,7 +61,6 @@ export function EditReviewDialog({
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      rating: String(review.rating),
       gradeReceived: review.gradeReceived || "",
       semester: review.semester || "",
       content: review.content,
@@ -85,7 +77,6 @@ export function EditReviewDialog({
         body: JSON.stringify({
           review_id: review.id,
           session_id: sessionId,
-          rating: Number(values.rating),
           grade_received: values.gradeReceived,
           semester: values.semester,
           content: values.content,
@@ -115,53 +106,35 @@ export function EditReviewDialog({
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <FormField
-                control={form.control}
-                name="rating"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{tForm("ratingLabel")}</FormLabel>
+            <FormField
+              control={form.control}
+              name="gradeReceived"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{tForm("gradeLabel")}</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
                     <FormControl>
-                      <StarRatingInput
-                        value={Number(field.value)}
-                        onChange={(val) => field.onChange(val.toString())}
-                      />
+                      <SelectTrigger>
+                        <SelectValue placeholder={tForm("select")} />
+                      </SelectTrigger>
                     </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="gradeReceived"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{tForm("gradeLabel")}</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder={tForm("select")} />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {["A", "B+", "B", "C+", "C", "D+", "D", "F", "W"].map(
-                          (grade) => (
-                            <SelectItem key={grade} value={grade}>
-                              {grade}
-                            </SelectItem>
-                          )
-                        )}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
+                    <SelectContent>
+                      {["A", "B+", "B", "C+", "C", "D+", "D", "F", "W"].map(
+                        (grade) => (
+                          <SelectItem key={grade} value={grade}>
+                            {grade}
+                          </SelectItem>
+                        )
+                      )}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <FormField
               control={form.control}
               name="semester"

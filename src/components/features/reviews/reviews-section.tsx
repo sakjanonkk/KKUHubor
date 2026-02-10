@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { Badge } from "@/components/ui/badge";
-import { Star, MessageSquare } from "lucide-react";
+import { ThumbsUp, MessageSquare } from "lucide-react";
 import { Review } from "@/types";
 import { ReviewCard } from "./review-card";
 import { ReviewForm } from "./review-form";
@@ -48,7 +48,7 @@ export function ReviewsSection({ reviews, courseId }: ReviewsSectionProps) {
         <div className="flex flex-col items-center justify-center py-20 text-center border rounded-3xl bg-muted/20 border-border/50 border-dashed animate-in fade-in zoom-in duration-500">
           <div className="relative mb-6">
             <div className="w-20 h-20 rounded-full bg-muted flex items-center justify-center">
-              <Star className="w-10 h-10 text-muted-foreground fill-muted-foreground/20" />
+              <ThumbsUp className="w-10 h-10 text-muted-foreground fill-muted-foreground/20" />
             </div>
             <div className="absolute -bottom-1 -right-1 w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
               <MessageSquare className="w-4 h-4 text-primary" />

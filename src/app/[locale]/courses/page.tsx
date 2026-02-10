@@ -17,7 +17,6 @@ interface CoursesPageProps {
     category?: string;
     gradingType?: string;
     facultyId?: string;
-    minRating?: string;
     hasReviews?: string;
     sortBy?: string;
     page?: string;
@@ -30,7 +29,6 @@ export default async function CoursesPage({ searchParams }: CoursesPageProps) {
     category,
     gradingType,
     facultyId,
-    minRating,
     hasReviews,
     sortBy,
     page,
@@ -54,7 +52,6 @@ export default async function CoursesPage({ searchParams }: CoursesPageProps) {
 
   // Parse numeric and boolean values
   const validFacultyId = facultyId ? parseInt(facultyId, 10) : undefined;
-  const validMinRating = minRating ? parseInt(minRating, 10) : undefined;
   const validHasReviews = hasReviews === "true";
   const validSortBy = sortBy as SortOption | undefined;
 
@@ -65,7 +62,6 @@ export default async function CoursesPage({ searchParams }: CoursesPageProps) {
     validCategory,
     validGradingType,
     validFacultyId,
-    validMinRating,
     validHasReviews,
     validSortBy,
     validPage
@@ -88,7 +84,6 @@ export default async function CoursesPage({ searchParams }: CoursesPageProps) {
     query && `"${query}"`,
     validCategory && categoryLabels[validCategory],
     validGradingType && gradingLabels[validGradingType],
-    validMinRating && `${tFilter("minRating")} ${validMinRating}+`,
     validHasReviews && tFilter("hasReviewsOnly"),
   ].filter(Boolean);
 

@@ -10,7 +10,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Course } from "@/types";
-import { Star } from "lucide-react";
+import { ThumbsUp } from "lucide-react";
 import { AddTagDialog } from "./add-tag-dialog";
 import { BookmarkButton } from "./bookmark-button";
 import { useLocale, useTranslations } from "next-intl";
@@ -39,11 +39,11 @@ export function CourseCard({ course }: CourseCardProps) {
           >
             {course.code}
           </Badge>
-          {hasReviews && (
-            <div className="flex items-center gap-1 bg-yellow-50 dark:bg-yellow-950/30 px-2 py-0.5 rounded-full border border-yellow-200 dark:border-yellow-800">
-              <Star className="w-3.5 h-3.5 fill-yellow-500 text-yellow-500" />
-              <span className="text-xs font-bold text-yellow-700 dark:text-yellow-500">
-                {course.avgRating}
+          {hasReviews && (course.totalLikes ?? 0) > 0 && (
+            <div className="flex items-center gap-1 bg-blue-50 dark:bg-blue-950/30 px-2 py-0.5 rounded-full border border-blue-200 dark:border-blue-800">
+              <ThumbsUp className="w-3.5 h-3.5 fill-blue-500 text-blue-500" />
+              <span className="text-xs font-bold text-blue-700 dark:text-blue-500">
+                {course.totalLikes}
               </span>
             </div>
           )}
@@ -108,30 +108,6 @@ export function CourseCard({ course }: CourseCardProps) {
               )}
             </div>
           </div>
-          {/* Mini Rating Distribution Bar Chart */}
-          {hasReviews && course.ratingDistribution && (
-            <div className="flex items-end justify-between gap-1">
-              {[...course.ratingDistribution].reverse().map((count, i) => {
-                const star = 5 - i;
-                const max = Math.max(...course.ratingDistribution!, 1);
-                const barHeight = Math.max(3, Math.round((count / max) * 28));
-                return (
-                  <div
-                    key={star}
-                    className="flex-1 flex flex-col items-center gap-0.5"
-                  >
-                    <div
-                      className="w-full rounded-t-sm bg-yellow-400 dark:bg-yellow-500/70"
-                      style={{ height: `${barHeight}px` }}
-                    />
-                    <span className="text-[9px] text-muted-foreground leading-none">
-                      {star}
-                    </span>
-                  </div>
-                );
-              })}
-            </div>
-          )}
         </div>
       </CardContent>
       <CardFooter className="pt-0">

@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/select";
 import { Review } from "@/types";
 
-export type SortOption = "recent" | "helpful" | "highest" | "lowest";
+export type SortOption = "recent" | "helpful";
 
 interface ReviewSortProps {
   reviews: Review[];
@@ -27,10 +27,6 @@ export function sortReviews(reviews: Review[], sortBy: SortOption): Review[] {
       );
     case "helpful":
       return sorted.sort((a, b) => (b.likeCount || 0) - (a.likeCount || 0));
-    case "highest":
-      return sorted.sort((a, b) => b.rating - a.rating);
-    case "lowest":
-      return sorted.sort((a, b) => a.rating - b.rating);
     default:
       return sorted;
   }
@@ -53,8 +49,6 @@ export function ReviewSort({ reviews, onSort, defaultSort = "recent" }: ReviewSo
         <SelectContent>
           <SelectItem value="recent">{t("sortMostRecent")}</SelectItem>
           <SelectItem value="helpful">{t("sortMostHelpful")}</SelectItem>
-          <SelectItem value="highest">{t("sortHighestRated")}</SelectItem>
-          <SelectItem value="lowest">{t("sortLowestRated")}</SelectItem>
         </SelectContent>
       </Select>
     </div>

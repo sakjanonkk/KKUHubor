@@ -6,7 +6,6 @@ import { z } from "zod";
 const reviewSchema = z.object({
   course_id: z.number().positive("Course ID must be a positive number"),
   reviewer_name: z.string().max(100, "Name too long").optional(),
-  rating: z.number().min(1, "Rating must be at least 1").max(5, "Rating cannot exceed 5"),
   grade_received: z.string().max(5).optional(),
   semester: z.string().max(20).optional(),
   content: z.string().min(10, "Content must be at least 10 characters").max(2000, "Content too long"),
@@ -16,7 +15,6 @@ const reviewSchema = z.object({
 const updateSchema = z.object({
   review_id: z.number().positive(),
   session_id: z.string().min(1),
-  rating: z.number().min(1).max(5).optional(),
   grade_received: z.string().max(5).optional(),
   semester: z.string().max(20).optional(),
   content: z.string().min(10).max(2000).optional(),
@@ -35,18 +33,17 @@ export async function POST(req: Request) {
       );
     }
 
-    const { course_id, reviewer_name, rating, grade_received, semester, content, session_id } = validated.data;
+    const { course_id, reviewer_name, grade_received, semester, content, session_id } = validated.data;
 
     const query = `
-      INSERT INTO reviews (course_id, reviewer_name, rating, grade_received, semester, content, session_id, created_at)
-      VALUES ($1, $2, $3, $4, $5, $6, $7, NOW())
+      INSERT INTO reviews (course_id, reviewer_name, grade_received, semester, content, session_id, created_at)
+      VALUES ($1, $2, $3, $4, $5, $6, NOW())
       RETURNING *
     `;
 
     const values = [
       course_id,
       reviewer_name || "Anonymous",
-      rating,
       grade_received,
       semester,
       content,
@@ -61,7 +58,6 @@ export async function POST(req: Request) {
       id: newReview.review_id,
       courseId: newReview.course_id,
       reviewerName: newReview.reviewer_name,
-      rating: newReview.rating,
       gradeReceived: newReview.grade_received,
       semester: newReview.semester,
       content: newReview.content,
@@ -86,7 +82,7 @@ export async function PUT(req: Request) {
       return NextResponse.json({ error: "Invalid input" }, { status: 400 });
     }
 
-    const { review_id, session_id, rating, grade_received, semester, content } = validated.data;
+    const { review_id, session_id, grade_received, semester, content } = validated.data;
 
     // Verify ownership via session_id
     const existing = await db.query(
@@ -102,12 +98,11 @@ export async function PUT(req: Request) {
 
     const result = await db.query(
       `UPDATE reviews SET
-        rating = COALESCE($1, rating),
-        grade_received = COALESCE($2, grade_received),
-        semester = COALESCE($3, semester),
-        content = COALESCE($4, content)
-      WHERE review_id = $5 RETURNING *`,
-      [rating, grade_received, semester, content, review_id]
+        grade_received = COALESCE($1, grade_received),
+        semester = COALESCE($2, semester),
+        content = COALESCE($3, content)
+      WHERE review_id = $4 RETURNING *`,
+      [grade_received, semester, content, review_id]
     );
 
     return NextResponse.json(result.rows[0]);

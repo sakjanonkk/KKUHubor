@@ -1,7 +1,7 @@
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { MessageSquare, Star, Flag } from "lucide-react";
+import { MessageSquare, ThumbsUp, Flag } from "lucide-react";
 
 interface ActivityItem {
   type: "review" | "comment" | "report";
@@ -23,13 +23,13 @@ interface RecentActivityProps {
 }
 
 const iconMap = {
-  review: Star,
+  review: ThumbsUp,
   comment: MessageSquare,
   report: Flag,
 };
 
 const colorMap = {
-  review: "text-yellow-500 bg-yellow-500/10",
+  review: "text-blue-500 bg-blue-500/10",
   comment: "text-blue-500 bg-blue-500/10",
   report: "text-red-500 bg-red-500/10",
 };

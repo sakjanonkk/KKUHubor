@@ -9,10 +9,9 @@ export interface Course {
   facultyColor?: string | null;
   description?: string | null;
   credit?: number | null;
-  avgRating?: number;
+  totalLikes?: number;
   reviewCount?: number;
   tags?: string[];
-  ratingDistribution?: number[];
 }
 
 export interface SummaryFile {
@@ -32,7 +31,7 @@ export interface Review {
   id: number;
   courseId: number;
   reviewerName?: string;
-  rating: number;
+  rating?: number;
   gradeReceived?: string;
   semester?: string;
   content: string;

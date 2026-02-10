@@ -2,7 +2,10 @@
   "permissions": {
     "allow": [
       "Bash(bun run build:*)",
-      "Bash(bunx prisma generate:*)"
+      "Bash(bunx prisma generate:*)",
+      "Bash(powershell -c:*)",
+      "Bash(powershell -Command:*)",
+      "Bash(powershell:*)"
     ]
   }
 }

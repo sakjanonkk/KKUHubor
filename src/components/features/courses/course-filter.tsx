@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/select";
 import {
   SlidersHorizontal,
-  Star,
+  ThumbsUp,
   ArrowUpDown,
   Building2,
   MessageSquare,
@@ -35,8 +35,6 @@ import {
   Activity,
   CheckCircle2,
   BarChart3,
-  TrendingDown,
-  TrendingUp,
   Binary,
 } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -90,14 +88,9 @@ const SORT_OPTIONS = [
     icon: <BarChart3 className="h-5 w-5 text-purple-500" />,
   },
   {
-    value: "rating_desc",
-    labelKey: "highestRated",
-    icon: <Star className="h-5 w-5 text-yellow-500 fill-yellow-500" />,
-  },
-  {
-    value: "rating_asc",
-    labelKey: "lowestRated",
-    icon: <TrendingDown className="h-5 w-5 text-red-500" />,
+    value: "likes_desc",
+    labelKey: "mostLiked",
+    icon: <ThumbsUp className="h-5 w-5 text-blue-500 fill-blue-500" />,
   },
   {
     value: "name_asc",
@@ -131,9 +124,6 @@ export function CourseFilter() {
   const [facultyId, setFacultyId] = useState<string>(
     searchParams.get("facultyId") || "all"
   );
-  const [minRating, setMinRating] = useState<number>(
-    parseInt(searchParams.get("minRating") || "0", 10)
-  );
   const [hasReviews, setHasReviews] = useState<boolean>(
     searchParams.get("hasReviews") === "true"
   );
@@ -165,7 +155,6 @@ export function CourseFilter() {
     category,
     gradingType,
     facultyId !== "all" ? facultyId : "",
-    minRating > 0 ? String(minRating) : "",
     hasReviews,
     sortBy !== "reviews_desc" ? sortBy : "",
   ].filter(Boolean).length;
@@ -182,9 +171,6 @@ export function CourseFilter() {
     if (facultyId && facultyId !== "all") params.set("facultyId", facultyId);
     else params.delete("facultyId");
 
-    if (minRating > 0) params.set("minRating", String(minRating));
-    else params.delete("minRating");
-
     if (hasReviews) params.set("hasReviews", "true");
     else params.delete("hasReviews");
 
@@ -199,7 +185,6 @@ export function CourseFilter() {
     setCategory("");
     setGradingType("");
     setFacultyId("all");
-    setMinRating(0);
     setHasReviews(false);
     setSortBy("reviews_desc");
 
@@ -336,44 +321,6 @@ export function CourseFilter() {
                 ))}
               </SelectContent>
             </Select>
-          </section>
-
-          {/* Rating Section */}
-          <section className="space-y-4">
-            <div className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-muted-foreground/70">
-              <Star className="h-4 w-4" />
-              {t("minRating")}
-            </div>
-            <div className="flex gap-2 p-1.5 bg-muted/30 rounded-xl border border-border/50">
-              {[0, 1, 2, 3, 4, 5].map((rating) => (
-                <button
-                  key={rating}
-                  onClick={() => setMinRating(rating)}
-                  className={cn(
-                    "flex-1 py-3 rounded-lg font-medium transition-all text-sm relative",
-                    minRating === rating
-                      ? "bg-background text-yellow-600 dark:text-yellow-400 shadow-sm ring-1 ring-black/5 dark:ring-white/10"
-                      : "text-muted-foreground hover:text-foreground hover:bg-background/50"
-                  )}
-                >
-                  {rating === 0 ? (
-                    t("any")
-                  ) : (
-                    <span className="flex flex-col items-center justify-center gap-1">
-                      <span className="font-bold text-base">{rating}</span>
-                      <Star
-                        className={cn(
-                          "h-3 w-3",
-                          minRating === rating
-                            ? "fill-yellow-500 text-yellow-500"
-                            : "fill-current opacity-30"
-                        )}
-                      />
-                    </span>
-                  )}
-                </button>
-              ))}
-            </div>
           </section>
 
           {/* Category Section */}

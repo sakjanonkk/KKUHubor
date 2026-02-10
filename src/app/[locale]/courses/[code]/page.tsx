@@ -6,8 +6,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 
-import { getCourseDistribution } from "@/actions/get-course-distribution";
-import { ScoreDistribution } from "@/components/features/courses/score-distribution";
+import { getCourseLikeStats } from "@/actions/get-course-distribution";
+import { CourseLikesOverview } from "@/components/features/courses/score-distribution";
 import { CourseStats } from "@/components/features/courses/course-stats";
 import { ShareButton } from "@/components/features/courses/share-button";
 import { Breadcrumb } from "@/components/layout/breadcrumb";
@@ -91,9 +91,9 @@ export default async function CourseDetailPage({ params }: PageProps) {
   }
 
   // Fetch data in parallel
-  const [reviews, distributionData, summaryFiles] = await Promise.all([
+  const [reviews, likeStats, summaryFiles] = await Promise.all([
     getReviews(course.id),
-    getCourseDistribution(course.id),
+    getCourseLikeStats(course.id),
     getSummaryFiles(course.id),
   ]);
 
@@ -150,17 +150,16 @@ export default async function CourseDetailPage({ params }: PageProps) {
             <Card className="bg-card/50 backdrop-blur-sm border-border/50">
               <CardHeader>
                 <CardTitle className="text-lg">
-                  {t("ratingDistribution")}
+                  {t("likesOverview")}
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <ScoreDistribution
-                  distribution={distributionData.distribution}
-                  totalReviews={distributionData.totalReviews}
-                  averageRating={distributionData.averageRating}
+                <CourseLikesOverview
+                  totalLikes={likeStats.totalLikes}
+                  totalReviews={likeStats.totalReviews}
                   translations={{
                     reviews: t("reviewsCount"),
-                    star: t("star"),
+                    likes: t("likes"),
                   }}
                 />
               </CardContent>

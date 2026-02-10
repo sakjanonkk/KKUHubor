@@ -8,83 +8,98 @@ import { Badge } from "@/components/ui/badge";
 import { SearchBar } from "@/components/features/search-bar";
 import { ReviewCard } from "@/components/features/reviews/review-card";
 import { TrendingCourseCard } from "@/components/features/courses/trending-course-card";
-import { Star, Search, BookOpen, MessageSquare, TrendingUp } from "lucide-react";
+import { ThumbsUp, Search, BookOpen, MessageSquare, TrendingUp } from "lucide-react";
 
 async function getStats() {
-  const coursesRes = await db.query(
-    "SELECT COUNT(*)::int as count FROM courses"
-  );
-  const reviewsRes = await db.query(
-    "SELECT COUNT(*)::int as count FROM reviews"
-  );
-  return {
-    courses: coursesRes.rows[0].count,
-    reviews: reviewsRes.rows[0].count,
-  };
+  try {
+    const coursesRes = await db.query(
+      "SELECT COUNT(*)::int as count FROM courses"
+    );
+    const reviewsRes = await db.query(
+      "SELECT COUNT(*)::int as count FROM reviews"
+    );
+    return {
+      courses: coursesRes.rows[0].count,
+      reviews: reviewsRes.rows[0].count,
+    };
+  } catch {
+    return { courses: 0, reviews: 0 };
+  }
 }
 
 async function getTrendingCourses() {
-  const res = await db.query(`
-    SELECT
-      c.course_code, c.name_th, c.name_en,
-      COUNT(r.review_id)::int as review_count,
-      ROUND(AVG(r.rating)::numeric, 1) as avg_rating,
-      f.color_code, f.name_en as faculty_name
-    FROM courses c
-    JOIN reviews r ON c.course_id = r.course_id
-    LEFT JOIN faculties f ON c.faculty_id = f.faculty_id
-    GROUP BY c.course_id, f.faculty_id
-    HAVING COUNT(r.review_id) >= 1
-    ORDER BY COUNT(r.review_id) DESC, AVG(r.rating) DESC
-    LIMIT 6
-  `);
+  try {
+    const res = await db.query(`
+      SELECT
+        c.course_code, c.name_th, c.name_en,
+        COUNT(r.review_id)::int as review_count,
+        COALESCE((
+          SELECT COUNT(*)::int FROM review_likes rl
+          JOIN reviews r2 ON rl.review_id = r2.review_id
+          WHERE r2.course_id = c.course_id
+        ), 0) as total_likes,
+        f.color_code, f.name_en as faculty_name
+      FROM courses c
+      JOIN reviews r ON c.course_id = r.course_id
+      LEFT JOIN faculties f ON c.faculty_id = f.faculty_id
+      GROUP BY c.course_id, f.faculty_id
+      HAVING COUNT(r.review_id) >= 1
+      ORDER BY total_likes DESC, COUNT(r.review_id) DESC
+      LIMIT 6
+    `);
 
-  return res.rows.map((row: any) => ({
-    code: row.course_code,
-    nameTH: row.name_th,
-    nameEN: row.name_en,
-    reviewCount: row.review_count,
-    avgRating: Number(row.avg_rating),
-    facultyColor: row.color_code,
-    facultyName: row.faculty_name,
-  }));
+    return res.rows.map((row: any) => ({
+      code: row.course_code,
+      nameTH: row.name_th,
+      nameEN: row.name_en,
+      reviewCount: row.review_count,
+      totalLikes: row.total_likes,
+      facultyColor: row.color_code,
+      facultyName: row.faculty_name,
+    }));
+  } catch {
+    return [];
+  }
 }
 
 async function getLatestReviews() {
-  const res = await db.query(`
-    SELECT 
-      r.review_id, 
-      r.rating, 
-      r.content, 
-      r.created_at,
-      r.reviewer_name,
-      r.grade_received,
-      r.semester,
-      c.course_code, 
-      c.name_en, 
-      c.name_th
-    FROM reviews r
-    JOIN courses c ON r.course_id = c.course_id
-    ORDER BY r.created_at DESC
-    LIMIT 3
-  `);
+  try {
+    const res = await db.query(`
+      SELECT
+        r.review_id,
+        r.content,
+        r.created_at,
+        r.reviewer_name,
+        r.grade_received,
+        r.semester,
+        c.course_code,
+        c.name_en,
+        c.name_th,
+        (SELECT COUNT(*)::int FROM review_likes rl WHERE rl.review_id = r.review_id) as like_count
+      FROM reviews r
+      JOIN courses c ON r.course_id = c.course_id
+      ORDER BY r.created_at DESC
+      LIMIT 3
+    `);
 
-  return res.rows.map((row: any) => ({
-    id: row.review_id,
-    courseId: row.course_id,
-    rating: row.rating,
-    content: row.content,
-    createdAt: row.created_at,
-    reviewerName: row.reviewer_name || "Anonymous",
-    gradeReceived: row.grade_received,
-    semester: row.semester,
-    likeCount: 0, // Default as not fetched in summary
-    course: {
-      code: row.course_code,
-      nameEN: row.name_en,
-      nameTH: row.name_th,
-    },
-  }));
+    return res.rows.map((row: any) => ({
+      id: row.review_id,
+      courseId: row.course_id,
+      content: row.content,
+      createdAt: row.created_at,
+      reviewerName: row.reviewer_name || "Anonymous",
+      gradeReceived: row.grade_received,
+      semester: row.semester,
+      likeCount: row.like_count,
+      course: {
+        code: row.course_code,
+        nameEN: row.name_en,
+        nameTH: row.name_th,
+      },
+    }));
+  } catch {
+    return [];
+  }
 }
 
 export default async function Home() {
@@ -129,7 +144,7 @@ export default async function Home() {
 
               <div className="flex items-center gap-4 text-sm text-muted-foreground">
                 <span className="flex items-center">
-                  <Star className="h-4 w-4 mr-1 fill-yellow-500 text-yellow-500" />{" "}
+                  <ThumbsUp className="h-4 w-4 mr-1 fill-blue-500 text-blue-500" />{" "}
                   {t("trustedBy")}
                 </span>
                 <span className="w-1 h-1 rounded-full bg-border" />
@@ -150,7 +165,7 @@ export default async function Home() {
                   icon: MessageSquare,
                 },
                 { label: t("statUsers"), value: "2.5k+", icon: Search },
-                { label: t("statFree"), value: t("statForever"), icon: Star },
+                { label: t("statFree"), value: t("statForever"), icon: ThumbsUp },
               ].map((stat, i) => (
                 <div
                   key={stat.label}

@@ -80,11 +80,7 @@ async function getAnalytics() {
     FROM reviews WHERE created_at >= NOW() - INTERVAL '7 days'
     GROUP BY DATE(created_at) ORDER BY day ASC
   `;
-  const ratingDistQuery = `
-    SELECT rating, COUNT(*)::int as count
-    FROM reviews WHERE rating IS NOT NULL
-    GROUP BY rating ORDER BY rating ASC
-  `;
+  const totalLikesQuery = `SELECT COUNT(*)::int as count FROM review_likes`;
   const recentActivityQuery = `
     (SELECT 'review' as type, review_id as id, reviewer_name as actor, content, created_at FROM reviews ORDER BY created_at DESC LIMIT 5)
     UNION ALL
@@ -92,24 +88,16 @@ async function getAnalytics() {
     ORDER BY created_at DESC LIMIT 10
   `;
 
-  const [totalReviews, totalComments, pendingRequests, topCourses, reviewsPerDay, ratingDist, recentActivity] =
+  const [totalReviews, totalComments, pendingRequests, topCourses, reviewsPerDay, totalLikes, recentActivity] =
     await Promise.all([
       db.query(totalReviewsQuery),
       db.query(totalCommentsQuery),
       db.query(pendingRequestsQuery),
       db.query(topCoursesQuery),
       db.query(reviewsPerDayQuery),
-      db.query(ratingDistQuery),
+      db.query(totalLikesQuery),
       db.query(recentActivityQuery),
     ]);
-
-  // Build rating distribution array [1-star, 2-star, ..., 5-star]
-  const ratingDistribution = [0, 0, 0, 0, 0];
-  for (const row of ratingDist.rows) {
-    if (row.rating >= 1 && row.rating <= 5) {
-      ratingDistribution[row.rating - 1] = row.count;
-    }
-  }
 
   return {
     totalReviews: totalReviews.rows[0]?.count || 0,
@@ -117,7 +105,7 @@ async function getAnalytics() {
     pendingRequests: pendingRequests.rows[0]?.count || 0,
     topCourses: topCourses.rows,
     reviewsPerDay: reviewsPerDay.rows,
-    ratingDistribution,
+    totalLikes: totalLikes.rows[0]?.count || 0,
     recentActivity: recentActivity.rows,
   };
 }
@@ -200,12 +188,12 @@ export default async function AdminDashboard() {
       {/* Detailed Analytics */}
       <AnalyticsCharts
         reviewsPerDay={analytics.reviewsPerDay}
-        ratingDistribution={analytics.ratingDistribution}
+        totalLikes={analytics.totalLikes}
         topCourses={analytics.topCourses}
         totalReviews={analytics.totalReviews}
         translations={{
           reviewsPerDay: t("reviewsPerDay"),
-          ratingOverview: t("ratingOverview"),
+          totalLikes: t("totalLikes"),
           topCourses: t("topCoursesTitle"),
           reviews: t("reviewsUnit"),
           noData: t("noData"),

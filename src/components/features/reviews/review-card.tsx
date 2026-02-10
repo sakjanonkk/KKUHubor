@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Review } from "@/types";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Star, MoreHorizontal, Flag, Heart, MessageCircle, Pencil, Trash2 } from "lucide-react";
+import { MoreHorizontal, Flag, ThumbsUp, MessageCircle, Pencil, Trash2 } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -134,10 +134,6 @@ export function ReviewCard({ review }: ReviewCardProps) {
                   {review.reviewerName || t("anonymous")}
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className="flex items-center gap-1 text-yellow-500 text-sm font-bold">
-                    {review.rating} <Star className="fill-current" size={14} />
-                  </div>
-
                   {/* Dropdown Menu */}
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -194,11 +190,11 @@ export function ReviewCard({ review }: ReviewCardProps) {
               size="sm"
               className={cn(
                 "h-10 px-3 md:h-8 md:px-2 gap-1.5",
-                isLiked && "text-red-500 hover:text-red-600"
+                isLiked && "text-blue-500 hover:text-blue-600"
               )}
               onClick={handleLike}
             >
-              <Heart className={cn("h-4 w-4", isLiked && "fill-current")} />
+              <ThumbsUp className={cn("h-4 w-4", isLiked && "fill-current")} />
               <span className="text-xs font-semibold">{likes}</span>
             </Button>
 
