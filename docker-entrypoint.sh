@@ -5,8 +5,10 @@ set -e
 # Set this env var in Dokploy for one-time reset, then remove it
 if [ "$DB_RESET" = "true" ]; then
   echo "DB_RESET=true detected, resetting database..."
-  npx prisma migrate reset --force
-  echo "Database reset complete."
+  npx prisma migrate reset --force --skip-seed
+  echo "Database reset complete, running seed..."
+  npx prisma db seed
+  echo "Seed complete."
 else
   echo "Running migrations..."
   npx prisma migrate deploy
