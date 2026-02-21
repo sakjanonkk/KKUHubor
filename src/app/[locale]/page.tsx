@@ -18,12 +18,16 @@ async function getStats() {
     const reviewsRes = await db.query(
       "SELECT COUNT(*)::int as count FROM reviews"
     );
+    const usersRes = await db.query(
+      "SELECT COUNT(DISTINCT reviewer_name)::int as count FROM reviews"
+    );
     return {
       courses: coursesRes.rows[0].count,
       reviews: reviewsRes.rows[0].count,
+      users: usersRes.rows[0].count,
     };
   } catch {
-    return { courses: 0, reviews: 0 };
+    return { courses: 0, reviews: 0, users: 0 };
   }
 }
 
@@ -164,7 +168,7 @@ export default async function Home() {
                   value: `${stats.reviews}+`,
                   icon: MessageSquare,
                 },
-                { label: t("statUsers"), value: "2.5k+", icon: Search },
+                { label: t("statUsers"), value: `${stats.users}+`, icon: Search },
                 { label: t("statFree"), value: t("statForever"), icon: ThumbsUp },
               ].map((stat, i) => (
                 <div

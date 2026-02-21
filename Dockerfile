@@ -74,14 +74,21 @@ RUN mkdir .next && chown nextjs:nodejs .next
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
-# Copy Prisma files for migrations
+# Copy Prisma files for migrations + seeding
 COPY --from=builder --chown=nextjs:nodejs /app/prisma ./prisma
 COPY --from=builder --chown=nextjs:nodejs /app/prisma.config.ts ./
 
-# Install only runtime dependencies for migrations (minimal)
-RUN npm install -g prisma && \
-    npm install dotenv pg @prisma/adapter-pg && \
-    npm cache clean --force
+# Copy entrypoint script
+COPY --chown=nextjs:nodejs docker-entrypoint.sh ./
+
+# Install runtime dependencies for migrations + seeding
+# python3/make/g++ needed for bcrypt native build
+RUN apk add --no-cache python3 make g++ && \
+    npm install -g prisma tsx && \
+    npm install dotenv pg @prisma/adapter-pg bcrypt && \
+    npm cache clean --force && \
+    apk del python3 make g++ && \
+    chmod +x docker-entrypoint.sh
 
 USER nextjs
 
@@ -90,5 +97,5 @@ EXPOSE 3000
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 
-# Run migrations then start server
-CMD ["sh", "-c", "npx prisma migrate deploy && node server.js"]
+# Run migrations, seed if empty, then start server
+CMD ["./docker-entrypoint.sh"]

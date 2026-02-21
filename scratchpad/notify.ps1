@@ -1,4 +1,4 @@
 Add-Type -AssemblyName System.Speech
 $synth = New-Object System.Speech.Synthesis.SpeechSynthesizer
 $synth.SelectVoice("Microsoft Zira Desktop")
-$synth.Speak("Done! Star rating system replaced with thumbs up. Build passes clean. All files updated.")
+$synth.Speak("Done! Database seeded with six thousand twenty real KKU courses from twenty four faculties.")
