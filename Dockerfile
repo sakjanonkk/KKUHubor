@@ -85,7 +85,7 @@ COPY --chown=nextjs:nodejs docker-entrypoint.sh ./
 # python3/make/g++ needed for bcrypt native build
 RUN apk add --no-cache python3 make g++ && \
     npm install -g prisma tsx && \
-    npm install dotenv pg @prisma/adapter-pg bcrypt && \
+    npm install dotenv pg @prisma/adapter-pg bcrypt postgres-array && \
     npm cache clean --force && \
     apk del python3 make g++ && \
     chmod +x docker-entrypoint.sh
