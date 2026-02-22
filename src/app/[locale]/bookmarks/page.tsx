@@ -9,6 +9,7 @@ import { Link } from "@/i18n/routing";
 import { Course } from "@/types";
 import { PageHeader } from "@/components/layout/page-header";
 import { useTranslations } from "next-intl";
+import Image from "next/image";
 
 export default function BookmarksPage() {
   const { bookmarks, clearBookmarks } = useBookmarks();
@@ -98,14 +99,7 @@ export default function BookmarksPage() {
           </div>
         ) : courses.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-24 text-center border rounded-3xl bg-muted/20 border-border/50 border-dashed animate-in fade-in zoom-in duration-500">
-            <div className="relative mb-6">
-              <div className="w-20 h-20 rounded-full bg-muted flex items-center justify-center">
-                <Heart className="w-10 h-10 text-muted-foreground fill-muted-foreground/20" />
-              </div>
-              <div className="absolute -top-1 -right-1 w-8 h-8 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center">
-                <BookOpen className="w-4 h-4 text-red-500" />
-              </div>
-            </div>
+            <Image src="/mascot-no-bookmarks.png" alt="No bookmarks" width={160} height={90} className="mb-6" />
             <h2 className="text-2xl font-bold mb-3">{t("emptyTitle")}</h2>
             <p className="text-muted-foreground max-w-md mx-auto mb-6 text-base leading-relaxed">
               {t("emptyDescription")}

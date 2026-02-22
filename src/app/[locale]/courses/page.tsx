@@ -10,6 +10,7 @@ import { CourseCategory, GradingType } from "@/lib/enums";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Search, BookOpen } from "lucide-react";
+import Image from "next/image";
 
 interface CoursesPageProps {
   searchParams: Promise<{
@@ -135,14 +136,7 @@ export default async function CoursesPage({ searchParams }: CoursesPageProps) {
             ))
           ) : (
             <div className="col-span-full flex flex-col items-center justify-center py-24 text-center border rounded-3xl bg-muted/20 border-border/50 border-dashed animate-in fade-in zoom-in duration-500">
-              <div className="relative mb-6">
-                <div className="w-20 h-20 rounded-full bg-muted flex items-center justify-center">
-                  <Search className="w-10 h-10 text-muted-foreground" />
-                </div>
-                <div className="absolute -top-1 -right-1 w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-                  <BookOpen className="w-4 h-4 text-primary" />
-                </div>
-              </div>
+              <Image src="/mascot-no-results.png" alt="No results" width={160} height={90} className="mb-6" />
               <h3 className="text-2xl font-bold mb-3">{t("noResultTitle")}</h3>
               <p className="text-muted-foreground max-w-md mx-auto mb-8 text-base leading-relaxed">
                 {t("noResultDescription")}

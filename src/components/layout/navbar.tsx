@@ -29,6 +29,7 @@ import { LanguageSwitcher } from "@/components/language-switcher";
 import { SearchBar } from "@/components/features/search-bar";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
+import Image from "next/image";
 
 interface NavbarProps {
   isAdmin?: boolean;
@@ -48,15 +49,23 @@ export function Navbar({ isAdmin = false }: NavbarProps) {
       : []),
   ];
 
-  const mobileOnlyItems = [
-    { name: t("about"), href: "/about", icon: Info },
-  ];
+  const mobileOnlyItems = [{ name: t("about"), href: "/about", icon: Info }];
 
   return (
     <nav className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         {/* Logo */}
-        <Link href="/" className="font-bold text-xl tracking-tight">
+        <Link
+          href="/"
+          className="font-bold text-xl tracking-tight flex items-center gap-2"
+        >
+          <Image
+            src="/logo.png"
+            alt="KKUHubor"
+            width={32}
+            height={32}
+            className="rounded-lg"
+          />
           {t("brand")}
         </Link>
 
@@ -70,7 +79,7 @@ export function Navbar({ isAdmin = false }: NavbarProps) {
                 "text-sm font-medium transition-colors hover:text-primary whitespace-nowrap",
                 pathname === item.href
                   ? "text-foreground"
-                  : "text-muted-foreground"
+                  : "text-muted-foreground",
               )}
             >
               {item.name}
@@ -87,18 +96,21 @@ export function Navbar({ isAdmin = false }: NavbarProps) {
           {/* Mobile Search */}
           <Sheet open={mobileSearchOpen} onOpenChange={setMobileSearchOpen}>
             <SheetTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="hover:bg-muted/50"
-              >
+              <Button variant="ghost" size="icon" className="hover:bg-muted/50">
                 <Search className="h-5 w-5" />
                 <span className="sr-only">Search</span>
               </Button>
             </SheetTrigger>
-            <SheetContent side="top" className="h-auto border-b shadow-lg p-0 bg-background/95 backdrop-blur-xl">
+            <SheetContent
+              side="top"
+              className="h-auto border-b shadow-lg p-0 bg-background/95 backdrop-blur-xl"
+            >
+              <SheetTitle className="sr-only">Search</SheetTitle>
               <div className="p-4 pt-10">
-                <SearchBar variant="hero" onSelect={() => setMobileSearchOpen(false)} />
+                <SearchBar
+                  variant="hero"
+                  onSelect={() => setMobileSearchOpen(false)}
+                />
               </div>
             </SheetContent>
           </Sheet>
@@ -125,9 +137,13 @@ export function Navbar({ isAdmin = false }: NavbarProps) {
               <div className="flex flex-col h-full">
                 <SheetHeader className="p-6 text-left border-b">
                   <SheetTitle className="font-bold text-2xl tracking-tight flex items-center gap-2">
-                    <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
-                      <BookOpen className="h-5 w-5" />
-                    </div>
+                    <Image
+                      src="/logo.png"
+                      alt="KKUHubor"
+                      width={32}
+                      height={32}
+                      className="rounded-lg"
+                    />
                     {t("brand")}
                   </SheetTitle>
                 </SheetHeader>
@@ -145,7 +161,7 @@ export function Navbar({ isAdmin = false }: NavbarProps) {
                             "flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-200 group text-base font-medium",
                             pathname === item.href
                               ? "bg-primary/10 text-primary"
-                              : "hover:bg-muted/60 text-muted-foreground hover:text-foreground"
+                              : "hover:bg-muted/60 text-muted-foreground hover:text-foreground",
                           )}
                         >
                           <item.icon
@@ -153,7 +169,7 @@ export function Navbar({ isAdmin = false }: NavbarProps) {
                               "h-5 w-5 transition-colors",
                               pathname === item.href
                                 ? "text-primary"
-                                : "text-muted-foreground group-hover:text-foreground"
+                                : "text-muted-foreground group-hover:text-foreground",
                             )}
                           />
                           {item.name}
@@ -174,7 +190,9 @@ export function Navbar({ isAdmin = false }: NavbarProps) {
                         <div className="p-2 rounded-lg bg-background shadow-sm">
                           <Languages className="h-4 w-4 text-orange-500" />
                         </div>
-                        <span className="font-medium text-sm">{t("language")}</span>
+                        <span className="font-medium text-sm">
+                          {t("language")}
+                        </span>
                       </div>
                       <LanguageSwitcher />
                     </div>

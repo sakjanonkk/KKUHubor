@@ -6,6 +6,7 @@ import { SummaryCard } from "./summary-card";
 import { UploadSummaryDialog } from "./upload-summary-dialog";
 import { FileText, Upload } from "lucide-react";
 import { useTranslations } from "next-intl";
+import Image from "next/image";
 
 interface SummariesSectionProps {
   summaryFiles: SummaryFile[];
@@ -31,14 +32,7 @@ export function SummariesSection({ summaryFiles, courseId }: SummariesSectionPro
 
       {summaryFiles.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20 text-center border rounded-3xl bg-muted/20 border-border/50 border-dashed animate-in fade-in zoom-in duration-500">
-          <div className="relative mb-6">
-            <div className="w-20 h-20 rounded-full bg-muted flex items-center justify-center">
-              <FileText className="w-10 h-10 text-muted-foreground fill-muted-foreground/20" />
-            </div>
-            <div className="absolute -bottom-1 -right-1 w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-              <Upload className="w-4 h-4 text-primary" />
-            </div>
-          </div>
+          <Image src="/mascot-no-summaries.png" alt="No summaries" width={160} height={90} className="mb-6" />
           <h3 className="text-2xl font-bold mb-3">{t("noFiles")}</h3>
           <p className="text-muted-foreground max-w-sm mx-auto mb-8 text-base leading-relaxed">
             {t("noFilesDescription")}

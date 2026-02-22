@@ -73,7 +73,7 @@ export default async function AboutPage() {
         {/* Links */}
         <section className="space-y-4">
           <h2 className="text-2xl font-bold">{t("links")}</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <a
               href="https://github.com/sakjanonkk/KKUHubor"
               target="_blank"
@@ -107,6 +107,27 @@ export default async function AboutPage() {
                     <p className="font-semibold">{t("facebookPage")}</p>
                     <p className="text-sm text-muted-foreground">
                       KKUHubor
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            </a>
+            <a
+              href="https://www.tiktok.com/@huborstudy"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Card className="hover:border-primary/30 hover:shadow-md transition-all h-full cursor-pointer">
+                <CardContent className="flex items-center gap-4 p-6">
+                  <div className="h-12 w-12 rounded-xl bg-black flex items-center justify-center shrink-0">
+                    <svg className="h-6 w-6 text-white" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1v-3.5a6.37 6.37 0 0 0-.79-.05A6.34 6.34 0 0 0 3.15 15a6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.34-6.34V8.1a8.16 8.16 0 0 0 4.76 1.52v-3.4c-.86 0-1.7-.18-2.48-.53h-.01l.49.01Z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <p className="font-semibold">TikTok</p>
+                    <p className="text-sm text-muted-foreground">
+                      @huborstudy
                     </p>
                   </div>
                 </CardContent>

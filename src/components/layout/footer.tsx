@@ -1,10 +1,11 @@
 "use client";
 
 import { Link } from "@/i18n/routing";
-import { BookOpen, Home, Bookmark, Info } from "lucide-react";
+import { Home, Bookmark, Info, BookOpen } from "lucide-react";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { ModeToggle } from "@/components/mode-toggle";
 import { useTranslations } from "next-intl";
+import Image from "next/image";
 
 export function Footer() {
   const t = useTranslations("Footer");
@@ -16,7 +17,8 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Brand */}
           <div>
-            <Link href="/" className="font-bold text-xl tracking-tight">
+            <Link href="/" className="font-bold text-xl tracking-tight flex items-center gap-2 w-fit">
+              <Image src="/logo.png" alt="KKUHubor" width={32} height={32} className="rounded-lg" />
               {tNav("brand")}
             </Link>
             <p className="text-sm text-muted-foreground mt-2 max-w-xs">

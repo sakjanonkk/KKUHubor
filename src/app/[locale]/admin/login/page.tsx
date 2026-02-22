@@ -14,6 +14,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { toast } from "sonner";
+import Image from "next/image";
 
 export default function AdminLoginPage() {
   const [username, setUsername] = useState("");
@@ -49,7 +50,8 @@ export default function AdminLoginPage() {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
       <Card className="w-[350px]">
-        <CardHeader>
+        <CardHeader className="items-center text-center">
+          <Image src="/mascot-admin.png" alt="KKUHubor Admin" width={100} height={56} className="mb-2" />
           <CardTitle>Admin Login</CardTitle>
           <CardDescription>
             Enter your credentials to access the dashboard.
