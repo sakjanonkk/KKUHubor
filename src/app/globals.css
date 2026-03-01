@@ -128,3 +128,9 @@
     overflow-x: hidden;
   }
 }
+
+/* Prevent react-remove-scroll-bar from adding extra margin/padding
+   when scrollbar-gutter: stable already reserves the space */
+html body[data-scroll-locked] {
+  margin-right: 0 !important;
+}

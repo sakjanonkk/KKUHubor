@@ -30,6 +30,7 @@ import { SearchBar } from "@/components/features/search-bar";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import Image from "next/image";
+import { ScrollProgress } from "@/components/layout/scroll-progress";
 
 interface NavbarProps {
   isAdmin?: boolean;
@@ -106,11 +107,21 @@ export function Navbar({ isAdmin = false }: NavbarProps) {
               className="h-auto border-b shadow-lg p-0 bg-background/95 backdrop-blur-xl"
             >
               <SheetTitle className="sr-only">Search</SheetTitle>
-              <div className="p-4 pt-10">
-                <SearchBar
-                  variant="hero"
-                  onSelect={() => setMobileSearchOpen(false)}
-                />
+              <div className="relative overflow-hidden">
+                {/* Background Gradients */}
+                <div className="absolute inset-0 -z-10 pointer-events-none">
+                  <div className="absolute -top-10 left-1/2 -translate-x-1/2 w-100 h-50 bg-primary/8 blur-[100px] rounded-full" />
+                  <div className="absolute -bottom-10 right-0 w-50 h-37.5 bg-blue-500/8 blur-[80px] rounded-full" />
+                </div>
+                <div className="px-5 pt-12 pb-6">
+                  <p className="text-sm font-medium text-muted-foreground mb-3">
+                    {t("searchCourse")}
+                  </p>
+                  <SearchBar
+                    variant="hero"
+                    onSelect={() => setMobileSearchOpen(false)}
+                  />
+                </div>
               </div>
             </SheetContent>
           </Sheet>
@@ -233,6 +244,7 @@ export function Navbar({ isAdmin = false }: NavbarProps) {
           </Sheet>
         </div>
       </div>
+      <ScrollProgress />
     </nav>
   );
 }

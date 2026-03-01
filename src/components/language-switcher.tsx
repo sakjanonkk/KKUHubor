@@ -25,7 +25,7 @@ export function LanguageSwitcher() {
   };
 
   return (
-    <DropdownMenu>
+    <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" size="icon" disabled={isPending}>
           <Languages className="h-[1.2rem] w-[1.2rem]" />

@@ -10,7 +10,8 @@
     "menu": "Menu",
     "settings": "Settings",
     "language": "Language",
-    "about": "About"
+    "about": "About",
+    "searchCourse": "Search for a course"
   },
   "Theme": {
     "toggle": "Toggle theme",
