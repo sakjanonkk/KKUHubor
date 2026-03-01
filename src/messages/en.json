@@ -343,5 +343,18 @@
     "facebookPage": "Facebook Page",
     "viewOnGitHub": "View on GitHub",
     "madeWith": "Made with care for KKU students"
+  },
+  "NotFound": {
+    "title": "404",
+    "heading": "Page not found",
+    "description": "The page you're looking for may have been removed, renamed, or never existed.",
+    "backHome": "Back to Home",
+    "browseCourses": "Browse Courses"
+  },
+  "Error": {
+    "title": "Something went wrong",
+    "description": "An unexpected error occurred. Please try again. If the problem persists, contact the administrator.",
+    "retry": "Try again",
+    "backHome": "Back to Home"
   }
 }
