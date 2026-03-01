@@ -59,7 +59,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(formattedCourses);
   } catch (error) {
-    console.error("Failed to fetch courses by codes:", error);
+    console.error("Failed to fetch courses by codes:", error instanceof Error ? error.message : "Unknown error");
     return NextResponse.json(
       { error: "Failed to fetch courses" },
       { status: 500 }

@@ -16,7 +16,7 @@ export async function POST(req: Request) {
     const validated = likeSchema.safeParse(body);
     if (!validated.success) {
       return NextResponse.json(
-        { error: "Invalid input", details: validated.error.issues.map(e => e.message) },
+        { error: "Invalid input" },
         { status: 400 }
       );
     }
@@ -57,8 +57,8 @@ export async function POST(req: Request) {
       liked: existingLike.rows.length === 0,
       count: newCount,
     });
-  } catch (error: any) {
-    console.error("Like API Error:", error);
+  } catch (error) {
+    console.error("Like API Error:", error instanceof Error ? error.message : "Unknown error");
     return NextResponse.json(
       { error: "Internal Server Error" },
       { status: 500 }

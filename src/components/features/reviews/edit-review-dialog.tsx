@@ -33,6 +33,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
+import { getOrCreateSessionId } from "@/lib/session";
 
 interface EditReviewDialogProps {
   review: Review;
@@ -70,7 +71,7 @@ export function EditReviewDialog({
   async function onSubmit(values: FormValues) {
     setIsSubmitting(true);
     try {
-      const sessionId = localStorage.getItem("session_id");
+      const sessionId = getOrCreateSessionId();
       const response = await fetch("/api/reviews", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },

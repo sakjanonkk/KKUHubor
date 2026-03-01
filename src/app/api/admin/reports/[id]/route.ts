@@ -12,10 +12,15 @@ export async function DELETE(req: Request, { params }: Params) {
     if (authError) return authError;
 
     const { id } = await params;
-    await db.query("DELETE FROM reports WHERE report_id = $1", [id]);
+    const numId = parseInt(id, 10);
+    if (isNaN(numId) || numId <= 0) {
+      return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
+    }
+
+    await db.query("DELETE FROM reports WHERE report_id = $1", [numId]);
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error("Failed to delete report:", error);
+    console.error("Failed to delete report:", error instanceof Error ? error.message : "Unknown error");
     return NextResponse.json({ error: "Failed to delete report" }, { status: 500 });
   }
 }
@@ -26,13 +31,18 @@ export async function PATCH(req: Request, { params }: Params) {
     if (authError) return authError;
 
     const { id } = await params;
+    const numId = parseInt(id, 10);
+    if (isNaN(numId) || numId <= 0) {
+      return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
+    }
+
     await db.query(
       "UPDATE reports SET status = 'dismissed' WHERE report_id = $1",
-      [id]
+      [numId]
     );
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error("Failed to dismiss report:", error);
+    console.error("Failed to dismiss report:", error instanceof Error ? error.message : "Unknown error");
     return NextResponse.json({ error: "Failed to dismiss report" }, { status: 500 });
   }
 }

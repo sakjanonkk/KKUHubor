@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Download, Trash2, FileText, Image, FileSpreadsheet } from "lucide-react";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
+import { getOrCreateSessionId } from "@/lib/session";
 
 function getFileIcon(type: string) {
   if (type === "application/pdf") return <FileText className="h-10 w-10 text-red-500" />;
@@ -40,7 +41,7 @@ export function SummaryCard({ file }: SummaryCardProps) {
   const t = useTranslations("Summaries");
 
   useEffect(() => {
-    const sessionId = localStorage.getItem("session_id");
+    const sessionId = getOrCreateSessionId();
     if (sessionId && file.sessionId && sessionId === file.sessionId) {
       setIsOwner(true);
     }
@@ -48,12 +49,13 @@ export function SummaryCard({ file }: SummaryCardProps) {
 
   const handleDelete = async () => {
     if (!confirm(t("deleteConfirm"))) return;
-    const sessionId = localStorage.getItem("session_id");
+    const sessionId = getOrCreateSessionId();
     try {
-      const res = await fetch(
-        `/api/summaries/${file.id}?session_id=${sessionId}`,
-        { method: "DELETE" }
-      );
+      const res = await fetch(`/api/summaries/${file.id}`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ session_id: sessionId }),
+      });
       if (res.ok) {
         toast.success(t("deleteSuccess"));
         router.refresh();

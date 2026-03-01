@@ -1,14 +1,29 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
+import { prisma } from "@/lib/database";
 
 /**
- * Verify admin session from cookies
- * Returns true if admin session exists, false otherwise
+ * Verify admin session by checking token against database
+ * Returns true if a valid (non-expired) session exists
  */
 export async function verifyAdminSession(): Promise<boolean> {
   const cookieStore = await cookies();
   const adminSession = cookieStore.get("admin_session");
-  return adminSession?.value === "true";
+  const token = adminSession?.value;
+
+  if (!token || token === "true") {
+    return false;
+  }
+
+  const session = await prisma.adminSession.findUnique({
+    where: { token },
+  });
+
+  if (!session || session.expiresAt < new Date()) {
+    return false;
+  }
+
+  return true;
 }
 
 /**

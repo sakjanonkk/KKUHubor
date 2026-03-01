@@ -17,7 +17,7 @@ export async function POST(req: Request) {
     const validated = commentSchema.safeParse(body);
     if (!validated.success) {
       return NextResponse.json(
-        { error: "Invalid input", details: validated.error.issues.map(e => e.message) },
+        { error: "Invalid input" },
         { status: 400 }
       );
     }
@@ -33,8 +33,8 @@ export async function POST(req: Request) {
     const result = await db.query(query, values);
 
     return NextResponse.json(result.rows[0]);
-  } catch (error: any) {
-    console.error("Comment API Error:", error);
+  } catch (error) {
+    console.error("Comment API Error:", error instanceof Error ? error.message : "Unknown error");
     return NextResponse.json(
       { error: "Internal Server Error" },
       { status: 500 }
@@ -59,8 +59,8 @@ export async function GET(req: Request) {
     const result = await db.query(query, [reviewId]);
 
     return NextResponse.json(result.rows);
-  } catch (error: any) {
-    console.error("Fetch Comments Error:", error);
+  } catch (error) {
+    console.error("Fetch Comments Error:", error instanceof Error ? error.message : "Unknown error");
     return NextResponse.json(
       { error: "Internal Server Error" },
       { status: 500 }

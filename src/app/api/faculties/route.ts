@@ -8,7 +8,7 @@ export async function GET() {
     );
     return NextResponse.json(result.rows);
   } catch (error) {
-    console.error("Failed to fetch faculties:", error);
+    console.error("Failed to fetch faculties:", error instanceof Error ? error.message : "Unknown error");
     return NextResponse.json(
       { error: "Internal Server Error" },
       { status: 500 }

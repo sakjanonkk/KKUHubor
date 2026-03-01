@@ -13,16 +13,20 @@ export async function DELETE(req: Request, { params }: Params) {
     if (authError) return authError;
 
     const { id } = await params;
+    const numId = parseInt(id, 10);
+    if (isNaN(numId) || numId <= 0) {
+      return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
+    }
 
     // First delete associated reports (foreign key constraint)
-    await db.query("DELETE FROM reports WHERE review_id = $1", [id]);
+    await db.query("DELETE FROM reports WHERE review_id = $1", [numId]);
 
     // Then delete the review
-    await db.query("DELETE FROM reviews WHERE review_id = $1", [id]);
+    await db.query("DELETE FROM reviews WHERE review_id = $1", [numId]);
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error("Failed to delete review:", error);
+    console.error("Failed to delete review:", error instanceof Error ? error.message : "Unknown error");
     return NextResponse.json({ error: "Failed to delete review" }, { status: 500 });
   }
 }

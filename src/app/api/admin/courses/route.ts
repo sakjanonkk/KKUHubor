@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import { cookies } from "next/headers";
 import db from "@/lib/db";
+import { requireAdminAuth } from "@/lib/auth";
 import { z } from "zod";
 
 const courseSchema = z.object({
@@ -12,12 +12,8 @@ const courseSchema = z.object({
 
 export async function POST(req: Request) {
   try {
-    // Auth Check
-    const cookieStore = await cookies();
-    const session = cookieStore.get("admin_session");
-    if (!session) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    const authError = await requireAdminAuth();
+    if (authError) return authError;
 
     const body = await req.json();
     const validated = courseSchema.safeParse(body);
@@ -36,7 +32,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ success: true }, { status: 201 });
   } catch (error) {
-    console.error("Failed to add course:", error);
+    console.error("Failed to add course:", error instanceof Error ? error.message : "Unknown error");
     return NextResponse.json(
       { error: "Failed to add course" },
       { status: 500 }

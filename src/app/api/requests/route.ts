@@ -35,7 +35,7 @@ export async function POST(req: Request) {
       { status: 201 }
     );
   } catch (error) {
-    console.error("Failed to create request:", error);
+    console.error("Failed to create request:", error instanceof Error ? error.message : "Unknown error");
     return NextResponse.json(
       { error: "Internal Server Error" },
       { status: 500 }

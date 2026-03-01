@@ -10,8 +10,15 @@ interface RouteParams {
 export async function DELETE(req: Request, { params }: RouteParams) {
   try {
     const { id } = await params;
-    const { searchParams } = new URL(req.url);
-    const sessionId = searchParams.get("session_id");
+
+    // Read session_id from request body instead of URL params
+    let sessionId: string | null = null;
+    try {
+      const body = await req.json();
+      sessionId = body?.session_id || null;
+    } catch {
+      // Body may be empty for admin requests
+    }
 
     // Check admin or ownership
     const adminAuth = await requireAdminAuth();
@@ -54,7 +61,7 @@ export async function DELETE(req: Request, { params }: RouteParams) {
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error("Error deleting summary:", error);
+    console.error("Error deleting summary:", error instanceof Error ? error.message : "Unknown error");
     return NextResponse.json(
       { error: "Failed to delete summary" },
       { status: 500 }

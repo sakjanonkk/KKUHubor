@@ -17,6 +17,7 @@ import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
 import { Upload, X, FileText, Image, FileSpreadsheet, Loader2 } from "lucide-react";
+import { getOrCreateSessionId } from "@/lib/session";
 
 const ALLOWED_TYPES = [
   "application/pdf",
@@ -90,11 +91,7 @@ export function UploadSummaryDialog({ courseId }: UploadSummaryDialogProps) {
 
     setIsUploading(true);
     try {
-      let sessionId = localStorage.getItem("session_id");
-      if (!sessionId) {
-        sessionId = Math.random().toString(36).substring(2);
-        localStorage.setItem("session_id", sessionId);
-      }
+      const sessionId = getOrCreateSessionId();
 
       const formData = new FormData();
       formData.append("file", file);

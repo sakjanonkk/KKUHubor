@@ -48,7 +48,7 @@ export async function GET(_req: Request, { params }: RouteParams) {
       },
     });
   } catch (error) {
-    console.error("Error downloading summary:", error);
+    console.error("Error downloading summary:", error instanceof Error ? error.message : "Unknown error");
     return NextResponse.json(
       { error: "Failed to download file" },
       { status: 500 }

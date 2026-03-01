@@ -72,7 +72,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json(result.rows[0], { status: 201 });
   } catch (error) {
-    console.error("Error uploading summary:", error);
+    console.error("Error uploading summary:", error instanceof Error ? error.message : "Unknown error");
     return NextResponse.json(
       { error: "Failed to upload summary" },
       { status: 500 }
@@ -104,7 +104,7 @@ export async function GET(req: Request) {
 
     return NextResponse.json({ files: result.rows });
   } catch (error) {
-    console.error("Error fetching summaries:", error);
+    console.error("Error fetching summaries:", error instanceof Error ? error.message : "Unknown error");
     return NextResponse.json(
       { error: "Failed to fetch summaries" },
       { status: 500 }

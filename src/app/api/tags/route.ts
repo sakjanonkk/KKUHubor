@@ -1,26 +1,22 @@
 import { NextResponse } from "next/server";
 import db from "@/lib/db";
+import { z } from "zod";
+
+const tagRequestSchema = z.object({
+  courseId: z.number().positive(),
+  newTag: z.string().min(1).max(20),
+});
 
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { courseId, newTag } = body;
-
-    if (!courseId || !newTag) {
-      return NextResponse.json(
-        { error: "Missing required fields" },
-        { status: 400 }
-      );
+    const validated = tagRequestSchema.safeParse(body);
+    if (!validated.success) {
+      return NextResponse.json({ error: "Invalid input" }, { status: 400 });
     }
 
-    const tag = newTag.trim();
-
-    if (tag.length === 0 || tag.length > 20) {
-      return NextResponse.json(
-        { error: "Tag must be between 1 and 20 characters" },
-        { status: 400 }
-      );
-    }
+    const tag = validated.data.newTag.trim();
+    const courseId = validated.data.courseId;
 
     // Insert into tag_requests table
     const query = `
@@ -37,7 +33,7 @@ export async function POST(req: Request) {
       tag: result.rows[0],
     });
   } catch (error) {
-    console.error("Failed to submit tag request:", error);
+    console.error("Failed to submit tag request:", error instanceof Error ? error.message : "Unknown error");
     return NextResponse.json(
       { error: "Internal Server Error" },
       { status: 500 }

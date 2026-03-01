@@ -28,7 +28,7 @@ export async function POST(req: Request) {
     const validated = reviewSchema.safeParse(body);
     if (!validated.success) {
       return NextResponse.json(
-        { error: "Invalid input", details: validated.error.issues.map(e => e.message) },
+        { error: "Invalid input" },
         { status: 400 }
       );
     }
@@ -66,7 +66,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json(formattedReview, { status: 201 });
   } catch (error) {
-    console.error("Error creating review:", error);
+    console.error("Error creating review:", error instanceof Error ? error.message : "Unknown error");
     return NextResponse.json(
       { error: "Failed to create review" },
       { status: 500 }
@@ -107,20 +107,25 @@ export async function PUT(req: Request) {
 
     return NextResponse.json(result.rows[0]);
   } catch (error) {
-    console.error("Error updating review:", error);
+    console.error("Error updating review:", error instanceof Error ? error.message : "Unknown error");
     return NextResponse.json({ error: "Failed to update review" }, { status: 500 });
   }
 }
 
+const deleteSchema = z.object({
+  id: z.number().positive(),
+  session_id: z.string().min(1),
+});
+
 export async function DELETE(req: Request) {
   try {
-    const { searchParams } = new URL(req.url);
-    const reviewId = searchParams.get("id");
-    const sessionId = searchParams.get("session_id");
-
-    if (!reviewId || !sessionId) {
-      return NextResponse.json({ error: "Missing id or session_id" }, { status: 400 });
+    const body = await req.json();
+    const validated = deleteSchema.safeParse(body);
+    if (!validated.success) {
+      return NextResponse.json({ error: "Invalid input" }, { status: 400 });
     }
+
+    const { id: reviewId, session_id: sessionId } = validated.data;
 
     // Verify ownership
     const existing = await db.query(
@@ -130,14 +135,14 @@ export async function DELETE(req: Request) {
     if (existing.rows.length === 0) {
       return NextResponse.json({ error: "Review not found" }, { status: 404 });
     }
-    if (!existing.rows[0].session_id || existing.rows[0].session_id !== sessionId) {
+    if (!sessionId || !existing.rows[0].session_id || existing.rows[0].session_id !== sessionId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     await db.query("DELETE FROM reviews WHERE review_id = $1", [reviewId]);
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error("Error deleting review:", error);
+    console.error("Error deleting review:", error instanceof Error ? error.message : "Unknown error");
     return NextResponse.json({ error: "Failed to delete review" }, { status: 500 });
   }
 }

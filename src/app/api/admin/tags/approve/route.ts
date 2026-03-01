@@ -1,22 +1,25 @@
 import { NextResponse } from "next/server";
 import db from "@/lib/db";
 import { requireAdminAuth } from "@/lib/auth";
+import { z } from "zod";
+
+const tagActionSchema = z.object({
+  requestId: z.number().positive(),
+  action: z.enum(["approve", "reject"]),
+});
 
 export async function PUT(req: Request) {
   try {
-    // Auth Check
     const authError = await requireAdminAuth();
     if (authError) return authError;
 
     const body = await req.json();
-    const { requestId, action } = body; // action: 'approve' | 'reject'
-
-    if (!requestId || !action) {
-      return NextResponse.json(
-        { error: "Missing required fields" },
-        { status: 400 }
-      );
+    const validated = tagActionSchema.safeParse(body);
+    if (!validated.success) {
+      return NextResponse.json({ error: "Invalid input" }, { status: 400 });
     }
+
+    const { requestId, action } = validated.data;
 
     if (action === "reject") {
       const query = `UPDATE tag_requests SET status = 'rejected' WHERE request_id = $1`;
@@ -62,7 +65,7 @@ export async function PUT(req: Request) {
 
     return NextResponse.json({ error: "Invalid action" }, { status: 400 });
   } catch (error) {
-    console.error("Failed to process tag request:", error);
+    console.error("Failed to process tag request:", error instanceof Error ? error.message : "Unknown error");
     return NextResponse.json(
       { error: "Internal Server Error" },
       { status: 500 }

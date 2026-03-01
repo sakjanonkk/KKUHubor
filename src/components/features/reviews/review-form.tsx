@@ -34,6 +34,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
+import { getOrCreateSessionId } from "@/lib/session";
 
 interface ReviewFormProps {
   courseId: number;
@@ -75,11 +76,7 @@ export function ReviewForm({ courseId }: ReviewFormProps) {
   async function onSubmit(values: FormValues) {
     try {
       // Get or create session ID for review ownership
-      let sessionId = localStorage.getItem("session_id");
-      if (!sessionId) {
-        sessionId = Math.random().toString(36).substring(2);
-        localStorage.setItem("session_id", sessionId);
-      }
+      const sessionId = getOrCreateSessionId();
 
       const response = await fetch("/api/reviews", {
         method: "POST",

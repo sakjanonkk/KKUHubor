@@ -19,6 +19,7 @@ import { CommentSection } from "./comment-section";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
+import { getOrCreateSessionId } from "@/lib/session";
 
 interface ReviewCardProps {
   review: Review;
@@ -46,7 +47,7 @@ export function ReviewCard({ review }: ReviewCardProps) {
     }
 
     // Check ownership via session_id
-    const sessionId = localStorage.getItem("session_id");
+    const sessionId = getOrCreateSessionId();
     if (sessionId && review.sessionId && sessionId === review.sessionId) {
       setIsOwner(true);
     }
@@ -54,12 +55,13 @@ export function ReviewCard({ review }: ReviewCardProps) {
 
   const handleDelete = async () => {
     if (!confirm(t("deleteConfirm"))) return;
-    const sessionId = localStorage.getItem("session_id");
+    const sessionId = getOrCreateSessionId();
     try {
-      const res = await fetch(
-        `/api/reviews?id=${review.id}&session_id=${sessionId}`,
-        { method: "DELETE" }
-      );
+      const res = await fetch(`/api/reviews`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: review.id, session_id: sessionId }),
+      });
       if (res.ok) {
         toast.success(t("deleteSuccess"));
         router.refresh();
@@ -73,11 +75,7 @@ export function ReviewCard({ review }: ReviewCardProps) {
 
   const handleLike = async () => {
     // Get or create session ID
-    let sessionId = localStorage.getItem("session_id");
-    if (!sessionId) {
-      sessionId = Math.random().toString(36).substring(2);
-      localStorage.setItem("session_id", sessionId);
-    }
+    const sessionId = getOrCreateSessionId();
 
     // Optimistic UI Update
     const prevLikes = likes;

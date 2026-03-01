@@ -11,13 +11,20 @@ async function main() {
   // ============================================================
   // 1. ADMIN USER (only admin, no demo users)
   // ============================================================
+  const adminPassword = process.env.ADMIN_PASSWORD;
+  if (!adminPassword) {
+    console.error("❌ ADMIN_PASSWORD environment variable is required for seeding.");
+    console.error("   Set it in .env: ADMIN_PASSWORD=your_secure_password");
+    process.exit(1);
+  }
+
   await prisma.users.upsert({
     where: { email: "admin@kkuhubor.com" },
     update: {},
     create: {
       username: "admin",
       email: "admin@kkuhubor.com",
-      password_hash: await bcrypt.hash("%3N23MgR7Gyt5p5", 10),
+      password_hash: await bcrypt.hash(adminPassword, 10),
       role: "admin",
       image: "https://ui-avatars.com/api/?name=Admin&background=6366f1&color=fff",
     },

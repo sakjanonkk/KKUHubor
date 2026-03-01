@@ -35,7 +35,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json(result.rows[0], { status: 201 });
   } catch (error) {
-    console.error("Error reporting review:", error);
+    console.error("Error reporting review:", error instanceof Error ? error.message : "Unknown error");
     return NextResponse.json(
       { error: "Failed to submit report" },
       { status: 500 }

@@ -1,24 +1,24 @@
 import { NextResponse } from "next/server";
-import { cookies } from "next/headers";
 import db from "@/lib/db";
+import { requireAdminAuth } from "@/lib/auth";
+import { z } from "zod";
+
+const approveSchema = z.object({
+  requestId: z.number().positive(),
+});
 
 export async function POST(req: Request) {
   try {
-    // Auth Check
-    const cookieStore = await cookies();
-    const session = cookieStore.get("admin_session");
-    if (!session) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    const authError = await requireAdminAuth();
+    if (authError) return authError;
+
+    const body = await req.json();
+    const validated = approveSchema.safeParse(body);
+    if (!validated.success) {
+      return NextResponse.json({ error: "Invalid input" }, { status: 400 });
     }
 
-    const { requestId } = await req.json();
-
-    if (!requestId) {
-      return NextResponse.json(
-        { error: "Missing Request ID" },
-        { status: 400 }
-      );
-    }
+    const { requestId } = validated.data;
 
     // Transaction
     await db.query("BEGIN");
@@ -62,7 +62,7 @@ export async function POST(req: Request) {
     });
   } catch (error) {
     await db.query("ROLLBACK");
-    console.error("Approve failed:", error);
+    console.error("Approve failed:", error instanceof Error ? error.message : "Unknown error");
     return NextResponse.json(
       { error: "Failed to approve request" },
       { status: 500 }

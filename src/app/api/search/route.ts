@@ -5,7 +5,7 @@ export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
   const query = searchParams.get("q");
 
-  if (!query || query.trim().length === 0) {
+  if (!query || query.trim().length === 0 || query.length > 100) {
     return NextResponse.json([]);
   }
 
@@ -24,7 +24,7 @@ export async function GET(req: Request) {
 
     return NextResponse.json(result.rows);
   } catch (error) {
-    console.error("Search API Error:", error);
+    console.error("Search API Error:", error instanceof Error ? error.message : "Unknown error");
     return NextResponse.json(
       { error: "Internal Server Error" },
       { status: 500 }
