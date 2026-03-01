@@ -71,11 +71,13 @@ async function getLatestReviews() {
     const res = await db.query(`
       SELECT
         r.review_id,
+        r.course_id,
         r.content,
         r.created_at,
         r.reviewer_name,
         r.grade_received,
         r.semester,
+        r.session_id,
         c.course_code,
         c.name_en,
         c.name_th,
@@ -94,6 +96,7 @@ async function getLatestReviews() {
       reviewerName: row.reviewer_name || "Anonymous",
       gradeReceived: row.grade_received,
       semester: row.semester,
+      sessionId: row.session_id,
       likeCount: row.like_count,
       course: {
         code: row.course_code,

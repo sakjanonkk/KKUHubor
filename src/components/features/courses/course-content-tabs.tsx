@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { Review, SummaryFile } from "@/types";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ReviewsSection } from "@/components/features/reviews/reviews-section";
@@ -20,6 +21,25 @@ export function CourseContentTabs({
   courseId,
 }: CourseContentTabsProps) {
   const t = useTranslations("Summaries");
+  const [reviewCount, setReviewCount] = useState(reviews.length);
+  const [summaryCount, setSummaryCount] = useState(summaryFiles.length);
+
+  useEffect(() => {
+    const onReviewAdded = () => setReviewCount((c) => c + 1);
+    const onReviewDeleted = () => setReviewCount((c) => Math.max(0, c - 1));
+    const onSummaryAdded = () => setSummaryCount((c) => c + 1);
+    const onSummaryDeleted = () => setSummaryCount((c) => Math.max(0, c - 1));
+    window.addEventListener("review-added", onReviewAdded);
+    window.addEventListener("review-deleted", onReviewDeleted);
+    window.addEventListener("summary-added", onSummaryAdded);
+    window.addEventListener("summary-deleted", onSummaryDeleted);
+    return () => {
+      window.removeEventListener("review-added", onReviewAdded);
+      window.removeEventListener("review-deleted", onReviewDeleted);
+      window.removeEventListener("summary-added", onSummaryAdded);
+      window.removeEventListener("summary-deleted", onSummaryDeleted);
+    };
+  }, []);
 
   return (
     <div className="md:col-span-2">
@@ -28,18 +48,18 @@ export function CourseContentTabs({
           <TabsTrigger value="reviews" className="gap-1.5">
             <MessageSquare className="h-4 w-4" />
             {t("tabReviews")}
-            {reviews.length > 0 && (
+            {reviewCount > 0 && (
               <Badge variant="secondary" className="rounded-full ml-1 text-xs px-1.5 py-0">
-                {reviews.length}
+                {reviewCount}
               </Badge>
             )}
           </TabsTrigger>
           <TabsTrigger value="summaries" className="gap-1.5">
             <FileText className="h-4 w-4" />
             {t("tabSummaries")}
-            {summaryFiles.length > 0 && (
+            {summaryCount > 0 && (
               <Badge variant="secondary" className="rounded-full ml-1 text-xs px-1.5 py-0">
-                {summaryFiles.length}
+                {summaryCount}
               </Badge>
             )}
           </TabsTrigger>

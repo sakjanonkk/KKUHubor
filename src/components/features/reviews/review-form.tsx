@@ -95,6 +95,9 @@ export function ReviewForm({ courseId }: ReviewFormProps) {
         throw new Error("Failed to submit review");
       }
 
+      const newReview = await response.json();
+      window.dispatchEvent(new CustomEvent("review-added", { detail: newReview }));
+
       toast.success(t("successToast"));
       setOpen(false);
       form.reset();

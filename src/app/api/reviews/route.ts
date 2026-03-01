@@ -62,6 +62,8 @@ export async function POST(req: Request) {
       semester: newReview.semester,
       content: newReview.content,
       createdAt: newReview.created_at,
+      sessionId: newReview.session_id,
+      likeCount: 0,
     };
 
     return NextResponse.json(formattedReview, { status: 201 });

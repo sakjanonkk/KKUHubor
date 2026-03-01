@@ -1,9 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { Badge } from "@/components/ui/badge";
-import { ThumbsUp, MessageSquare } from "lucide-react";
 import { Review } from "@/types";
 import { ReviewCard } from "./review-card";
 import { ReviewForm } from "./review-form";
@@ -17,9 +16,39 @@ interface ReviewsSectionProps {
 
 export function ReviewsSection({ reviews, courseId }: ReviewsSectionProps) {
   const t = useTranslations("CourseDetail");
+  const [allReviews, setAllReviews] = useState<Review[]>(reviews);
   const [sortedReviews, setSortedReviews] = useState<Review[]>(
     sortReviews(reviews, "recent")
   );
+
+  // Listen for new reviews (from ReviewForm anywhere on the page)
+  useEffect(() => {
+    const handleReviewAdded = (e: Event) => {
+      const newReview = (e as CustomEvent).detail as Review;
+      setAllReviews((prev) => [newReview, ...prev]);
+      setSortedReviews((prev) => [newReview, ...prev]);
+    };
+    const handleReviewDeleted = (e: Event) => {
+      const deletedId = (e as CustomEvent).detail as number;
+      setAllReviews((prev) => prev.filter((r) => r.id !== deletedId));
+      setSortedReviews((prev) => prev.filter((r) => r.id !== deletedId));
+    };
+    const handleReviewUpdated = (e: Event) => {
+      const updated = (e as CustomEvent).detail as Review;
+      const updateList = (prev: Review[]) =>
+        prev.map((r) => (r.id === updated.id ? { ...r, ...updated } : r));
+      setAllReviews(updateList);
+      setSortedReviews(updateList);
+    };
+    window.addEventListener("review-added", handleReviewAdded);
+    window.addEventListener("review-deleted", handleReviewDeleted);
+    window.addEventListener("review-updated", handleReviewUpdated);
+    return () => {
+      window.removeEventListener("review-added", handleReviewAdded);
+      window.removeEventListener("review-deleted", handleReviewDeleted);
+      window.removeEventListener("review-updated", handleReviewUpdated);
+    };
+  }, []);
 
   const handleSort = (newSortedReviews: Review[]) => {
     setSortedReviews(newSortedReviews);
@@ -30,15 +59,15 @@ export function ReviewsSection({ reviews, courseId }: ReviewsSectionProps) {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
         <h3 className="text-2xl font-bold flex items-center gap-2">
           {t("studentReviews")}
-          {reviews.length > 0 && (
+          {allReviews.length > 0 && (
             <Badge variant="secondary" className="rounded-full">
-              {reviews.length}
+              {allReviews.length}
             </Badge>
           )}
         </h3>
-        {reviews.length > 1 && (
+        {allReviews.length > 1 && (
           <ReviewSort
-            reviews={reviews}
+            reviews={allReviews}
             onSort={handleSort}
             defaultSort="recent"
           />

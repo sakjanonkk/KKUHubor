@@ -57,6 +57,7 @@ export function SummaryCard({ file }: SummaryCardProps) {
         body: JSON.stringify({ session_id: sessionId }),
       });
       if (res.ok) {
+        window.dispatchEvent(new CustomEvent("summary-deleted", { detail: file.id }));
         toast.success(t("deleteSuccess"));
         router.refresh();
       } else {

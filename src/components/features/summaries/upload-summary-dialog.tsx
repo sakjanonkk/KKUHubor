@@ -110,6 +110,9 @@ export function UploadSummaryDialog({ courseId }: UploadSummaryDialogProps) {
         throw new Error(data.error || "Upload failed");
       }
 
+      const newFile = await res.json();
+      window.dispatchEvent(new CustomEvent("summary-added", { detail: newFile }));
+
       toast.success(t("uploadSuccess"));
       setOpen(false);
       setFile(null);

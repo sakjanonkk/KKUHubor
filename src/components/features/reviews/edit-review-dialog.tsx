@@ -88,6 +88,10 @@ export function EditReviewDialog({
         throw new Error("Failed to update review");
       }
 
+      window.dispatchEvent(new CustomEvent("review-updated", {
+        detail: { ...review, gradeReceived: values.gradeReceived, semester: values.semester, content: values.content },
+      }));
+
       toast.success(t("editSuccess"));
       onOpenChange(false);
       router.refresh();

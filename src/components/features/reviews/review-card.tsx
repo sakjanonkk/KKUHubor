@@ -63,6 +63,7 @@ export function ReviewCard({ review }: ReviewCardProps) {
         body: JSON.stringify({ id: review.id, session_id: sessionId }),
       });
       if (res.ok) {
+        window.dispatchEvent(new CustomEvent("review-deleted", { detail: review.id }));
         toast.success(t("deleteSuccess"));
         router.refresh();
       } else {

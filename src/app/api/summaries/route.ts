@@ -57,7 +57,7 @@ export async function POST(req: Request) {
        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, NOW())
        RETURNING file_id as id, course_id as "courseId", uploader_name as "uploaderName",
                  title, file_name as "fileName", file_size as "fileSize", file_type as "fileType",
-                 download_count as "downloadCount", created_at as "createdAt"`,
+                 session_id as "sessionId", download_count as "downloadCount", created_at as "createdAt"`,
       [
         courseId,
         uploaderName?.trim() || "Anonymous",
