@@ -24,10 +24,25 @@ let bucketReady = false;
 
 async function ensureBucket() {
   if (bucketReady) return;
+  console.log("[storage] S3 config:", {
+    endpoint: process.env.S3_ENDPOINT || "(not set)",
+    bucket: BUCKET,
+    region: process.env.S3_REGION || "us-east-1",
+    hasAccessKey: !!process.env.S3_ACCESS_KEY,
+    hasSecretKey: !!process.env.S3_SECRET_KEY,
+  });
   try {
     await s3.send(new HeadBucketCommand({ Bucket: BUCKET }));
-  } catch {
-    await s3.send(new CreateBucketCommand({ Bucket: BUCKET }));
+    console.log("[storage] Bucket OK");
+  } catch (err: unknown) {
+    console.error("[storage] HeadBucket failed:", err instanceof Error ? err.message : err);
+    try {
+      await s3.send(new CreateBucketCommand({ Bucket: BUCKET }));
+      console.log("[storage] Bucket created");
+    } catch (createErr: unknown) {
+      console.error("[storage] CreateBucket failed:", createErr instanceof Error ? createErr.message : createErr);
+      throw createErr;
+    }
   }
   bucketReady = true;
 }
