@@ -29,8 +29,8 @@ interface RateLimitConfig {
 const RATE_LIMIT_RULES: { pattern: RegExp; config: RateLimitConfig; methods?: string[] }[] = [
   // Login: 5 requests per 15 minutes
   { pattern: /^\/api\/auth\/login$/, config: { maxRequests: 5, windowMs: 15 * 60 * 1000 } },
-  // Reviews POST: 5 per hour
-  { pattern: /^\/api\/reviews$/, config: { maxRequests: 5, windowMs: 60 * 60 * 1000 }, methods: ["POST"] },
+  // Reviews POST: 20 per hour
+  { pattern: /^\/api\/reviews$/, config: { maxRequests: 20, windowMs: 60 * 60 * 1000 }, methods: ["POST"] },
   // Comments POST: 20 per hour
   { pattern: /^\/api\/comments$/, config: { maxRequests: 20, windowMs: 60 * 60 * 1000 }, methods: ["POST"] },
   // Likes: 60 per minute
