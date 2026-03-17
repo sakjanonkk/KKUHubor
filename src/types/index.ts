@@ -9,7 +9,7 @@ export interface Course {
   facultyColor?: string | null;
   description?: string | null;
   credit?: number | null;
-  totalLikes?: number;
+  totalReactions?: number;
   reviewCount?: number;
   tags?: string[];
 }
@@ -36,9 +36,6 @@ export interface Review {
   semester?: string;
   content: string;
   createdAt: Date;
-  likeCount?: number;
-  helpfulCount?: number;
-  notHelpfulCount?: number;
   totalReactions?: number;
   reactionCounts?: Record<string, number>;
   sessionId?: string;

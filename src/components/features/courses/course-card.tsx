@@ -10,7 +10,6 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Course } from "@/types";
-import { ThumbsUp } from "lucide-react";
 import { AddTagDialog } from "./add-tag-dialog";
 import { BookmarkButton } from "./bookmark-button";
 import { useLocale, useTranslations } from "next-intl";
@@ -39,11 +38,11 @@ export function CourseCard({ course }: CourseCardProps) {
           >
             {course.code}
           </Badge>
-          {hasReviews && (course.totalLikes ?? 0) > 0 && (
+          {hasReviews && (course.totalReactions ?? 0) > 0 && (
             <div className="flex items-center gap-1 bg-blue-50 dark:bg-blue-950/30 px-2 py-0.5 rounded-full border border-blue-200 dark:border-blue-800">
-              <ThumbsUp className="w-3.5 h-3.5 fill-blue-500 text-blue-500" />
+              <span className="text-sm leading-none">{"\u{1F44D}"}</span>
               <span className="text-xs font-bold text-blue-700 dark:text-blue-500">
-                {course.totalLikes}
+                {course.totalReactions}
               </span>
             </div>
           )}

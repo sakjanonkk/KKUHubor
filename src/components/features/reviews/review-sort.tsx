@@ -29,8 +29,7 @@ export function sortReviews(reviews: Review[], sortBy: SortOption): Review[] {
       return sorted.sort((a, b) => {
         const scoreA = a.totalReactions || 0;
         const scoreB = b.totalReactions || 0;
-        if (scoreB !== scoreA) return scoreB - scoreA;
-        return (b.likeCount || 0) - (a.likeCount || 0);
+        return scoreB - scoreA;
       });
     default:
       return sorted;

@@ -69,7 +69,8 @@ export async function POST(req: Request) {
       sessionId: newReview.session_id,
       avatarStyle: newReview.avatar_style,
       avatarSeed: newReview.avatar_seed,
-      likeCount: 0,
+      totalReactions: 0,
+      reactionCounts: {},
     };
 
     return NextResponse.json(formattedReview, { status: 201 });

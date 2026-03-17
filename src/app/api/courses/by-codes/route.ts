@@ -27,7 +27,7 @@ export async function POST(request: NextRequest) {
         reviews: {
           include: {
             _count: {
-              select: { review_likes: true },
+              select: { review_reactions: true },
             },
           },
         },
@@ -37,8 +37,8 @@ export async function POST(request: NextRequest) {
     // Transform to match the UI's expected shape
     const formattedCourses = courses.map((c: any) => {
       const reviewCount = c.reviews.length;
-      const totalLikes = c.reviews.reduce(
-        (acc: number, r: any) => acc + (r._count?.review_likes || 0),
+      const totalReactions = c.reviews.reduce(
+        (acc: number, r: any) => acc + (r._count?.review_reactions || 0),
         0
       );
 
@@ -52,7 +52,7 @@ export async function POST(request: NextRequest) {
         facultyNameEN: c.faculty?.name_en || null,
         facultyColor: c.faculty?.color_code || null,
         tags: c.tags,
-        totalLikes,
+        totalReactions,
         reviewCount,
       };
     });

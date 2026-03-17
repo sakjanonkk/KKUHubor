@@ -80,7 +80,7 @@ async function getAnalytics() {
     FROM reviews WHERE created_at >= NOW() - INTERVAL '7 days'
     GROUP BY DATE(created_at) ORDER BY day ASC
   `;
-  const totalLikesQuery = `SELECT COUNT(*)::int as count FROM review_likes`;
+  const totalReactionsQuery = `SELECT COUNT(*)::int as count FROM review_reactions`;
   const recentActivityQuery = `
     (SELECT 'review' as type, review_id as id, reviewer_name as actor, content, created_at FROM reviews ORDER BY created_at DESC LIMIT 5)
     UNION ALL
@@ -88,14 +88,14 @@ async function getAnalytics() {
     ORDER BY created_at DESC LIMIT 10
   `;
 
-  const [totalReviews, totalComments, pendingRequests, topCourses, reviewsPerDay, totalLikes, recentActivity] =
+  const [totalReviews, totalComments, pendingRequests, topCourses, reviewsPerDay, totalReactions, recentActivity] =
     await Promise.all([
       db.query(totalReviewsQuery),
       db.query(totalCommentsQuery),
       db.query(pendingRequestsQuery),
       db.query(topCoursesQuery),
       db.query(reviewsPerDayQuery),
-      db.query(totalLikesQuery),
+      db.query(totalReactionsQuery),
       db.query(recentActivityQuery),
     ]);
 
@@ -105,7 +105,7 @@ async function getAnalytics() {
     pendingRequests: pendingRequests.rows[0]?.count || 0,
     topCourses: topCourses.rows,
     reviewsPerDay: reviewsPerDay.rows,
-    totalLikes: totalLikes.rows[0]?.count || 0,
+    totalReactions: totalReactions.rows[0]?.count || 0,
     recentActivity: recentActivity.rows,
   };
 }
@@ -188,12 +188,12 @@ export default async function AdminDashboard() {
       {/* Detailed Analytics */}
       <AnalyticsCharts
         reviewsPerDay={analytics.reviewsPerDay}
-        totalLikes={analytics.totalLikes}
+        totalReactions={analytics.totalReactions}
         topCourses={analytics.topCourses}
         totalReviews={analytics.totalReviews}
         translations={{
           reviewsPerDay: t("reviewsPerDay"),
-          totalLikes: t("totalLikes"),
+          totalReactions: t("totalReactions"),
           topCourses: t("topCoursesTitle"),
           reviews: t("reviewsUnit"),
           noData: t("noData"),

@@ -13,7 +13,7 @@ export type Course = {
   facultyNameEN: string | null;
   facultyColor: string | null;
   tags: string[];
-  totalLikes: number;
+  totalReactions: number;
   reviewCount: number;
 };
 
@@ -92,7 +92,7 @@ export async function getCourses(
         reviews: {
           include: {
             _count: {
-              select: { review_likes: true },
+              select: { review_reactions: true },
             },
           },
         },
@@ -102,8 +102,8 @@ export async function getCourses(
     // Transform and calculate aggregates
     let formattedCourses = courses.map((c: any) => {
       const reviewCount = c.reviews.length;
-      const totalLikes = c.reviews.reduce(
-        (acc: number, r: any) => acc + (r._count?.review_likes || 0),
+      const totalReactions = c.reviews.reduce(
+        (acc: number, r: any) => acc + (r._count?.review_reactions || 0),
         0
       );
 
@@ -117,7 +117,7 @@ export async function getCourses(
         facultyNameEN: c.faculty?.name_en || null,
         facultyColor: c.faculty?.color_code || null,
         tags: c.tags,
-        totalLikes,
+        totalReactions,
         reviewCount,
       };
     });
@@ -134,8 +134,8 @@ export async function getCourses(
           return a.code.localeCompare(b.code);
 
         case "likes_desc":
-          if (b.totalLikes !== a.totalLikes) {
-            return b.totalLikes - a.totalLikes;
+          if (b.totalReactions !== a.totalReactions) {
+            return b.totalReactions - a.totalReactions;
           }
           return b.reviewCount - a.reviewCount;
 

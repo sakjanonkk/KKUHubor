@@ -1,18 +1,15 @@
 import { MessageSquare } from "lucide-react";
 
 interface CourseLikesOverviewProps {
-  totalLikes: number;
   totalReviews: number;
   totalReactions: number;
   translations?: {
     reviews: string;
-    likes: string;
     totalReactions: string;
   };
 }
 
 export function CourseLikesOverview({
-  totalLikes,
   totalReviews,
   totalReactions,
   translations,

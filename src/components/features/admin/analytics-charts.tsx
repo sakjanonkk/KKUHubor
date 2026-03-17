@@ -1,7 +1,7 @@
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ThumbsUp, TrendingUp } from "lucide-react";
+import { TrendingUp } from "lucide-react";
 
 interface DailyReview {
   day: string;
@@ -16,12 +16,12 @@ interface TopCourse {
 
 interface AnalyticsChartsProps {
   reviewsPerDay: DailyReview[];
-  totalLikes: number;
+  totalReactions: number;
   topCourses: TopCourse[];
   totalReviews: number;
   translations: {
     reviewsPerDay: string;
-    totalLikes: string;
+    totalReactions: string;
     topCourses: string;
     reviews: string;
     noData: string;
@@ -30,7 +30,7 @@ interface AnalyticsChartsProps {
 
 export function AnalyticsCharts({
   reviewsPerDay,
-  totalLikes,
+  totalReactions,
   topCourses,
   translations: t,
 }: AnalyticsChartsProps) {
@@ -80,17 +80,17 @@ export function AnalyticsCharts({
         </CardContent>
       </Card>
 
-      {/* Total Likes */}
+      {/* Total Reactions */}
       <Card>
         <CardHeader className="pb-2">
           <CardTitle className="text-sm font-medium flex items-center gap-2">
-            <ThumbsUp className="h-4 w-4" />
-            {t.totalLikes}
+            <span className="text-base leading-none">{"\u{1F44D}"}</span>
+            {t.totalReactions}
           </CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col items-center justify-center py-8">
-          <ThumbsUp className="w-10 h-10 fill-blue-500 text-blue-500 mb-2" />
-          <span className="text-4xl font-bold">{totalLikes}</span>
+          <span className="text-4xl mb-2">{"\u{1F44D}"}</span>
+          <span className="text-4xl font-bold">{totalReactions}</span>
         </CardContent>
       </Card>
 

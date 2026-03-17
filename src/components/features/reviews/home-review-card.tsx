@@ -4,7 +4,7 @@ import { ReviewWithCourse } from "@/types";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { UserAvatar } from "@/components/ui/user-avatar";
-import { ThumbsUp, MessageCircle, ArrowRight } from "lucide-react";
+import { MessageCircle, ArrowRight } from "lucide-react";
 import { Link } from "@/i18n/routing";
 import { useLocale, useTranslations } from "next-intl";
 
@@ -66,8 +66,8 @@ export function HomeReviewCard({ review }: HomeReviewCardProps) {
         <CardFooter className="pt-0">
           <div className="flex items-center gap-4 text-muted-foreground">
             <div className="flex items-center gap-1.5">
-              <ThumbsUp className="h-3.5 w-3.5" />
-              <span className="text-xs font-medium">{review.likeCount || 0}</span>
+              <span className="text-sm leading-none">{"\u{1F44D}"}</span>
+              <span className="text-xs font-medium">{review.totalReactions || 0}</span>
             </div>
             <div className="flex items-center gap-1.5">
               <MessageCircle className="h-3.5 w-3.5" />

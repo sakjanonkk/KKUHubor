@@ -38,17 +38,17 @@ async function getTrendingCourses() {
         c.course_code, c.name_th, c.name_en,
         COUNT(r.review_id)::int as review_count,
         COALESCE((
-          SELECT COUNT(*)::int FROM review_likes rl
-          JOIN reviews r2 ON rl.review_id = r2.review_id
+          SELECT COUNT(*)::int FROM review_reactions rr
+          JOIN reviews r2 ON rr.review_id = r2.review_id
           WHERE r2.course_id = c.course_id
-        ), 0) as total_likes,
+        ), 0) as total_reactions,
         f.color_code, f.name_en as faculty_name
       FROM courses c
       JOIN reviews r ON c.course_id = r.course_id
       LEFT JOIN faculties f ON c.faculty_id = f.faculty_id
       GROUP BY c.course_id, f.faculty_id
       HAVING COUNT(r.review_id) >= 1
-      ORDER BY total_likes DESC, COUNT(r.review_id) DESC
+      ORDER BY total_reactions DESC, COUNT(r.review_id) DESC
       LIMIT 6
     `);
 
@@ -57,7 +57,7 @@ async function getTrendingCourses() {
       nameTH: row.name_th,
       nameEN: row.name_en,
       reviewCount: row.review_count,
-      totalLikes: row.total_likes,
+      totalReactions: row.total_reactions,
       facultyColor: row.color_code,
       facultyName: row.faculty_name,
     }));
@@ -83,7 +83,7 @@ async function getLatestReviews() {
         c.course_code,
         c.name_en,
         c.name_th,
-        (SELECT COUNT(*)::int FROM review_likes rl WHERE rl.review_id = r.review_id) as like_count
+        (SELECT COUNT(*)::int FROM review_reactions rr WHERE rr.review_id = r.review_id) as total_reactions
       FROM reviews r
       JOIN courses c ON r.course_id = c.course_id
       ORDER BY r.created_at DESC
@@ -101,7 +101,7 @@ async function getLatestReviews() {
       sessionId: row.session_id,
       avatarStyle: row.avatar_style,
       avatarSeed: row.avatar_seed,
-      likeCount: row.like_count,
+      totalReactions: row.total_reactions,
       course: {
         code: row.course_code,
         nameEN: row.name_en,
