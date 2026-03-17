@@ -11,6 +11,7 @@
     "settings": "Settings",
     "language": "Language",
     "about": "About",
+    "community": "Community",
     "searchCourse": "Search for a course"
   },
   "Theme": {
@@ -50,7 +51,8 @@
     "feature3Title": "Better Decisions",
     "feature3Desc": "Plan your semester with confidence using insights from other students.",
     "trendingTitle": "Trending Courses",
-    "trendingDesc": "Most reviewed courses by the community. See what everyone is talking about."
+    "trendingDesc": "Most reviewed courses by the community. See what everyone is talking about.",
+    "viewAllReviews": "View All Reviews"
   },
   "Common": {
     "loading": "Loading...",
@@ -75,7 +77,9 @@
     "noReviews": "No reviews yet",
     "previous": "Previous",
     "next": "Next",
-    "moreTag": "+{count} more"
+    "moreTag": "+{count} more",
+    "searchPlaceholder": "Search courses...",
+    "clearAll": "Clear all"
   },
   "Bookmarks": {
     "title": "Bookmarked Courses",
@@ -109,11 +113,13 @@
   },
   "UserSettings": {
     "title": "User Settings",
-    "description": "Set your display name for reviews and comments. This is stored locally in your browser.",
+    "description": "Set your display name and avatar for reviews and comments. This is stored locally in your browser.",
     "nameLabel": "Name",
     "namePlaceholder": "Anonymous",
+    "avatarLabel": "Avatar Style",
+    "preview": "Preview",
     "saveButton": "Save Changes",
-    "savedToast": "Display name updated"
+    "savedToast": "Settings updated"
   },
   "Filter": {
     "button": "Filters",
@@ -254,17 +260,18 @@
       "subtitle": "Share your experience with this course. Reviews are anonymous.",
       "nameLabel": "Name (Optional)",
       "namePlaceholder": "Anonymous",
-      "gradeLabel": "Grade (Optional)",
-      "select": "Select",
+      "gradeLabel": "Grade",
+      "select": "Select grade",
       "semesterLabel": "Semester",
-      "semesterPlaceholder": "e.g. 1/2024",
+      "semesterPlaceholder": "Select semester",
       "contentLabel": "Review",
       "contentPlaceholder": "Tell us about the course content, difficulty, etc.",
       "submit": "Submit Review",
       "successToast": "Review submitted successfully!",
       "errorToast": "Something went wrong. Please try again.",
       "validation": {
-        "semester": "Semester is required (e.g., 1/2024)",
+        "grade": "Please select a grade",
+        "semester": "Please select a semester",
         "contentLength": "Review must be at least 10 characters"
       }
     }
@@ -351,6 +358,17 @@
     "description": "The page you're looking for may have been removed, renamed, or never existed.",
     "backHome": "Back to Home",
     "browseCourses": "Browse Courses"
+  },
+  "Community": {
+    "title": "Community Feed",
+    "description": "See all the latest reviews from KKU students.",
+    "sortLatest": "Latest",
+    "sortPopular": "Most Liked",
+    "loadMore": "Load More",
+    "loading": "Loading...",
+    "noReviews": "No reviews yet. Be the first to share your experience!",
+    "endOfFeed": "You've reached the end!",
+    "reviewFor": "Review for"
   },
   "Error": {
     "title": "Something went wrong",

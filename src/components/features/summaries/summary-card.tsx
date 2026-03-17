@@ -6,6 +6,7 @@ import { SummaryFile } from "@/types";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Download, Trash2, FileText, Image, FileSpreadsheet } from "lucide-react";
+import { UserAvatar } from "@/components/ui/user-avatar";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
 import { getOrCreateSessionId } from "@/lib/session";
@@ -77,9 +78,12 @@ export function SummaryCard({ file }: SummaryCardProps) {
           </div>
           <div className="flex-1 min-w-0">
             <h4 className="font-medium text-sm truncate">{file.title}</h4>
-            <p className="text-xs text-muted-foreground mt-0.5">
-              {t("by")} {file.uploaderName || t("anonymous")}
-            </p>
+            <div className="flex items-center gap-1.5 mt-0.5">
+              <UserAvatar name={file.uploaderName || t("anonymous")} size={16} />
+              <p className="text-xs text-muted-foreground">
+                {file.uploaderName || t("anonymous")}
+              </p>
+            </div>
             <div className="flex items-center gap-2 mt-1.5 text-xs text-muted-foreground">
               <span className="px-1.5 py-0.5 rounded bg-muted font-medium">
                 {getFileExtLabel(file.fileType)}

@@ -38,4 +38,15 @@ export interface Review {
   createdAt: Date;
   likeCount?: number;
   sessionId?: string;
+  avatarStyle?: string;
+}
+
+export interface ReviewCourseInfo {
+  code: string;
+  nameEN: string | null;
+  nameTH: string;
+}
+
+export interface ReviewWithCourse extends Review {
+  course: ReviewCourseInfo;
 }

@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Loader2, Send } from "lucide-react";
+import { UserAvatar } from "@/components/ui/user-avatar";
 import { toast } from "sonner";
 import { useUserIdentity } from "@/hooks/use-user-identity";
 import { useTranslations } from "next-intl";
@@ -97,9 +98,12 @@ export function CommentSection({ reviewId }: CommentSectionProps) {
                 className="bg-muted/50 p-2 rounded-md text-sm"
               >
                 <div className="flex justify-between items-center mb-1">
-                  <span className="font-bold text-xs">
-                    {comment.author_name}
-                  </span>
+                  <div className="flex items-center gap-1.5">
+                    <UserAvatar name={comment.author_name} size={18} />
+                    <span className="font-bold text-xs">
+                      {comment.author_name}
+                    </span>
+                  </div>
                   <span className="text-[10px] text-muted-foreground">
                     {new Date(comment.created_at).toLocaleDateString()}
                   </span>

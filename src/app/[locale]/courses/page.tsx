@@ -6,10 +6,11 @@ import { CourseRequestDialog } from "@/components/features/courses/course-reques
 import { CourseFilter } from "@/components/features/courses/course-filter";
 import { CoursePagination } from "@/components/features/courses/course-pagination";
 import { PageHeader } from "@/components/layout/page-header";
+import { CourseSearch } from "@/components/features/courses/course-search";
+import { ActiveFilters } from "@/components/features/courses/active-filters";
 import { CourseCategory, GradingType } from "@/lib/enums";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Search, BookOpen } from "lucide-react";
+import { BookOpen } from "lucide-react";
 import Image from "next/image";
 
 interface CoursesPageProps {
@@ -80,13 +81,13 @@ export default async function CoursesPage({ searchParams }: CoursesPageProps) {
     CRITERION: tFilter("criterionRef"),
   };
 
-  // Count active filters for display
-  const activeFilters = [
-    query && `"${query}"`,
-    validCategory && categoryLabels[validCategory],
-    validGradingType && gradingLabels[validGradingType],
-    validHasReviews && tFilter("hasReviewsOnly"),
-  ].filter(Boolean);
+  // Build active filter items with keys for removal
+  const activeFilterItems: { key: string; label: string }[] = [];
+  if (query) activeFilterItems.push({ key: "query", label: `"${query}"` });
+  if (validCategory) activeFilterItems.push({ key: "category", label: categoryLabels[validCategory] });
+  if (validGradingType) activeFilterItems.push({ key: "gradingType", label: gradingLabels[validGradingType] });
+  if (validHasReviews) activeFilterItems.push({ key: "hasReviews", label: tFilter("hasReviewsOnly") });
+  if (validFacultyId) activeFilterItems.push({ key: "facultyId", label: tFilter("faculty") });
 
   return (
     <main className="min-h-screen bg-background">
@@ -98,29 +99,17 @@ export default async function CoursesPage({ searchParams }: CoursesPageProps) {
       </PageHeader>
 
       <div className="container mx-auto px-4 py-8">
-        {/* Active Filters Display */}
-        {activeFilters.length > 0 && (
-          <div className="flex flex-wrap gap-2 items-center mb-6 animate-in fade-in slide-in-from-top-2 duration-300">
-            <span className="text-sm text-muted-foreground font-medium">
-              {t("activeFilters")}
-            </span>
-            {activeFilters.map((filter, index) => (
-              <Badge
-                key={index}
-                variant="secondary"
-                className="text-xs px-2.5 py-1"
-              >
-                {filter}
-              </Badge>
-            ))}
+        {/* Search + Results Count + Active Filters */}
+        <div className="mb-6 space-y-4">
+          <div className="flex items-center justify-between gap-4">
+            <div className="text-sm text-muted-foreground font-medium">
+              {t("foundPrefix")}{" "}
+              <span className="text-foreground font-bold">{totalCount}</span>{" "}
+              {totalCount !== 1 ? t("coursesUnit") : t("courseUnit")}
+            </div>
+            <CourseSearch />
           </div>
-        )}
-
-        {/* Results Count */}
-        <div className="text-sm text-muted-foreground mb-6 font-medium">
-          {t("foundPrefix")}{" "}
-          <span className="text-foreground font-bold">{totalCount}</span>{" "}
-          {totalCount !== 1 ? t("coursesUnit") : t("courseUnit")}
+          <ActiveFilters filters={activeFilterItems} />
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

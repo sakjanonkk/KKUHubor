@@ -6,9 +6,9 @@ import { getTranslations } from "next-intl/server";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { SearchBar } from "@/components/features/search-bar";
-import { ReviewCard } from "@/components/features/reviews/review-card";
+import { HomeReviewCard } from "@/components/features/reviews/home-review-card";
 import { TrendingCourseCard } from "@/components/features/courses/trending-course-card";
-import { ThumbsUp, Search, BookOpen, MessageSquare, TrendingUp } from "lucide-react";
+import { ThumbsUp, Search, BookOpen, MessageSquare, TrendingUp, Newspaper } from "lucide-react";
 
 async function getStats() {
   try {
@@ -78,6 +78,7 @@ async function getLatestReviews() {
         r.grade_received,
         r.semester,
         r.session_id,
+        r.avatar_style,
         c.course_code,
         c.name_en,
         c.name_th,
@@ -97,6 +98,7 @@ async function getLatestReviews() {
       gradeReceived: row.grade_received,
       semester: row.semester,
       sessionId: row.session_id,
+      avatarStyle: row.avatar_style,
       likeCount: row.like_count,
       course: {
         code: row.course_code,
@@ -202,16 +204,27 @@ export default async function Home() {
                 {t("latestReviewsDesc")}
               </p>
             </div>
-            <Button
-              size="lg"
-              variant="outline"
-              className="rounded-full"
-              asChild
-            >
-              <Link href="/courses">
-                {t("browseButton")} <BookOpen className="ml-2 w-4 h-4" />
-              </Link>
-            </Button>
+            <div className="flex gap-3">
+              <Button
+                size="lg"
+                className="rounded-full"
+                asChild
+              >
+                <Link href="/community">
+                  {t("viewAllReviews")} <Newspaper className="ml-2 w-4 h-4" />
+                </Link>
+              </Button>
+              <Button
+                size="lg"
+                variant="outline"
+                className="rounded-full"
+                asChild
+              >
+                <Link href="/courses">
+                  {t("browseButton")} <BookOpen className="ml-2 w-4 h-4" />
+                </Link>
+              </Button>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -221,9 +234,7 @@ export default async function Home() {
                 className="animate-in fade-in slide-in-from-bottom-4 fill-mode-backwards"
                 style={{ animationDelay: `${i * 100}ms` }}
               >
-                <div className="h-full">
-                  <ReviewCard review={review} />
-                </div>
+                <HomeReviewCard review={review} />
               </div>
             ))}
           </div>

@@ -9,6 +9,7 @@ import {
   Menu,
   Home,
   BookOpen,
+  MessageSquare,
   ShieldCheck,
   Bookmark,
   Palette,
@@ -44,6 +45,7 @@ export function Navbar({ isAdmin = false }: NavbarProps) {
   const navItems = [
     { name: t("home"), href: "/", icon: Home },
     { name: t("courses"), href: "/courses", icon: BookOpen },
+    { name: t("community"), href: "/community", icon: MessageSquare },
     { name: t("bookmarks"), href: "/bookmarks", icon: Bookmark },
     ...(isAdmin
       ? [{ name: t("admin"), href: "/admin", icon: ShieldCheck }]

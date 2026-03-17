@@ -165,9 +165,9 @@ export function UploadSummaryDialog({ courseId }: UploadSummaryDialogProps) {
           <div className="space-y-2">
             <Label>{t("selectFile")}</Label>
             {file ? (
-              <div className="flex items-center gap-3 p-3 border rounded-lg bg-muted/50">
+              <div className="flex items-center gap-3 p-3 border rounded-lg bg-muted/50 overflow-hidden">
                 {getFileIcon(file.type)}
-                <div className="flex-1 min-w-0">
+                <div className="flex-1 min-w-0 overflow-hidden">
                   <p className="text-sm font-medium truncate">{file.name}</p>
                   <p className="text-xs text-muted-foreground">{formatSize(file.size)}</p>
                 </div>

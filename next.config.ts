@@ -15,6 +15,10 @@ const nextConfig = {
         protocol: "https" as const,
         hostname: "storage.beersval.com",
       },
+      {
+        protocol: "https" as const,
+        hostname: "api.dicebear.com",
+      },
     ],
   },
   async headers() {
@@ -33,7 +37,7 @@ const nextConfig = {
           {
             key: "Content-Security-Policy",
             value:
-              "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' https://ui-avatars.com https://storage.beersval.com data:; font-src 'self' data:; connect-src 'self';",
+              "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' https://ui-avatars.com https://storage.beersval.com https://api.dicebear.com data:; font-src 'self' data:; connect-src 'self';",
           },
         ],
       },

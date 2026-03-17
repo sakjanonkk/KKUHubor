@@ -2,9 +2,13 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Review } from "@/types";
+import { Review, ReviewCourseInfo } from "@/types";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { UserAvatar } from "@/components/ui/user-avatar";
 import { MoreHorizontal, Flag, ThumbsUp, MessageCircle, Pencil, Trash2 } from "lucide-react";
+import { Link } from "@/i18n/routing";
+import { useLocale } from "next-intl";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -23,13 +27,15 @@ import { getOrCreateSessionId } from "@/lib/session";
 
 interface ReviewCardProps {
   review: Review;
+  course?: ReviewCourseInfo;
 }
 
-export function ReviewCard({ review }: ReviewCardProps) {
+export function ReviewCard({ review, course }: ReviewCardProps) {
   const [reportOpen, setReportOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [isOwner, setIsOwner] = useState(false);
   const router = useRouter();
+  const locale = useLocale();
   const t = useTranslations("Review");
 
   // Social State
@@ -126,11 +132,28 @@ export function ReviewCard({ review }: ReviewCardProps) {
     <>
       <Card className="bg-card/50 backdrop-blur-sm border-border/40 hover:border-primary/20 transition-all duration-300 hover:shadow-lg">
         <CardHeader className="pb-2">
+          {course && (
+            <Link
+              href={`/courses/${course.code}`}
+              className="flex items-center gap-2 mb-2 group/course"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <Badge variant="secondary" className="font-mono text-xs shrink-0">
+                {course.code}
+              </Badge>
+              <span className="text-sm font-medium truncate group-hover/course:text-primary transition-colors">
+                {locale === "en" && course.nameEN ? course.nameEN : course.nameTH}
+              </span>
+            </Link>
+          )}
           <div className="flex justify-between items-start">
             <div className="flex-1">
               <div className="flex justify-between items-center">
-                <div className="font-semibold">
-                  {review.reviewerName || t("anonymous")}
+                <div className="flex items-center gap-2">
+                  <UserAvatar name={review.reviewerName || t("anonymous")} size={28} style={review.avatarStyle} />
+                  <span className="font-semibold">
+                    {review.reviewerName || t("anonymous")}
+                  </span>
                 </div>
                 <div className="flex items-center gap-2">
                   {/* Dropdown Menu */}

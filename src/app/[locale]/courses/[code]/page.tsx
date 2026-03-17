@@ -71,6 +71,7 @@ async function getReviews(courseId: number): Promise<Review[]> {
       content,
       created_at as "createdAt",
       session_id as "sessionId",
+      avatar_style as "avatarStyle",
       (SELECT COUNT(*)::int FROM review_likes WHERE review_id = reviews.review_id) as "likeCount"
     FROM reviews
     WHERE course_id = $1

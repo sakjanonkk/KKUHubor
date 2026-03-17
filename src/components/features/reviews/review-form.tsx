@@ -35,6 +35,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
 import { getOrCreateSessionId } from "@/lib/session";
+import { generateSemesterOptions } from "@/lib/semester";
 
 interface ReviewFormProps {
   courseId: number;
@@ -45,12 +46,14 @@ export function ReviewForm({ courseId }: ReviewFormProps) {
   const router = useRouter();
   const t = useTranslations("Review.Form");
 
-  const { name: storedName } = useUserIdentity();
+  const { name: storedName, avatarStyle } = useUserIdentity();
+
+  const semesterOptions = generateSemesterOptions();
 
   const formSchema = z.object({
     reviewerName: z.string().optional(),
-    gradeReceived: z.string().optional(),
-    semester: z.string().regex(/^[1-3]\/\d{4}$/, t("validation.semester")),
+    gradeReceived: z.string().min(1, t("validation.grade")),
+    semester: z.string().min(1, t("validation.semester")),
     content: z.string().min(10, t("validation.contentLength")),
   });
 
@@ -88,6 +91,7 @@ export function ReviewForm({ courseId }: ReviewFormProps) {
           semester: values.semester,
           content: values.content,
           session_id: sessionId,
+          avatar_style: avatarStyle,
         }),
       });
 
@@ -135,51 +139,64 @@ export function ReviewForm({ courseId }: ReviewFormProps) {
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name="gradeReceived"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t("gradeLabel")}</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder={t("select")} />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {["A", "B+", "B", "C+", "C", "D+", "D", "F", "W"].map(
-                        (grade) => (
-                          <SelectItem key={grade} value={grade}>
-                            {grade}
+            <div className="grid grid-cols-2 gap-4">
+              <FormField
+                control={form.control}
+                name="gradeReceived"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t("gradeLabel")}</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder={t("select")} />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {["A", "B+", "B", "C+", "C", "D+", "D", "F", "W"].map(
+                          (grade) => (
+                            <SelectItem key={grade} value={grade}>
+                              {grade}
+                            </SelectItem>
+                          )
+                        )}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="semester"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t("semesterLabel")}</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder={t("semesterPlaceholder")} />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {semesterOptions.map((sem) => (
+                          <SelectItem key={sem} value={sem}>
+                            {sem}
                           </SelectItem>
-                        )
-                      )}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="semester"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t("semesterLabel")}</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder={t("semesterPlaceholder")}
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
             <FormField
               control={form.control}
               name="content"
