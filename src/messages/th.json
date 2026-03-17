@@ -97,6 +97,8 @@
     "nameLabel": "ชื่อ",
     "namePlaceholder": "ไม่ระบุชื่อ",
     "avatarLabel": "รูปแบบอวาตาร์",
+    "customizeLabel": "เลือกหน้าตาอวาตาร์",
+    "shuffleButton": "สุ่มใหม่",
     "preview": "ตัวอย่าง",
     "saveButton": "บันทึก",
     "savedToast": "บันทึกการตั้งค่าแล้ว"

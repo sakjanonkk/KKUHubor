@@ -39,6 +39,7 @@ export interface Review {
   likeCount?: number;
   sessionId?: string;
   avatarStyle?: string;
+  avatarSeed?: string;
 }
 
 export interface ReviewCourseInfo {

@@ -117,6 +117,8 @@
     "nameLabel": "Name",
     "namePlaceholder": "Anonymous",
     "avatarLabel": "Avatar Style",
+    "customizeLabel": "Customize Your Look",
+    "shuffleButton": "Shuffle",
     "preview": "Preview",
     "saveButton": "Save Changes",
     "savedToast": "Settings updated"

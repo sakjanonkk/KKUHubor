@@ -79,6 +79,7 @@ async function getLatestReviews() {
         r.semester,
         r.session_id,
         r.avatar_style,
+        r.avatar_seed,
         c.course_code,
         c.name_en,
         c.name_th,
@@ -99,6 +100,7 @@ async function getLatestReviews() {
       semester: row.semester,
       sessionId: row.session_id,
       avatarStyle: row.avatar_style,
+      avatarSeed: row.avatar_seed,
       likeCount: row.like_count,
       course: {
         code: row.course_code,

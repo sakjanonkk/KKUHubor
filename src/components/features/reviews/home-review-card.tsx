@@ -38,7 +38,7 @@ export function HomeReviewCard({ review }: HomeReviewCardProps) {
           {/* Reviewer Meta */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <UserAvatar name={review.reviewerName || t("anonymous")} size={24} style={review.avatarStyle} />
+              <UserAvatar name={review.reviewerName || t("anonymous")} size={24} style={review.avatarStyle} seed={review.avatarSeed} />
               <span className="font-semibold text-sm">
                 {review.reviewerName || t("anonymous")}
               </span>

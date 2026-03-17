@@ -26,6 +26,7 @@ export async function GET(req: NextRequest) {
           r.semester,
           r.session_id,
           r.avatar_style,
+          r.avatar_seed,
           c.course_code,
           c.name_en,
           c.name_th,
@@ -53,6 +54,7 @@ export async function GET(req: NextRequest) {
       semester: row.semester,
       sessionId: row.session_id,
       avatarStyle: row.avatar_style,
+      avatarSeed: row.avatar_seed,
       likeCount: row.like_count,
       commentCount: row.comment_count,
       course: {

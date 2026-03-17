@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Moon, Sun } from "lucide-react";
+import { Moon, Sun, Monitor } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useTranslations } from "next-intl";
 
@@ -13,9 +13,33 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-export function ModeToggle() {
-  const { setTheme } = useTheme();
+interface ModeToggleProps {
+  variant?: "dropdown" | "cycle";
+}
+
+export function ModeToggle({ variant = "dropdown" }: ModeToggleProps) {
+  const { theme, setTheme } = useTheme();
   const t = useTranslations("Theme");
+
+  if (variant === "cycle") {
+    const cycle = () => {
+      if (theme === "light") setTheme("dark");
+      else if (theme === "dark") setTheme("system");
+      else setTheme("light");
+    };
+
+    const label =
+      theme === "light" ? t("light") : theme === "dark" ? t("dark") : t("system");
+
+    return (
+      <Button variant="outline" size="sm" className="gap-2" onClick={cycle}>
+        {theme === "light" && <Sun className="h-4 w-4" />}
+        {theme === "dark" && <Moon className="h-4 w-4" />}
+        {theme !== "light" && theme !== "dark" && <Monitor className="h-4 w-4" />}
+        <span className="text-xs">{label}</span>
+      </Button>
+    );
+  }
 
   return (
     <DropdownMenu modal={false}>
@@ -40,4 +64,3 @@ export function ModeToggle() {
     </DropdownMenu>
   );
 }
-

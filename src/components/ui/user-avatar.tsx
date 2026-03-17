@@ -5,17 +5,18 @@ interface UserAvatarProps {
   size?: number;
   className?: string;
   style?: string;
+  seed?: string;
 }
 
 const DEFAULT_STYLE = "notionists-neutral";
 
-export function getAvatarUrl(name: string, size: number, style?: string) {
-  const seed = encodeURIComponent(name || "Anonymous");
-  return `https://api.dicebear.com/9.x/${style || DEFAULT_STYLE}/svg?seed=${seed}&size=${size}`;
+export function getAvatarUrl(name: string, size: number, style?: string, seed?: string) {
+  const avatarSeed = encodeURIComponent(seed || name || "Anonymous");
+  return `https://api.dicebear.com/9.x/${style || DEFAULT_STYLE}/svg?seed=${avatarSeed}&size=${size}`;
 }
 
-export function UserAvatar({ name, size = 32, className = "", style }: UserAvatarProps) {
-  const src = getAvatarUrl(name, size, style);
+export function UserAvatar({ name, size = 32, className = "", style, seed }: UserAvatarProps) {
+  const src = getAvatarUrl(name, size, style, seed);
 
   return (
     <Image

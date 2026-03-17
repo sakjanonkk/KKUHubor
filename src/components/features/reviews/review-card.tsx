@@ -150,7 +150,7 @@ export function ReviewCard({ review, course }: ReviewCardProps) {
             <div className="flex-1">
               <div className="flex justify-between items-center">
                 <div className="flex items-center gap-2">
-                  <UserAvatar name={review.reviewerName || t("anonymous")} size={28} style={review.avatarStyle} />
+                  <UserAvatar name={review.reviewerName || t("anonymous")} size={28} style={review.avatarStyle} seed={review.avatarSeed} />
                   <span className="font-semibold">
                     {review.reviewerName || t("anonymous")}
                   </span>

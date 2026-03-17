@@ -80,13 +80,13 @@ export default async function AboutPage() {
               rel="noopener noreferrer"
             >
               <Card className="hover:border-primary/30 hover:shadow-md transition-all h-full cursor-pointer">
-                <CardContent className="flex items-center gap-4 p-6">
+                <CardContent className="flex items-center gap-4 p-6 min-w-0">
                   <div className="h-12 w-12 rounded-xl bg-zinc-900 dark:bg-zinc-100 flex items-center justify-center shrink-0">
                     <Github className="h-6 w-6 text-white dark:text-zinc-900" />
                   </div>
-                  <div>
+                  <div className="min-w-0">
                     <p className="font-semibold">{t("sourceCode")}</p>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-sm text-muted-foreground truncate">
                       github.com/sakjanonkk/KKUHubor
                     </p>
                   </div>

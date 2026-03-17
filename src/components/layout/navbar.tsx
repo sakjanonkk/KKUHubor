@@ -219,7 +219,7 @@ export function Navbar({ isAdmin = false }: NavbarProps) {
                           {t("theme")}
                         </span>
                       </div>
-                      <ModeToggle />
+                      <ModeToggle variant="cycle" />
                     </div>
 
                     <div className="flex items-center justify-between p-3 rounded-xl bg-muted/30 border border-border/50">

@@ -11,6 +11,7 @@ const reviewSchema = z.object({
   content: z.string().min(10, "Content must be at least 10 characters").max(2000, "Content too long"),
   session_id: z.string().max(255).optional(),
   avatar_style: z.string().max(50).optional(),
+  avatar_seed: z.string().max(100).optional(),
 });
 
 const updateSchema = z.object({
@@ -34,11 +35,11 @@ export async function POST(req: Request) {
       );
     }
 
-    const { course_id, reviewer_name, grade_received, semester, content, session_id, avatar_style } = validated.data;
+    const { course_id, reviewer_name, grade_received, semester, content, session_id, avatar_style, avatar_seed } = validated.data;
 
     const query = `
-      INSERT INTO reviews (course_id, reviewer_name, grade_received, semester, content, session_id, avatar_style, created_at)
-      VALUES ($1, $2, $3, $4, $5, $6, $7, NOW())
+      INSERT INTO reviews (course_id, reviewer_name, grade_received, semester, content, session_id, avatar_style, avatar_seed, created_at)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, NOW())
       RETURNING *
     `;
 
@@ -50,6 +51,7 @@ export async function POST(req: Request) {
       content,
       session_id || null,
       avatar_style || null,
+      avatar_seed || null,
     ];
 
     const result = await db.query(query, values);
@@ -66,6 +68,7 @@ export async function POST(req: Request) {
       createdAt: newReview.created_at,
       sessionId: newReview.session_id,
       avatarStyle: newReview.avatar_style,
+      avatarSeed: newReview.avatar_seed,
       likeCount: 0,
     };
 

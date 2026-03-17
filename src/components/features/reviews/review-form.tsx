@@ -46,7 +46,7 @@ export function ReviewForm({ courseId }: ReviewFormProps) {
   const router = useRouter();
   const t = useTranslations("Review.Form");
 
-  const { name: storedName, avatarStyle } = useUserIdentity();
+  const { name: storedName, avatarStyle, avatarSeed } = useUserIdentity();
 
   const semesterOptions = generateSemesterOptions();
 
@@ -92,6 +92,7 @@ export function ReviewForm({ courseId }: ReviewFormProps) {
           content: values.content,
           session_id: sessionId,
           avatar_style: avatarStyle,
+          avatar_seed: avatarSeed || undefined,
         }),
       });
 
