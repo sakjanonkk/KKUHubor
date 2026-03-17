@@ -35,7 +35,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
 import { getOrCreateSessionId } from "@/lib/session";
-import { generateSemesterOptions } from "@/lib/semester";
+import { generateYearOptions } from "@/lib/semester";
 
 interface ReviewFormProps {
   courseId: number;
@@ -48,12 +48,13 @@ export function ReviewForm({ courseId }: ReviewFormProps) {
 
   const { name: storedName, avatarStyle, avatarSeed } = useUserIdentity();
 
-  const semesterOptions = generateSemesterOptions();
+  const yearOptions = generateYearOptions();
 
   const formSchema = z.object({
     reviewerName: z.string().optional(),
     gradeReceived: z.string().min(1, t("validation.grade")),
-    semester: z.string().min(1, t("validation.semester")),
+    term: z.string().min(1, t("validation.term")),
+    academicYear: z.string().min(1, t("validation.year")),
     content: z.string().min(10, t("validation.contentLength")),
   });
 
@@ -64,7 +65,8 @@ export function ReviewForm({ courseId }: ReviewFormProps) {
     defaultValues: {
       reviewerName: storedName || "",
       gradeReceived: "",
-      semester: "",
+      term: "",
+      academicYear: "",
       content: "",
     },
   });
@@ -88,7 +90,7 @@ export function ReviewForm({ courseId }: ReviewFormProps) {
           course_id: courseId,
           reviewer_name: values.reviewerName || "Anonymous",
           grade_received: values.gradeReceived,
-          semester: values.semester,
+          semester: `${values.term}/${values.academicYear}`,
           content: values.content,
           session_id: sessionId,
           avatar_style: avatarStyle,
@@ -140,7 +142,7 @@ export function ReviewForm({ courseId }: ReviewFormProps) {
                 </FormItem>
               )}
             />
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-3 gap-3">
               <FormField
                 control={form.control}
                 name="gradeReceived"
@@ -172,23 +174,50 @@ export function ReviewForm({ courseId }: ReviewFormProps) {
               />
               <FormField
                 control={form.control}
-                name="semester"
+                name="term"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{t("semesterLabel")}</FormLabel>
+                    <FormLabel>{t("termLabel")}</FormLabel>
                     <Select
                       onValueChange={field.onChange}
                       defaultValue={field.value}
                     >
                       <FormControl>
                         <SelectTrigger className="w-full">
-                          <SelectValue placeholder={t("semesterPlaceholder")} />
+                          <SelectValue placeholder={t("termPlaceholder")} />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        {semesterOptions.map((sem) => (
-                          <SelectItem key={sem} value={sem}>
-                            {sem}
+                        {["1", "2", "3"].map((term) => (
+                          <SelectItem key={term} value={term}>
+                            {term}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="academicYear"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t("yearLabel")}</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder={t("yearPlaceholder")} />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {yearOptions.map((year) => (
+                          <SelectItem key={year} value={String(year)}>
+                            {year}
                           </SelectItem>
                         ))}
                       </SelectContent>

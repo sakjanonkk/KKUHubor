@@ -52,6 +52,11 @@ const STYLE_LABELS: Record<AvatarStyle, string> = {
   "toon-head": "Toon Head",
 };
 
+const FIXED_SEEDS = [
+  "alpha", "bravo", "charlie", "delta", "echo",
+  "foxtrot", "golf", "hotel", "india", "juliet", "kilo",
+];
+
 function generateRandomSeeds(count: number): string[] {
   return Array.from({ length: count }, () =>
     Math.random().toString(36).substring(2, 10)
@@ -63,12 +68,18 @@ export function UserIdentityDialog() {
   const [localName, setLocalName] = useState("");
   const [localStyle, setLocalStyle] = useState<AvatarStyle>("notionists-neutral");
   const [localSeed, setLocalSeed] = useState("");
-  const [seedOptions, setSeedOptions] = useState<string[]>([]);
+  const [extraSeeds, setExtraSeeds] = useState<string[]>([]);
   const [open, setOpen] = useState(false);
   const t = useTranslations("UserSettings");
 
-  const shuffleSeeds = useCallback(() => {
-    setSeedOptions(generateRandomSeeds(8));
+  // Include previously saved seed if it's not in the fixed list
+  const allSeeds = [...FIXED_SEEDS, ...extraSeeds];
+  const seedOptions = avatarSeed && !allSeeds.includes(avatarSeed)
+    ? [avatarSeed, ...allSeeds]
+    : allSeeds;
+
+  const addMoreSeeds = useCallback(() => {
+    setExtraSeeds(generateRandomSeeds(4));
   }, []);
 
   useEffect(() => {
@@ -76,7 +87,7 @@ export function UserIdentityDialog() {
       setLocalName(name);
       setLocalStyle(avatarStyle);
       setLocalSeed(avatarSeed);
-      setSeedOptions(generateRandomSeeds(8));
+      setExtraSeeds([]);
     }
   }, [open, name, avatarStyle, avatarSeed]);
 
@@ -162,7 +173,7 @@ export function UserIdentityDialog() {
                 variant="ghost"
                 size="sm"
                 className="h-7 px-2 text-xs gap-1"
-                onClick={shuffleSeeds}
+                onClick={addMoreSeeds}
               >
                 <Shuffle className="h-3 w-3" />
                 {t("shuffleButton")}

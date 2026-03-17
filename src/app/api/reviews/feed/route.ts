@@ -31,7 +31,8 @@ export async function GET(req: NextRequest) {
           c.name_en,
           c.name_th,
           (SELECT COUNT(*)::int FROM review_likes rl WHERE rl.review_id = r.review_id) as like_count,
-          (SELECT COUNT(*)::int FROM comments cm WHERE cm.review_id = r.review_id) as comment_count
+          (SELECT COUNT(*)::int FROM comments cm WHERE cm.review_id = r.review_id) as comment_count,
+          (SELECT COUNT(*)::int FROM review_reactions rr WHERE rr.review_id = r.review_id) as total_reactions
         FROM reviews r
         JOIN courses c ON r.course_id = c.course_id
         ORDER BY ${orderClause}
@@ -56,6 +57,7 @@ export async function GET(req: NextRequest) {
       avatarStyle: row.avatar_style,
       avatarSeed: row.avatar_seed,
       likeCount: row.like_count,
+      totalReactions: row.total_reactions,
       commentCount: row.comment_count,
       course: {
         code: row.course_code,

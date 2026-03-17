@@ -74,7 +74,8 @@ export function UploadSummaryDialog({ courseId }: UploadSummaryDialogProps) {
     }
     setFile(f);
     if (!title) {
-      setTitle(f.name.replace(/\.[^/.]+$/, ""));
+      const nameWithoutExt = f.name.replace(/\.[^/.]+$/, "");
+      setTitle(nameWithoutExt.length > 80 ? nameWithoutExt.substring(0, 80) : nameWithoutExt);
     }
   };
 
@@ -165,9 +166,9 @@ export function UploadSummaryDialog({ courseId }: UploadSummaryDialogProps) {
           <div className="space-y-2">
             <Label>{t("selectFile")}</Label>
             {file ? (
-              <div className="flex items-center gap-3 p-3 border rounded-lg bg-muted/50 overflow-hidden">
-                {getFileIcon(file.type)}
-                <div className="flex-1 min-w-0 overflow-hidden">
+              <div className="flex items-center gap-3 p-3 border rounded-lg bg-muted/50">
+                <div className="shrink-0">{getFileIcon(file.type)}</div>
+                <div className="flex-1 w-0">
                   <p className="text-sm font-medium truncate">{file.name}</p>
                   <p className="text-xs text-muted-foreground">{formatSize(file.size)}</p>
                 </div>

@@ -102,14 +102,15 @@
     "noReviewsDesc": "Be the first to share your experience with this course. Help others make better decisions!",
     "sortBy": "Sort by",
     "sortMostRecent": "Most Recent",
-    "sortMostHelpful": "Most Helpful",
+    "sortMostPopular": "Most Popular",
     "share": "Share",
     "copied": "Link copied!",
     "totalReviews": "Total Reviews",
     "avgGrade": "Top Grade",
     "commonSemester": "Latest Semester",
     "reviewsCount": "reviews",
-    "likes": "likes"
+    "likes": "likes",
+    "totalReactions": "reactions"
   },
   "UserSettings": {
     "title": "User Settings",
@@ -245,7 +246,7 @@
     "grade": "Grade",
     "anonymous": "Anonymous",
     "comments": "Comments",
-    "likeError": "Failed to update like",
+    "reactionError": "Failed to save reaction",
     "edit": "Edit review",
     "delete": "Delete review",
     "deleteConfirm": "Are you sure you want to delete this review?",
@@ -264,8 +265,10 @@
       "namePlaceholder": "Anonymous",
       "gradeLabel": "Grade",
       "select": "Select grade",
-      "semesterLabel": "Semester",
-      "semesterPlaceholder": "Select semester",
+      "termLabel": "Term",
+      "termPlaceholder": "Term",
+      "yearLabel": "Year (B.E.)",
+      "yearPlaceholder": "Year",
       "contentLabel": "Review",
       "contentPlaceholder": "Tell us about the course content, difficulty, etc.",
       "submit": "Submit Review",
@@ -273,7 +276,8 @@
       "errorToast": "Something went wrong. Please try again.",
       "validation": {
         "grade": "Please select a grade",
-        "semester": "Please select a semester",
+        "term": "Please select a term",
+        "year": "Please select a year",
         "contentLength": "Review must be at least 10 characters"
       }
     }
@@ -310,7 +314,16 @@
     "post": "Post",
     "posting": "Posting...",
     "success": "Comment posted!",
-    "error": "Failed to post comment"
+    "error": "Failed to post comment",
+    "edit": "Edit",
+    "delete": "Delete",
+    "deleteConfirm": "Are you sure you want to delete this comment?",
+    "editSuccess": "Comment updated!",
+    "editError": "Failed to update comment",
+    "deleteSuccess": "Comment deleted!",
+    "deleteError": "Failed to delete comment",
+    "save": "Save",
+    "cancel": "Cancel"
   },
   "Summaries": {
     "title": "Summary Files",

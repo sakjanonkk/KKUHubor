@@ -85,6 +85,29 @@ const RATE_LIMIT_RULES: {
     config: { maxRequests: 10, windowMs: 60 * 60 * 1000 },
     methods: ["POST"],
   },
+  // Comments PUT: 20 per hour
+  {
+    pattern: /^\/api\/comments$/,
+    config: { maxRequests: 20, windowMs: 60 * 60 * 1000 },
+    methods: ["PUT"],
+  },
+  // Comments DELETE: 10 per hour
+  {
+    pattern: /^\/api\/comments$/,
+    config: { maxRequests: 10, windowMs: 60 * 60 * 1000 },
+    methods: ["DELETE"],
+  },
+  // Helpfulness votes: 60 per minute
+  {
+    pattern: /^\/api\/helpfulness$/,
+    config: { maxRequests: 60, windowMs: 60 * 1000 },
+  },
+  // Reactions: 60 per minute
+  {
+    pattern: /^\/api\/reactions$/,
+    config: { maxRequests: 60, windowMs: 60 * 1000 },
+    methods: ["POST"],
+  },
 ];
 
 // Default: 60 requests per minute for any unmatched API route

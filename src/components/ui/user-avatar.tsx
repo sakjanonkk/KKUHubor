@@ -1,4 +1,7 @@
+"use client";
+
 import Image from "next/image";
+import { useState } from "react";
 
 interface UserAvatarProps {
   name: string;
@@ -16,16 +19,26 @@ export function getAvatarUrl(name: string, size: number, style?: string, seed?: 
 }
 
 export function UserAvatar({ name, size = 32, className = "", style, seed }: UserAvatarProps) {
+  const [loaded, setLoaded] = useState(false);
   const src = getAvatarUrl(name, size, style, seed);
 
   return (
-    <Image
-      src={src}
-      alt={name || "Anonymous"}
-      width={size}
-      height={size}
-      className={`rounded-full bg-muted shrink-0 ${className}`}
-      unoptimized
-    />
+    <div
+      className={`relative rounded-full bg-muted shrink-0 overflow-hidden ${className}`}
+      style={{ width: size, height: size }}
+    >
+      {!loaded && (
+        <div className="absolute inset-0 rounded-full bg-muted animate-pulse" />
+      )}
+      <Image
+        src={src}
+        alt={name || "Anonymous"}
+        width={size}
+        height={size}
+        className={`rounded-full transition-opacity duration-300 ${loaded ? "opacity-100" : "opacity-0"}`}
+        unoptimized
+        onLoad={() => setLoaded(true)}
+      />
+    </div>
   );
 }

@@ -6,7 +6,7 @@ import { Review, ReviewCourseInfo } from "@/types";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { UserAvatar } from "@/components/ui/user-avatar";
-import { MoreHorizontal, Flag, ThumbsUp, MessageCircle, Pencil, Trash2 } from "lucide-react";
+import { MoreHorizontal, Flag, MessageCircle, Pencil, Trash2 } from "lucide-react";
 import { Link } from "@/i18n/routing";
 import { useLocale } from "next-intl";
 import {
@@ -20,7 +20,7 @@ import { Button } from "@/components/ui/button";
 import { ReportDialog } from "./report-dialog";
 import { EditReviewDialog } from "./edit-review-dialog";
 import { CommentSection } from "./comment-section";
-import { cn } from "@/lib/utils";
+import { ReviewReactions } from "./review-reactions";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
 import { getOrCreateSessionId } from "@/lib/session";
@@ -38,21 +38,9 @@ export function ReviewCard({ review, course }: ReviewCardProps) {
   const locale = useLocale();
   const t = useTranslations("Review");
 
-  // Social State
-  const [likes, setLikes] = useState(review.likeCount || 0);
-  const [isLiked, setIsLiked] = useState(false);
   const [showComments, setShowComments] = useState(false);
 
   useEffect(() => {
-    // Check local storage for like status (Anonymous user persistence)
-    const likedReviews = JSON.parse(
-      localStorage.getItem("liked_reviews") || "[]"
-    );
-    if (likedReviews.includes(review.id)) {
-      setIsLiked(true);
-    }
-
-    // Check ownership via session_id
     const sessionId = getOrCreateSessionId();
     if (sessionId && review.sessionId && sessionId === review.sessionId) {
       setIsOwner(true);
@@ -77,54 +65,6 @@ export function ReviewCard({ review, course }: ReviewCardProps) {
       }
     } catch {
       toast.error(t("deleteError"));
-    }
-  };
-
-  const handleLike = async () => {
-    // Get or create session ID
-    const sessionId = getOrCreateSessionId();
-
-    // Optimistic UI Update
-    const prevLikes = likes;
-    const prevIsLiked = isLiked;
-
-    setIsLiked(!isLiked);
-    setLikes(isLiked ? likes - 1 : likes + 1);
-
-    try {
-      const res = await fetch("/api/likes", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ reviewId: review.id, sessionId }),
-      });
-
-      if (res.ok) {
-        const data = await res.json();
-        // Sync with server source of truth if needed, but usually redundant if optimistic worked
-        // setLikes(data.count);
-
-        // Update Local Storage
-        const likedReviews = JSON.parse(
-          localStorage.getItem("liked_reviews") || "[]"
-        );
-        if (data.liked) {
-          if (!likedReviews.includes(review.id)) {
-            likedReviews.push(review.id);
-          }
-        } else {
-          const index = likedReviews.indexOf(review.id);
-          if (index > -1) likedReviews.splice(index, 1);
-        }
-        localStorage.setItem("liked_reviews", JSON.stringify(likedReviews));
-      } else {
-        // Revert on failure
-        setLikes(prevLikes);
-        setIsLiked(prevIsLiked);
-        toast.error(t("likeError"));
-      }
-    } catch (error) {
-      setLikes(prevLikes);
-      setIsLiked(prevIsLiked);
     }
   };
 
@@ -156,7 +96,6 @@ export function ReviewCard({ review, course }: ReviewCardProps) {
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
-                  {/* Dropdown Menu */}
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button variant="ghost" className="h-8 w-8 p-0">
@@ -206,19 +145,12 @@ export function ReviewCard({ review, course }: ReviewCardProps) {
           <p className="whitespace-pre-wrap text-sm mb-4">{review.content}</p>
 
           {/* Social Actions */}
-          <div className="flex items-center gap-4 pt-2">
-            <Button
-              variant="ghost"
-              size="sm"
-              className={cn(
-                "h-10 px-3 md:h-8 md:px-2 gap-1.5",
-                isLiked && "text-blue-500 hover:text-blue-600"
-              )}
-              onClick={handleLike}
-            >
-              <ThumbsUp className={cn("h-4 w-4", isLiked && "fill-current")} />
-              <span className="text-xs font-semibold">{likes}</span>
-            </Button>
+          <div className="flex items-center gap-1 pt-2">
+            <ReviewReactions
+              reviewId={review.id}
+              initialTotalReactions={review.totalReactions}
+              initialReactionCounts={review.reactionCounts}
+            />
 
             <Button
               variant="ghost"
@@ -231,7 +163,6 @@ export function ReviewCard({ review, course }: ReviewCardProps) {
             </Button>
           </div>
 
-          {/* Comment Section */}
           {showComments && <CommentSection reviewId={review.id} />}
         </CardContent>
       </Card>

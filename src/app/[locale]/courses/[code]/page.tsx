@@ -73,7 +73,8 @@ async function getReviews(courseId: number): Promise<Review[]> {
       session_id as "sessionId",
       avatar_style as "avatarStyle",
       avatar_seed as "avatarSeed",
-      (SELECT COUNT(*)::int FROM review_likes WHERE review_id = reviews.review_id) as "likeCount"
+      (SELECT COUNT(*)::int FROM review_likes WHERE review_id = reviews.review_id) as "likeCount",
+      (SELECT COUNT(*)::int FROM review_reactions WHERE review_id = reviews.review_id) as "totalReactions"
     FROM reviews
     WHERE course_id = $1
     ORDER BY created_at DESC
@@ -159,9 +160,11 @@ export default async function CourseDetailPage({ params }: PageProps) {
                 <CourseLikesOverview
                   totalLikes={likeStats.totalLikes}
                   totalReviews={likeStats.totalReviews}
+                  totalReactions={likeStats.totalReactions}
                   translations={{
                     reviews: t("reviewsCount"),
                     likes: t("likes"),
+                    totalReactions: t("totalReactions"),
                   }}
                 />
               </CardContent>

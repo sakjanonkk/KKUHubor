@@ -37,6 +37,10 @@ export interface Review {
   content: string;
   createdAt: Date;
   likeCount?: number;
+  helpfulCount?: number;
+  notHelpfulCount?: number;
+  totalReactions?: number;
+  reactionCounts?: Record<string, number>;
   sessionId?: string;
   avatarStyle?: string;
   avatarSeed?: string;

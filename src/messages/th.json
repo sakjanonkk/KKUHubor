@@ -82,14 +82,15 @@
     "noReviewsDesc": "มาเป็นคนแรกที่รีวิววิชานี้เลย!",
     "sortBy": "จัดเรียง",
     "sortMostRecent": "ล่าสุด",
-    "sortMostHelpful": "มีประโยชน์ที่สุด",
+    "sortMostPopular": "ยอดนิยม",
     "share": "แชร์",
     "copied": "คัดลอกลิงก์แล้ว",
     "totalReviews": "รีวิวทั้งหมด",
     "avgGrade": "เกรดยอดนิยม",
     "commonSemester": "เทอมล่าสุด",
     "reviewsCount": "รีวิว",
-    "likes": "ถูกใจ"
+    "likes": "ถูกใจ",
+    "totalReactions": "รีแอค"
   },
   "UserSettings": {
     "title": "ตั้งค่าผู้ใช้",
@@ -225,7 +226,7 @@
     "grade": "เกรด",
     "anonymous": "ไม่ระบุชื่อ",
     "comments": "ความคิดเห็น",
-    "likeError": "ไม่สามารถกดไลก์ได้",
+    "reactionError": "บันทึกรีแอคไม่สำเร็จ",
     "edit": "แก้ไขรีวิว",
     "delete": "ลบรีวิว",
     "deleteConfirm": "ต้องการลบรีวิวนี้จริงๆ ใช่ไหม?",
@@ -244,8 +245,10 @@
       "namePlaceholder": "ไม่ระบุตัวตน",
       "gradeLabel": "เกรด",
       "select": "เลือกเกรด",
-      "semesterLabel": "ปีการศึกษา",
-      "semesterPlaceholder": "เลือกเทอม",
+      "termLabel": "เทอม",
+      "termPlaceholder": "เทอม",
+      "yearLabel": "ปี พ.ศ.",
+      "yearPlaceholder": "ปี",
       "contentLabel": "รีวิว",
       "contentPlaceholder": "เล่าเกี่ยวกับเนื้อหาวิชา ความยากง่าย การสอนของอาจารย์...",
       "submit": "ส่งรีวิว",
@@ -253,7 +256,8 @@
       "errorToast": "เกิดข้อผิดพลาด ลองใหม่อีกครั้ง",
       "validation": {
         "grade": "กรุณาเลือกเกรด",
-        "semester": "กรุณาเลือกเทอม",
+        "term": "กรุณาเลือกเทอม",
+        "year": "กรุณาเลือกปี",
         "contentLength": "รีวิวต้องยาวอย่างน้อย 10 ตัวอักษร"
       }
     }
@@ -310,7 +314,16 @@
     "post": "โพสต์",
     "posting": "กำลังโพสต์...",
     "success": "โพสต์ความคิดเห็นแล้ว!",
-    "error": "โพสต์ไม่สำเร็จ ลองใหม่นะ"
+    "error": "โพสต์ไม่สำเร็จ ลองใหม่นะ",
+    "edit": "แก้ไข",
+    "delete": "ลบ",
+    "deleteConfirm": "ต้องการลบความคิดเห็นนี้ใช่ไหม?",
+    "editSuccess": "แก้ไขความคิดเห็นแล้ว!",
+    "editError": "แก้ไขไม่สำเร็จ",
+    "deleteSuccess": "ลบความคิดเห็นแล้ว!",
+    "deleteError": "ลบไม่สำเร็จ",
+    "save": "บันทึก",
+    "cancel": "ยกเลิก"
   },
   "Summaries": {
     "title": "ไฟล์สรุป",
