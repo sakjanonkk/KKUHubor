@@ -39,27 +39,27 @@ const RATE_LIMIT_RULES: {
     pattern: /^\/api\/auth\/login$/,
     config: { maxRequests: 5, windowMs: 15 * 60 * 1000 },
   },
-  // Reviews POST: 20 per hour
+  // Reviews POST: 5 per hour
   {
     pattern: /^\/api\/reviews$/,
-    config: { maxRequests: 200, windowMs: 60 * 60 * 1000 },
+    config: { maxRequests: 5, windowMs: 60 * 60 * 1000 },
     methods: ["POST"],
   },
   // Comments POST: 20 per hour
   {
     pattern: /^\/api\/comments$/,
-    config: { maxRequests: 100, windowMs: 60 * 60 * 1000 },
+    config: { maxRequests: 20, windowMs: 60 * 60 * 1000 },
     methods: ["POST"],
   },
-  // Likes: 60 per minute
+  // Likes: 30 per minute
   {
     pattern: /^\/api\/likes$/,
-    config: { maxRequests: 1000, windowMs: 60 * 1000 },
+    config: { maxRequests: 30, windowMs: 60 * 1000 },
   },
   // Search: 30 per minute
   {
     pattern: /^\/api\/search$/,
-    config: { maxRequests: 100, windowMs: 60 * 1000 },
+    config: { maxRequests: 30, windowMs: 60 * 1000 },
   },
   // Reports: 10 per hour
   {
@@ -82,7 +82,7 @@ const RATE_LIMIT_RULES: {
   // Course requests: 5 per hour
   {
     pattern: /^\/api\/requests$/,
-    config: { maxRequests: 10, windowMs: 60 * 60 * 1000 },
+    config: { maxRequests: 5, windowMs: 60 * 60 * 1000 },
     methods: ["POST"],
   },
   // Comments PUT: 20 per hour
@@ -97,15 +97,15 @@ const RATE_LIMIT_RULES: {
     config: { maxRequests: 10, windowMs: 60 * 60 * 1000 },
     methods: ["DELETE"],
   },
-  // Helpfulness votes: 60 per minute
+  // Helpfulness votes: 30 per minute
   {
     pattern: /^\/api\/helpfulness$/,
-    config: { maxRequests: 60, windowMs: 60 * 1000 },
+    config: { maxRequests: 30, windowMs: 60 * 1000 },
   },
-  // Reactions: 60 per minute
+  // Reactions: 30 per minute
   {
     pattern: /^\/api\/reactions$/,
-    config: { maxRequests: 60, windowMs: 60 * 1000 },
+    config: { maxRequests: 30, windowMs: 60 * 1000 },
     methods: ["POST"],
   },
 ];
